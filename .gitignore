@@ -1,0 +1,7 @@
+*.mexw64
+*.mexmaci64
+*.asv
+**/codegen/
+*.DS_store
+examples/classification/Intrusion Detection/data/synthData.mat
+examples/classification/Intrusion Detection/data/tagged_data.csv
