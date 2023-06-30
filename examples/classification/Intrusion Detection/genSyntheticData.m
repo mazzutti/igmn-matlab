@@ -29,9 +29,9 @@ function [trainData, testData, fullData] = ...
     testData = genSynthData(models, nSimTest, subSets);
     fullData = vertcat(subSets{:});
 
-    noise = 0.05;
-    trainData = addNoise(trainData, noise);
-    testData = addNoise(testData, noise);
+    noise = 0.02;
+    trainData = addNoise(trainData, noise, categoricalVarIndexes);
+    testData = addNoise(testData, noise, categoricalVarIndexes);
 end
 
 function models = genSynthModels(subSets)
@@ -57,9 +57,11 @@ function synthData = genSynthData(models, nSim, subSets)
     end
 end
 
-function data = addNoise(data, noise)
+function data = addNoise(data, noise, categoricalVarIndexes)
     [N, M] = size(data);
     for i = 1: M-2
-        data(:, i) = data(:, i) + noise*std(data(:, i)) * randn(N, 1);
+        if 	~ismember(i, categoricalVarIndexes)
+            data(:, i) = data(:, i) + noise*std(data(:, i)) * randn(N, 1);
+        end
     end
 end

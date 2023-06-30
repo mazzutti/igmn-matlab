@@ -14,15 +14,14 @@ function plotOptimizationResults(dataCache, igmnParams, inputVars, outputVars, l
     options.spMin = int32(igmnParams(3));
     options.vMin = int32(igmnParams(4));
     options.regValue = igmnParams(5);
-    options.compSize = int32(size(trainData, 1));
     
     net = igmn(range, options);
     if useMex
         net = train_mex(net, trainData);
-        outputs = classify_mex(net, testData, outputVars, 0);
+        outputs = classify_mex(net, testData, outputVars);
     else
         net = train(net, trainData);
-        outputs = classify(net, testData, outputVars, 0);
+        outputs = classify(net, testData, outputVars);
     end
     
     regressionEntries = cell(1, 3 * O);

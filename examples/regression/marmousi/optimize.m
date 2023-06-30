@@ -44,7 +44,6 @@ function fit  = fitness(range, params,  trainData, testData, vs, targets)
     options.delta = params(2);
     options.spMin = int32(params(3));
     options.vMin = int32(params(4));
-    options.compSize = int32(size(trainData, 1));
     net = igmn(range, options);
     T = int32(size(range, 2) / 2);
     logTrainData = trainData(:, :);

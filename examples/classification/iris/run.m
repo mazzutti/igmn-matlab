@@ -1,6 +1,5 @@
 dbstop if error
-
-clear all;
+clear all; %#ok<CLALL>
 close all;
 clc;
 
@@ -26,7 +25,7 @@ model = igmn(range, options);
 
 model = train(model, trainData);
 
-resultData = classify(model, testData(:, 1:4), [5, 6, 7], false);
+resultData = classify(model, testData(:, 1:4), [5, 6, 7]);
 
 expectedOut = testData(:, end-2:end);
 

@@ -40,8 +40,10 @@ depth = wellData(:, 1);
 facies = wellData(:, 2);
 wellData = wellData(:, 2:end);
 
-% Optimization Options
+% compile options
+useMex = true;
 
+% Optimization Options
 
 doOptimization = false;
 lb =  [
@@ -61,9 +63,6 @@ ub = [
 
 algorithm = "particleswarm"; % "particleswarm" | "ga" | "patternsearch"
 
-% Compile Options
-useMex = true;
-useGpu = false;
 
 % Model Options
 normalize = true;
@@ -91,6 +90,10 @@ C = size(modelData, 2);
 O = length(outputVars);
 I = length(inputVars);
 
+if useMex && (~exist('train_mex', 'file') || ~exist('predict_mex', 'file'))
+    compile(I + O, outputVars); 
+end
+
 %% Prepare data cache
 targets = wellData(:, outputVars);
 if normalize
@@ -108,16 +111,6 @@ dataCache = {normalizedModelData, normalizedWellData, ranges, targets};
 %% Do IGMN optinmization (find good hyperparameters)
 
 if doOptimization
-    if useMex
-        trainSize = size(normalizedModelData, 1);
-        testSize = size(normalizedWellData, 1);
-        compSize = trainSize;
-        inputSize = length(inputVars);
-        outputSize = C - inputSize;
-        options = {};
-        options.useGpu = useGpu;
-        compile(inputSize, outputSize, compSize, trainSize, testSize, options);
-    end
 
     tic; 
     igmnParams(:) = optimize(algorithm, dataCache, lb, ub, inputVars, outputVars, useMex);
@@ -139,14 +132,6 @@ end
 
 trainData = normalizedModelData;
 testData = normalizedWellData(:, inputVars);
-trainSize = int32(size(trainData, 1));
-
-% Recompile igmn due to dataset size change
-if useMex
-    compileOptions = {};
-    compileOptions.useGpu = useGpu;
-    compile(I, O, trainSize, trainSize, size(testData, 1), compileOptions);
-end
 
 options = {}; 
 options.tau = igmnParams(1); 
@@ -154,7 +139,6 @@ options.delta = igmnParams(2);
 options.spMin = int32(igmnParams(3));
 options.vMin = int32(igmnParams(4));
 options.regValue = igmnParams(5);
-options.compSize = trainSize;
 
 range = dataCache{3};
 
@@ -181,7 +165,6 @@ gridDomainProbabilities = computeDomainProbabilities(gridProbabilities, outputVa
 probabilities = cell(1, O);
 for i = 1:O; probabilities{i} = squeeze(gridDomainProbabilities(i, :, :)); end
 
-
 outputsDomain = cell(1, O);
 for i = 1:O
     interval = variableRanges(:, outputVars(i));
@@ -201,10 +184,8 @@ end
 xlabels = cell(1, O);
 for i = 1:O; xlabels{i} = sprintf('%s (v/v)', legends{i}{2}); end
 
-
 plotResults(targets, outputs, xlabels, depth, facies, legends, ...
     outputVars, variableRanges, variableNames, outputsDomain, probabilities, 'IGMN Inversion');
-
 
 %% Compare with RockPhysicsKDEInversion
 [outputs, probabilities, outputsDomain] = kdeInversion(modelData, wellData);

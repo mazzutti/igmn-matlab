@@ -12,15 +12,31 @@ function [Y, probabilities] = recall(net, X, features, featureGrid) %#codegen
     % Inputs:
     %   Y : an NxM attributes array.
     %   features : an optional array of ints or names.
+    %   featureGrid : an optional array to doubles with the grid 
+    %   to compute probabilities.
     % Output:
     %   Y : an array with the estimate for the missing 
     %       values.
-    coder.extrinsic('pageinv');
-    [N, M] = size(X);
-    
-    if nargin < 3
-        features  = (M + 1):net.dimension;
+    %   probabilities: the computed posterior probabilities.
+    arguments
+        net (1, 1) igmn;
+        X (:, :) { ...
+            mustBeNumeric, ...
+            mustBeNonempty ...
+        };
+        features (1, :) { ...
+            mustBeNumeric, ...
+            mustBeNonempty, ...
+            mustBeInteger, ...
+            mustBeNDimensional(net, X, features) ...
+        } = [(size(X, 2) + 1):net.dimension], ...
+        featureGrid (:, :) { mustBeNumeric } = [];
     end
+    N = size(X, 1);
+    
+    % if nargin < 3
+    %     features  = (M + 1):net.dimension;
+    % end
     F = length(features);
     beta = features;
     alpha = setdiff(1:net.dimension, beta);
@@ -36,12 +52,12 @@ function [Y, probabilities] = recall(net, X, features, featureGrid) %#codegen
     end
 
     
-    alphaCovs = net.covs(alpha, alpha, 1:net.nc);
-    alphaBetaCovs = net.covs(beta, alpha, 1:net.nc);
-    betaBetaCovs = net.covs(beta, beta, 1:net.nc);
-    alphaMeans = net.means(1:net.nc, alpha);
-    betaMeans = net.means(1:net.nc, beta);
-    priors = net.priors(1:net.nc);
+    alphaCovs = net.covs(alpha, alpha, :);
+    alphaBetaCovs = net.covs(beta, alpha, :);
+    betaBetaCovs = net.covs(beta, beta, :);
+    alphaMeans = net.means(:, alpha);
+    betaMeans = net.means(:, beta);
+    priors = net.priors(:);
     
     parfor i = 1:net.nc
         alphaDiff = X - alphaMeans(i, :);

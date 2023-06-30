@@ -5,7 +5,6 @@ classdef igmn
         minTau = 1.0e-5;
         defaultTau = 0.1;
         defaultDelta = 0.01;
-        defaultCompSize = int32(1000);
     end
     
     properties
@@ -20,7 +19,6 @@ classdef igmn
         range;
         nc;
         sampleSize;
-        compSize;
         delta;
         tau;
         spMin;
@@ -37,8 +35,8 @@ classdef igmn
         distances;
 
         % components outputs
-        logLike;
-        post;
+        logLikes;
+        posteriors;
     end
 
     methods
@@ -72,16 +70,10 @@ classdef igmn
             %
             % Output:
             %   self:        The IGMN handle for the new instance.
-            % arguments
-            %     range (2,:) {mustBeNumeric, mustBeNonempty};
-            %     options struct { ...
-            %         mustBeBetween(options, 'tau', [0, 1]), ...
-            %         mustBeBetween(options, 'delta', [0, 1]), ...
-            %         mustBeIntegerGreaterThan(options, 'vMin', 2), ...
-            %         mustBeIntegerGreaterThan(options, 'spMin', 2) ...
-            %         mustBeIntegerGreaterThan(options, 'compSize', 99) ...
-            %     } = struct();
-            % end
+            arguments
+                range (2,:) {mustBeNumeric, mustBeNonempty};
+                options struct = struct();
+            end
             self.range = range;
             self.dimension = int32(size(self.range, 2));
             defaults = struct(...                     
@@ -89,7 +81,6 @@ classdef igmn
                 'delta', igmn.defaultDelta, ...
                 'spMin', 2 * int32(self.dimension), ...
                 'vMin', int32(self.dimension  + 1), ...
-                'compSize', igmn.defaultCompSize, ...
                 'regValue', 0);
             options = mergeOptions(defaults, options);
             self.nc = int32(0);
@@ -98,18 +89,17 @@ classdef igmn
             self.spMin = options.spMin;
             self.tau = options.tau;
             self.delta = options.delta;
-            self.compSize = options.compSize;
             self.initialCov = diag((self.delta * (self.range(2, :) - self.range(1, :))) .^ 2);
             self.maxDistance = chi2inv(1 - self.tau, double(self.dimension));
             self.minCov = eye(self.dimension) * (igmn.eta + options.regValue);
-            self.means = zeros(self.compSize, self.dimension);
-            self.covs = zeros(self.dimension, self.dimension, self.compSize);
-            self.priors = zeros(1, self.compSize);
-            self.sps = zeros(1, self.compSize);
-            self.vs = zeros(1, self.compSize, 'int32');
-            self.distances = zeros(1, self.compSize);
-            self.logLike = zeros(1, self.compSize);
-            self.post = zeros(1, self.compSize);
+            self.covs = [];
+            self.means = [];
+            self.priors = [];
+            self.sps = [];
+            self.vs = [];
+            self.distances = [];
+            self.logLikes = [];
+            self.posteriors = [];
         end
     end
 end

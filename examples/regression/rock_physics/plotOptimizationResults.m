@@ -18,16 +18,14 @@ function plotOptimizationResults(dataCache, igmnParams, ...
     options.spMin = int32(igmnParams(3));
     options.vMin = int32(igmnParams(4));
     options.regValue = igmnParams(5);
-    options.compSize = int32(size(trainData, 1));
     
-
     net = igmn(range, options);
     if useMex
         net = train_mex(net, trainData);
         outputs = predict_mex(net, testData, outputVars, 0);
     else
         net = train(net, trainData);
-        outputs = predict(net, testData, outputVars, 0);
+        outputs = predict(net, testData, outputVars);
     end
     if nargin == 8
         outputs = denormalizeData(outputs, minMaxProportion, outputVars);

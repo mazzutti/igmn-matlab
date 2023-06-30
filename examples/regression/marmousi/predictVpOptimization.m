@@ -4,7 +4,7 @@ close all;
 clc;
 
 addpath('../../../igmn/');
-addpath(genpath('../../../../Seislab 3.02'));
+addpath(genpath('../../../Seislab 3.02'));
 
 load('cmaps.mat');
 

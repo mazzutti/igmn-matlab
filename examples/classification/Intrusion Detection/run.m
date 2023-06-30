@@ -10,7 +10,7 @@ addpath('../../../igmn');
 
 %% Options
 
-genSynthData = true;
+genSynthData = false;
 nSimTrain = 20000;
 nSimTest = 10000;
 
@@ -22,16 +22,16 @@ nSimTest = 10000;
 %     'Srv_serror_rate' ...
 % };
 
-ignoredVars = {
-    'Connection_Flag', 'Urgent',  'Land', 'Wrong', 'SourceToDestPkts', ...
-    'DestToSourcePkts',  'CountSameService', 'Serror_rate', ...
-    'Diff_srv_rate',  'Diff_srv_rate', 'Same_src_port_rate', ...
-    'Srv_diff_host_rate', 'Srv_serror_rate' ...
-};
-
 % ignoredVars = {
-%     'Land', 'Wrong'
+%     'Connection_Flag', 'Urgent',  'Land', 'Wrong', 'SourceToDestPkts', ...
+%     'DestToSourcePkts',  'CountSameService', 'Serror_rate', ...
+%     'Diff_srv_rate',  'Diff_srv_rate', 'Same_src_port_rate', ...
+%     'Srv_diff_host_rate', 'Srv_serror_rate' ...
 % };
+
+ignoredVars = {
+    'Land', 'Wrong'
+};
 
 lb = [
     1.0e-9, ...       % min tau
@@ -52,7 +52,8 @@ algorithm = "particleswarm"; % "particleswarm" | "ga" | "patternsearch"
 
 % Compile Options
 useMex = true;
-useGpu = false;
+options = {};
+options.isClassifyProblem = true;
 
 % Model Options
 normalize = true;
@@ -82,6 +83,10 @@ O = 2;
 inputVars = 1:I;
 outputVars = I+1:I+O;
 
+if useMex && (~exist('train_mex', 'file') || ~exist('classify_mex', 'file'))
+    compile(I + O, outputVars, options); 
+end
+
 if normalize
     [normalizedFullData, minMaxProportion] = normalizeData(fullData);
     range = [min(normalizedFullData); max(normalizedFullData)];
@@ -93,19 +98,9 @@ else
     dataCache = {trainData, testData, range, fullData};
 end
 
-if doOptimization
-    if useMex
-        trainSize = size(dataCache{1}, 1);
-        testSize = size(dataCache{2}, 1);
-        compSize = trainSize;
-        inputSize = I;
-        outputSize = O;
-        options = {};
-        options.useGpu = useGpu;
-        options.isClassifyProblem = true;
-        compile(inputSize, outputSize, compSize, trainSize, testSize, options);
-    end
 
+if doOptimization
+        
     tic; 
     igmnParams(:) = optimize(...
         algorithm, dataCache, lb, ub, inputVars, outputVars, useMex);
@@ -124,21 +119,12 @@ targets = testData(:, outputVars);
 testData = testData(:, inputVars);
 trainSize = int32(size(trainData, 1));
 
-% Recompile igmn due to dataset size change
-if useMex
-    compileOptions = {};
-    compileOptions.useGpu = useGpu;
-    compileOptions.isClassifyProblem = true;
-    compile(I, O, trainSize, trainSize, size(testData, 1), compileOptions);
-end
-
 options = {}; 
 options.tau = igmnParams(1); 
 options.delta = igmnParams(2);
 options.spMin = int32(igmnParams(3));
 options.vMin = int32(igmnParams(4));
 options.regValue = igmnParams(5);
-options.compSize = trainSize;
 
 range = dataCache{3};
 
@@ -147,14 +133,14 @@ net = igmn(range, options);
 tic;
 if useMex
     net = train_mex(net, trainData);
-    outputs = classify_mex(net, testData, outputVars, 0);
+    outputs = classify_mex(net, testData, outputVars);
 else
     net = train(net, trainData);
-    outputs = classify(net, testData, outputVars, 0);
+    outputs = classify(net, testData, outputVars);
 end
 toc;
 
-% Do some plots
+%% Do some plots
 
 classes = {legends{1}{1} legends{2}{1}};
 targets = onehotdecode(double(targets), classes, 2);

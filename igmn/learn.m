@@ -12,7 +12,7 @@ function net = learn(net, x) %#codegen
         };
     end
     net = computeLikelihood(net, x);
-    if sum(net.distances(1:net.nc) <= net.maxDistance)
+    if sum(net.distances <= net.maxDistance)
         net = update(net, x);
     else
         net = createComponent(net, x); 

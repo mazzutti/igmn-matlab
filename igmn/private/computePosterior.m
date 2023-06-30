@@ -1,9 +1,8 @@
 % Compute the posterior probability for each IGMN component
 function net = computePosterior(net) %#codegen
-    logDensity = bsxfun(@plus, ...
-        net.logLike(1:net.nc), double(log(net.priors(1:net.nc))));
+    logDensity = bsxfun(@plus, net.logLikes, double(log(net.priors)));
     % minus maxll to avoid underflow
     logDensity = exp(bsxfun(@minus, logDensity, max(logDensity, [], 2)));
     % normalize
-    net.post(1:net.nc) = bsxfun(@rdivide, logDensity, sum(logDensity, 2));
+    net.posteriors = bsxfun(@rdivide, logDensity, sum(logDensity, 2));
 end

@@ -22,6 +22,6 @@ function idx = cluster(net, X) %#codegen
         x = X(i,:);
         net = computeLikelihood(net, x);
         net = computePosterior(net);
-        [~, idx(i)] = max(net.post);
+        [~, idx(i)] = max(net.posteriors);
     end
 end

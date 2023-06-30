@@ -60,15 +60,14 @@ function fit  = fitness(params, trainData, testData, targets, range, outputVars,
     options.spMin = int32(params(3));
     options.vMin = int32(params(4));
     options.regValue = params(5);
-    options.compSize = int32(size(trainData, 1));
-  
+
     net = igmn(range, options);
     if useMex
         net = train_mex(net, trainData);
         outputs = predict_mex(net, testData, outputVars, 0);
     else
         net = train(net, trainData);
-        outputs = predict(net, testData, outputVars, 0);
+        outputs = predict(net, testData, outputVars);
     end
     fit = sum(sqrt(mean((targets - outputs) .^ 2)));
 end
