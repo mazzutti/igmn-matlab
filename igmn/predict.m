@@ -28,17 +28,21 @@ function [Y, probabilities] = predict(net, X, features, discretizationSize) %#co
         } = 0;
     end
     F = length(features);
+    N = int64(size(X, 1));
+    step = int64(intmax("int32")/(net.nc  ^ 2));
+    Y = zeros(N, F);
+    probabilities = zeros(N, discretizationSize ^ F);
+    featureGrid = zeros(discretizationSize ^ F, F);
     if discretizationSize
         domain = discretizeFeaturesRange(net.range(:, features), discretizationSize);
         cellGrid = cell(1, F);
         [cellGrid{:}] = ndgrid(domain{:});
         featureGrid = zeros(discretizationSize ^ F, F);
         for i = 1:F; featureGrid(:, i) = cellGrid{i}(:); end
-        
-        [Y, probabilities] = recall(net, X, features, featureGrid);
-    else
-        [Y, probabilities] = recall(net, X, features);
-    end 
-    
+    end
+    for i = 1:step:N
+        slice = i:min(i+step-1, N);
+        [Y(slice, :), probabilities(slice, :)] = recall(net, X(slice, :), features, featureGrid);
+    end
 end
 

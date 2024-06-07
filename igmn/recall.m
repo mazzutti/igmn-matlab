@@ -33,49 +33,58 @@ function [Y, probabilities] = recall(net, X, features, featureGrid) %#codegen
         featureGrid (:, :) { mustBeNumeric } = [];
     end
     N = size(X, 1);
-    
-    % if nargin < 3
-    %     features  = (M + 1):net.dimension;
-    % end
-    F = length(features);
-    beta = features;
-    alpha = setdiff(1:net.dimension, beta);
-    
-    pajs = zeros(N, 1, net.nc);
-    xm = zeros(N, F, net.nc);
-    
     computeGrid = ~isempty(featureGrid);
     if computeGrid
         probabilities = zeros(N, size(featureGrid, 1));
     else
         probabilities = zeros(N, 0);
     end
+    F = length(features);
+    beta = features;
+    alpha = setdiff(1:net.dimension, beta);
+    pajs = zeros(N, 1, net.nc);
+    xm = zeros(N, F, net.nc);
 
-    
-    alphaCovs = net.covs(alpha, alpha, :);
-    alphaBetaCovs = net.covs(beta, alpha, :);
-    betaBetaCovs = net.covs(beta, beta, :);
+    useRankOne = net.useRankOne;
+
     alphaMeans = net.means(:, alpha);
     betaMeans = net.means(:, beta);
-    priors = net.priors(:);
+    if useRankOne; covs = net.invCovs; else; covs = net.covs;end
+    alphaAlphaCovs = covs(alpha, alpha, :);
+    betaAlphaCovs = covs(beta, alpha, :);
+    betaBetaCovs = covs(beta, beta, :);
+    priors = net.priors;
     
-    parfor i = 1:net.nc
-        alphaDiff = X - alphaMeans(i, :);
-        alphaCov = alphaCovs(:, :, i);
-        alphaBetaCov = alphaBetaCovs(:, :, i);
-        xm(:, :, i) = betaMeans(i, :) + (alphaBetaCov / alphaCov * alphaDiff')';
-        loglike = computeLoglike(X, alphaCov, alphaDiff, false);
-        pajs(:, :, i) = exp(loglike) * priors(i);
+    for i = 1:net.nc
+        diff = X - alphaMeans(i, :);
+        alphaAlphaCov = alphaAlphaCovs(:, :, i);
+        betaAlphaCov = betaAlphaCovs(:, :, i);
+        betaBetaCov = betaBetaCovs(:, :, i);
+        determinant = 1;
+        if useRankOne
+            invBetaAlpha = betaBetaCov \ betaAlphaCov;
+            invA = alphaAlphaCov - (betaAlphaCov' * invBetaAlpha);
+            determinant = det(betaBetaCov);
+            pajs(:, :, i) = computeLoglike(X, invA, alphaMeans(i, :), ...
+                useRankOne=true, determinant=determinant) + igmn.minimum;
+            xm(:, :, i) = (betaMeans(i, :) - (invBetaAlpha * diff')');  
+        else
+            xm(:, :, i) = betaMeans(i, :) + (betaAlphaCov / alphaAlphaCov * diff')';
+            loglike = computeLoglike(X, alphaAlphaCov, diff);
+            pajs(:, :, i) = exp(loglike) * priors(i);
+        end
         if computeGrid
-            loglikeGrid = computeLoglike(featureGrid, betaBetaCovs(:, :, i), xm(:, :, i), true);
-            probabilities = probabilities + pajs(:, :, i) .* exp(loglikeGrid);
+            loglikeGrid = computeLoglike(featureGrid, betaBetaCov, xm(:, :, i), ...
+                isProbability=true, useRankOne=useRankOne, determinant=determinant);
+            if ~useRankOne; loglikeGrid = exp(loglikeGrid); end
+            probabilities = probabilities + pajs(:, :, i) .* loglikeGrid;
         end
     end
-    
     pajs = pajs ./ sum(pajs, 3);
-    pajs(isnan(pajs)) = 0;
+    pajs = fillmissing(pajs, 'constant', 0);
     Y = sum(bsxfun(@times, xm, pajs), 3);
     if computeGrid
         probabilities = probabilities ./ sum(probabilities, 2);
+        probabilities = fillmissing(probabilities, 'constant', 0);
     end
 end

@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\Targets\LTrace.Ocean.targets" />
+  <ItemDefinitionGroup>
+    <Reference>
+      <Private>False</Private>
+    </Reference>
+  </ItemDefinitionGroup>
+  <PropertyGroup>
+    <!--ProjectType:Plugin-->
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{23A3B879-24F5-4BE1-B9B9-70DA6AABC1EA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IGMNRockPhysics</RootNamespace>
+    <AssemblyName>OceanLayer</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Win32Resource>
+    </Win32Resource>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2022.1-Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants>DEBUG;TRACE;OCEAN2022</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2022.1-Debug|AnyCPU'">
+    <DefineConstants>DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2019.1-Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants>DEBUG;TRACE;OCEAN2019</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2019.1-Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants>DEBUG;TRACE;OCEAN2019</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2020.1-Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants>DEBUG;TRACE;OCEAN2020</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2020.1-Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants>DEBUG;TRACE;OCEAN2020</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2021.1-Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants>DEBUG;TRACE;OCEAN2021</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2021.1-Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants>DEBUG;TRACE;OCEAN2021</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2022.1-Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants>DEBUG;TRACE;OCEAN2022</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Slb.Ocean.Basics">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Schlumberger\Petrel 2022\Public\Slb.Ocean.Basics.dll</HintPath>
+    </Reference>
+    <Reference Include="Slb.Ocean.Core">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Schlumberger\Petrel 2022\Public\Slb.Ocean.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Slb.Ocean.Geometry">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Schlumberger\Petrel 2022\Public\Slb.Ocean.Geometry.dll</HintPath>
+    </Reference>
+    <Reference Include="Slb.Ocean.Petrel">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Schlumberger\Petrel 2022\Public\Slb.Ocean.Petrel.dll</HintPath>
+    </Reference>
+    <Reference Include="Slb.Ocean.Petrel.Configuration">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Schlumberger\Petrel 2022\Public\Slb.Ocean.Petrel.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Deployment" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainModule.cs" />
+    <Compile Include="Plugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IGMNInversion.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="OceanResources\OceanRibbonConfiguration.xml" />
+    <Content Include="OceanResources\Readme.txt" />
+    <None Include="Resources\this.Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ControllerSRP\ControllerSRP.csproj">
+      <Project>{099fb554-fd3f-47a1-89c3-bf29985163e2}</Project>
+      <Name>ControllerSRP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InterfaceSRP\InterfaceSRP.csproj">
+      <Project>{a8370f87-18f5-40ca-a0e3-1518c5662320}</Project>
+      <Name>InterfaceSRP</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del "$(ProjectDir)\plugin.xml"
+"$(OceanHome)\PluginPackager.exe" /g "$(TargetPath)" "$(ProjectDir)\plugin.xml" "$(OceanHome)\petrel.exe"
+"$(OceanHome)\PluginPackager.exe" /m "$(ProjectDir)\plugin.xml" "$(OceanHome)\petrel.exe" "$(TargetDir)"
+</PostBuildEvent>
+  </PropertyGroup>
+  <Target Name="GeneratePythonExecutableFileList">
+    <Message Importance="high" Text="Running GeneratePythonExecutableFileList..." />
+    <Exec Command="if not exist $(TargetDir)Python311 mkdir $(TargetDir)Python311" Condition="$(Configuration.EndsWith('Release'))" />
+    <Exec Command="robocopy $(SolutionDir)Python311 $(TargetDir)Python311 /s /e *.*" Condition="$(Configuration.EndsWith('Release'))" />
+    <Exec Command="xcopy $(SolutionDir)RockPhysicsKDEInversionDMS_shared.py $(TargetDir) /y " Condition="$(Configuration.EndsWith('Release'))" />
+  </Target>
+  <PropertyGroup>
+    <AssignTargetPathsDependsOn>
+      $(AssignTargetPathsDependsOn);
+      GeneratePythonExecutableFileList;
+    </AssignTargetPathsDependsOn>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+		Other similar extension points exist, see Microsoft.Common.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>

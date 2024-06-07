@@ -4,175 +4,117 @@ clear all; %#ok<CLALL>
 close all;
 clc;
 
+rng('default');
+rng(42);
+
 %% Add some external dependencies
 addpath('../../../igmn/');
 addpath(genpath('../../../Seislab 3.02'));
 addpath(genpath('../../../SeReM/'))
 
+% colors = distinguishableColors(6);
+% colororder(colors);
+
+colormap('jet');
+
 %% Do some configurations
-
-% Synthetic data configs
-wellFilePath = 'data/pseudowell_2856667402688.las';
-inputsStdMultiplyier = 1;
-stdVp = 100 * inputsStdMultiplyier;
-stdVs = 50 * inputsStdMultiplyier;
-stdRho = 0.05 * inputsStdMultiplyier;
-
-inputStds = {stdVp, stdVs, stdRho};
-
-outputsStdMultiplyier = 0;
-
-stdPhi = 0.01 * outputsStdMultiplyier;
-stdClay = 0.01 * outputsStdMultiplyier;
-stdSw = 0.01 * outputsStdMultiplyier;
-
-outputStds = {stdPhi, stdClay, stdSw};
-
 nSim = 100;
-discretizationSize = 15;
-showPlots = false;
+discretizationSize = 20;
+showPlots = true;
 useFacies = true;
 
 %% Create synthetic well data
-[modelData, wellData] = genPseudoWell(wellFilePath, nSim, inputStds{:}, outputStds{:}, useFacies, showPlots);
-% modelData = modelData(randperm(size(modelData, 1)), :);
+[modelData, wellData] = genPseudoWell(nSim, useFacies, showPlots, true);
 depth = wellData(:, 1);
 facies = wellData(:, 2);
-wellData = wellData(:, 2:end);
 
-% compile options
-useMex = true;
+trainData = modelData;
+% trainData = trainData(randperm(size(trainData, 1)), :);
+testData = wellData(:, 2:end);
 
-% Optimization Options
+%% Problem Configs
 
-doOptimization = false;
-lb =  [
-    1.0e-8, ...       % min tau
-    1.0e-8, ...       % min delta
-    2, ...            % min spMin
-    4, ...            % min vMin
-    0 ...             % min regValue
-];
-ub = [
-    1.0 - 1.0e-8, ... % max tau
-    1.0 - 1.0e-8 ...  % max delta 
-    4, ...            % max spMin
-    20, ...           % max vMin
-    1.0e-2, ...       % max regValue
-];
+normalize = false;
+nvars = 6; %#ok<NASGU>
+numberOfOutputVars = 3;
+if useFacies; nvars = 7; end
+inputVars = 1:nvars - numberOfOutputVars;
+outputVars = nvars - numberOfOutputVars + 1:nvars;
 
-algorithm = "particleswarm"; % "particleswarm" | "ga" | "patternsearch"
+targets = testData(:, outputVars);
+
+variableNames = {3};
+if useFacies; variableNames = ['Facies', variableNames]; end
+
+trainData(:, 2:3) = trainData(:, 2:3) ./ 1000;
+testData(:, 2:3) = testData(:, 2:3) ./ 1000;
 
 
-% Model Options
-normalize = true;
-if useFacies
-    inputVars = [1, 2, 3, 4];
-    outputVars = [5, 6, 7];
-else
-    inputVars = [1, 2, 3];
-    outputVars = [4, 5, 6];
-end
-
-% IGMN default hyperparameters
-igmnParams = [
-    0.05, ... % tau 
-    0.66, ... % delta
-    2, ...    % spMin
-    14, ...   % vMin
-    2e-6      % regValue            
-]; 
-
-variableNames = {'Facies', 'Vp', 'Vs', 'Rho', 'Porosity', 'Clay Volume', 'Water Saturation'};
-variableRanges = horzcat([min(wellData(:, inputVars)); max(wellData(:, inputVars))], [0 0.4; 0, 0.8; 0, 1]');
-
-C = size(modelData, 2);
-O = length(outputVars);
-I = length(inputVars);
-
-if useMex && (~exist('train_mex', 'file') || ~exist('predict_mex', 'file'))
-    compile(I + O, outputVars); 
-end
-
-%% Prepare data cache
-targets = wellData(:, outputVars);
+minMaxProportion = [];
 if normalize
-    [normalizedWellData, minMaxProportion] = normalizeData(vertcat(wellData, variableRanges));
-    ranges = normalizedWellData(end-1:end, :);
-    normalizedWellData = normalizedWellData(1:end-2, :);
-    normalizedModelData = normalizeData(modelData, minMaxProportion);
-else
-    normalizedWellData = wellData(:, :);
-    normalizedModelData = modelData(:, :);
-    ranges = variableRanges;
+    [testData, minMaxProportion] = normalizeData(testData);
+    trainData = normalizeData(trainData, minMaxProportion);
 end
-dataCache = {normalizedModelData, normalizedWellData, ranges, targets};
+inputs = testData(:, inputVars);
+allData = [trainData; testData];
 
-%% Do IGMN optinmization (find good hyperparameters)
+problem = Problem( ...
+    trainData, ...
+    testData, ...
+    'InputVarIndexes', inputVars, ...
+    'OutputVarIndexes', outputVars, ...
+    'AllData', allData, ...
+    'UseMex', false, ...
+    'DoParametersTuning', true, ...
+    'CompileOptions', compileoptions(...
+        'EnableRecompile', false, ...
+        'NumberOfVariables', nvars, ...
+        'NumberOfOutputVars', numberOfOutputVars, ...
+        'IsOptimization', true));
 
-if doOptimization
+problem.OptimizeOptions.Algorithm = 'pso';
+problem.OptimizeOptions.UseDefaultsFor = {'UseRankOne'};
+problem.OptimizeOptions.MaxFunEval = 30000;
+problem.OptimizeOptions.PopulationSize = 300;
+problem.OptimizeOptions.StallIterLimit = 40;
+problem.OptimizeOptions.UseParallel = true;
+problem.OptimizeOptions.TolFunValue = 1e-18;
 
-    tic; 
-    igmnParams(:) = optimize(algorithm, dataCache, lb, ub, inputVars, outputVars, useMex);
-    toc;
+problem.DefaultIgmnOptions.UseRankOne = 1;
 
-    % Plot otimization results
-    
-    legends = cell(1, O);
-    for i = 1:O
-        variablenName = variableNames{outputVars(i)};
-        legends{i} = {variablenName,  sprintf('%s Pred.', variablenName)};
-    end
-    if normalize
-        plotOptimizationResults(dataCache, igmnParams, inputVars, outputVars, depth, legends, useMex, minMaxProportion);
-    else
-        plotOptimizationResults(dataCache, igmnParams, inputVars, outputVars, depth, legends, useMex);
-    end
-end
+% problem.OptimizeOptions.hyperparameters{7}.lb = 3;
+% problem.OptimizeOptions.hyperparameters{1}.ub = 0.2;
+% problem.OptimizeOptions.hyperparameters{1}.lb = 1.0e-18;
+% problem.OptimizeOptions.hyperparameters{2}.ub = 0.3;
+% problem.OptimizeOptions.hyperparameters{2}.lb = 1.0e-8;
+% problem.OptimizeOptions.hyperparameters{3}.lb = 1;
+% problem.OptimizeOptions.hyperparameters{4}.lb = 1;
+% problem.OptimizeOptions.hyperparameters{6}.ub = 10;
+% problem.OptimizeOptions.hyperparameters{6}.lb = 5;
+% problem.OptimizeOptions.hyperparameters{5}.ub = 4;
+% problem.OptimizeOptions.hyperparameters{5}.lb = 2;
+% problem.OptimizeOptions.hyperparameters{8}.ub = 1.0e-2;
 
-trainData = normalizedModelData;
-testData = normalizedWellData(:, inputVars);
+% problem.DefaultIgmnOptions.MaxNc = 30;
+% problem.DefaultIgmnOptions.SPMin = 3;
+% problem.DefaultIgmnOptions.RegValue = 0;
+% problem.DefaultIgmnOptions.VMin = 6;
+% problem.DefaultIgmnOptions.RegValue = 2e-6;
+% problem.DefaultIgmnOptions.Tau = 0.05;
+% problem.DefaultIgmnOptions.Delta = 0.66;
+% problem.DefaultIgmnOptions.Gamma = 1;
+% problem.DefaultIgmnOptions.Phi = 1;
 
-options = {}; 
-options.tau = igmnParams(1); 
-options.delta = igmnParams(2);
-options.spMin = int32(igmnParams(3));
-options.vMin = int32(igmnParams(4));
-options.regValue = igmnParams(5);
-
-range = dataCache{3};
-
-net = igmn(range, options);
-
-tic;
-if useMex
-    net = train_mex(net, trainData);
-    [outputs, gridProbabilities] = predict_mex(net, testData, outputVars, discretizationSize);
-else
-    net = train(net, trainData); %#ok<*UNRCH>
-    [outputs, gridProbabilities] = predict(net, testData, outputVars, discretizationSize);
-end
-toc;
-
-if normalize
-    outputs = denormalizeData(outputs, minMaxProportion, outputVars);
-end
-
-gridDomainProbabilities = computeDomainProbabilities(gridProbabilities, outputVars, discretizationSize);
-
-% Do some plots
-
-probabilities = cell(1, O);
-for i = 1:O; probabilities{i} = squeeze(gridDomainProbabilities(i, :, :)); end
-
-outputsDomain = cell(1, O);
-for i = 1:O
-    interval = variableRanges(:, outputVars(i));
-    outputsDomain{i} = linspace(interval(1), interval(2), discretizationSize);
+if problem.UseMex
+    compile(problem.CompileOptions);
+    optimize = @optimize_mex;
+    igmn = @igmnBuilder_mex;
+    train = @train_mex;
+    predict = @predict_mex;
 end
 
-legends = cell(1, O);
-for i = 1:O
+legends = cell(1, numberOfOutputVars);
+for i = 1:numberOfOutputVars
     variablenName = variableNames{outputVars(i)};
     legends{i} = {
         '', ... % Confidence Interval?
@@ -181,14 +123,53 @@ for i = 1:O
     };
 end
 
-xlabels = cell(1, O);
-for i = 1:O; xlabels{i} = sprintf('%s (v/v)', legends{i}{2}); end
+xlabels = cell(1, numberOfOutputVars);
+for i = 1:numberOfOutputVars; xlabels{i} = legends{i}{2}; end
+
+%% Do IGMN optinmization (find good hyperparameters)
+igmnOptions = problem.DefaultIgmnOptions;
+if problem.DoParametersTuning
+    tic;
+    igmnOptions = optimize(problem);
+    toc;
+    igmnOptions.MaxNc = size(trainData, 1) + 1;
+    % Plot otimization results
+    legendsTrain = cell(1, numberOfOutputVars);
+    for i = 1:numberOfOutputVars
+        variablenName = variableNames{outputVars(i)};
+        legendsTrain{i} = {variablenName,  sprintf('%s Pred.', variablenName)};
+    end
+    plotOptimizationResults(trainData, inputVars, outputVars, igmnOptions, ...
+        problem.UseMex, legendsTrain, xlabels, minMaxProportion, 'toy_train_results');
+end
+
+% Testing & do some plots
+net = igmn(igmnOptions);
+tic;
+net = train(net, trainData); %#ok<*UNRCH>
+toc;
+tic;
+[outputs, gridProbabilities] = predict(net, inputs, outputVars, discretizationSize);
+toc;
+
+if normalize; outputs = denormalizeData(outputs, minMaxProportion, outputVars); end
+gridDomainProbabilities = computeDomainProbabilities(gridProbabilities, outputVars, discretizationSize);
+probabilities = cell(1, numberOfOutputVars);
+for i = 1:numberOfOutputVars; probabilities{i} = squeeze(gridDomainProbabilities(i, :, :)); end
+
+% variableRanges = horzcat([min(wellData(:, inputVars)); max(wellData(:, inputVars))], [0 0.4; 0, 0.8; 0, 1]');
+variableRanges = horzcat([min([modelData; wellData(:, 2:end)]); max([modelData; wellData(:, 2:end)])]);
+outputsDomain = cell(1, numberOfOutputVars);
+for i = 1:numberOfOutputVars
+    interval = variableRanges(:, outputVars(i));
+    outputsDomain{i} = linspace(interval(1), interval(2), discretizationSize);
+end
 
 plotResults(targets, outputs, xlabels, depth, facies, legends, ...
-    outputVars, variableRanges, variableNames, outputsDomain, probabilities, 'IGMN Inversion');
+    outputVars, variableRanges, variableNames, outputsDomain, probabilities, 'IGMN Inversion', 'toy_predict_results');
 
 %% Compare with RockPhysicsKDEInversion
-[outputs, probabilities, outputsDomain] = kdeInversion(modelData, wellData);
-plotResults(targets, outputs, xlabels, depth, facies, legends, ...
-        outputVars, variableRanges, variableNames, outputsDomain, probabilities, 'KDE Inversion');
+% [outputs, probabilities, outputsDomain] = kdeInversion(modelData, wellData(:, 2:end));
+% plotResults(targets, outputs, xlabels, depth, facies, legends, ...
+%         outputVars, variableRanges, variableNames, outputsDomain, probabilities, 'KDE Inversion');
 

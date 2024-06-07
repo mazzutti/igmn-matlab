@@ -30,19 +30,27 @@ function [h] = plotNet(net, varargin)
     
     addOptional(parser, 'sd', 1);
     addOptional(parser, 'npts', []);
-    addOptional(parser, 'ax', gca, checkAx);
+    addOptional(parser, 'ax', [], checkAx);
     
     parse(parser, varargin{:});
     
     sd = parser.Results.sd;
     npts = parser.Results.npts;
     ax = parser.Results.ax;
+
+    if isempty(ax)
+       figure; ax = gca;
+    end
     
     set(ax, 'nextplot', 'add');
     
     for i = 1:net.nc
         mean = net.means(i, :);
-        cov = net.covs(:, :, i)';
+        if net.useRankOne
+            cov = inv(net.invCovs(:, :, i))'; 
+        else 
+            cov = net.covs(:, :, i)'; 
+        end
         switch numel(mean)
             case 2, h = show2d(mean, cov, sd, npts, ax);
             case 3, h = show3d(mean, cov, sd, npts, ax);
@@ -52,7 +60,6 @@ function [h] = plotNet(net, varargin)
     end
     if nargout == 0, clear h; end
 end
-
 
 function h = show2d(mean, cov, sd, npts, ax)
     if isempty(npts), npts = 50; end

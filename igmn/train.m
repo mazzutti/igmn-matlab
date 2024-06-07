@@ -10,7 +10,10 @@ function  net = train(net, X) %#codegen
             mustBeNonempty ...
         };
     end
-    for i = 1:size(X, 1)
+    N = size(X, 1);
+
+    for i = 1:N
         net = learn(net, X(i, :));
+        if ~net.converged; return; end
     end
 end

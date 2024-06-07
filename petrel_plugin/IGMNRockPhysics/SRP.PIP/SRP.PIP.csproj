@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--ProjectType:PIPBuilder-->
+  <PropertyGroup>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C0275EE4-FD0D-45B3-AD2C-36303B6F6716}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SRP.PIP</RootNamespace>
+    <AssemblyName>SRP.PIP</AssemblyName>
+  </PropertyGroup>
+  <Import Project="..\Targets\LTrace.Ocean.targets" />
+  <ItemGroup>
+    <None Include="Readme.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="Build">
+    <Exec Command="$(PreBuildEvent)" />
+    <Exec Command="$(PostBuildEvent)" />
+  </Target>
+  <Target Name="Rebuild">
+    <Exec Command="$(PreBuildEvent)" />
+    <Exec Command="$(PostBuildEvent)" />
+  </Target>
+  
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+  
+   <PreBuildEvent>
+   
+
+		if $(UseOceanPluginManager) == true (
+        if exist "$(ProjectDir)\obj\copytemp" rmdir "$(ProjectDir)\obj\copytemp" /s /q
+		if exist "$(ProjectDir)\obj\DeployList-temp.xml" del "$(ProjectDir)\obj\DeployList-temp.xml"
+		
+		"$(ProjectDir)\DeployFolderToPIP.exe" --sourceXml="$(ProjectDir)DeployList-Petrel$(OceanVersion).xml" --outputXml="$(ProjectDir)\DeployList-temp.xml"
+		
+		"$(ProjectDir)DeployCopier.exe" "$(ProjectDir)\DeployList-temp.xml" "$(ProjectDir)\obj\copytemp"
+	
+		)
+		
+	</PreBuildEvent>
+	
+    <PostBuildEvent>
+	
+	
+	"$(OceanHome)\PluginPackager.exe" /p "$(ProjectDir)\obj\copytemp\OceanLayer.dll" "$(TargetDir)$(TargetName)-Petrel$(OceanVersion).pip" "$(OceanHome)\petrel.exe" 
+
+	</PostBuildEvent>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Folder Include="Python311\" />
+  </ItemGroup>
+
+</Project>

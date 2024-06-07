@@ -1,59 +1,67 @@
-function plotOptimizationResults(dataCache, igmnParams, ...
-    inputVars, outputVars, depth, legends, useMex, minMaxProportion)
+function plotOptimizationResults(trainData, inputVars, outputVars, ...
+    igmnOptions, useMex, legends, xlabels, minMaxProportion, exportFileName)
 
+    inputs =  trainData(:, inputVars);
+    targets = trainData(:, outputVars);
     O = length(outputVars);
 
-    colors = distinguishableColors(2*O);
-    colororder(colors);
+    colormap('jet');
 
-    trainData = dataCache{1};
-    wellData = dataCache{2};
-    range = dataCache{3};
-    targets = dataCache{4};
-    testData = wellData(:, inputVars);
-
-    options = {}; 
-    options.tau = igmnParams(1); 
-    options.delta = igmnParams(2);
-    options.spMin = int32(igmnParams(3));
-    options.vMin = int32(igmnParams(4));
-    options.regValue = igmnParams(5);
-    
-    net = igmn(range, options);
     if useMex
-        net = train_mex(net, trainData);
-        outputs = predict_mex(net, testData, outputVars, 0);
+        igmn = @igmnBuilder_mex;
+        train = @train_mex;
+        predict = @predict_mex;
     else
-        net = train(net, trainData);
-        outputs = predict(net, testData, outputVars);
+        igmn = @igmn;
+        train = @train;
+        predict = @predict;
     end
-    if nargin == 8
+    
+    net = igmn(igmnOptions);
+    net = train(net, trainData);
+    outputs = predict(net, inputs, outputVars, 0);
+
+    if  ~isempty(minMaxProportion)
         outputs = denormalizeData(outputs, minMaxProportion, outputVars);
     end
     
     legendNames = horzcat(legends{:});
-    wellFig = figure('NumberTitle', 'off', 'Name', ...
-    sprintf('%s x %s | %s x %s | %s x %s', legendNames{:}));
-
-    axes('Units', 'normalized', 'Position', [0 0 1 1]);
-    
+    figure;
+    wellFig = tiledlayout('horizontal', 'Padding', 'none', 'TileSpacing', 'tight');
+    wellFig.Parent.Name = sprintf('%s x %s | %s x %s | %s x %s', legendNames{:});
+    depth = 1:size(targets, 1);
     for i = 1:O
-        subplot(1, O, i, 'Parent', wellFig);
+        ax = nexttile;
+        ax.FontSize = 10;
         hold on;
-        plot(targets(:, i), depth, 'LineWidth', 0.1, 'Color', colors(i, :));
-        plot(outputs(:, i), depth, 'LineWidth', 0.1, 'Color', colors(i + O, :));
-        legend(legends{i}{:})
+        plot(targets(:, i), depth, 'LineWidth', 0.5);
+        xlabel(xlabels{i}, 'FontSize', 10);
+        plot(outputs(:, i), depth, 'LineWidth', 1);
+        legend(legends{i}{:}, 'FontSize', 10, 'Location','southoutside');
+        set(ax, 'YDir','reverse');
+        set(ax, 'YTick', [])
         hold off;
     end
+
+    pos = wellFig.Parent.Position;
+    wellFig.Parent.Position = [pos(1), pos(2)/1.5, pos(3)*1.1, pos(4)*1.5];
     
     regressionEntries = cell(1, 3 * O);
     for i = 1:O
         index = (i - 1) * O + 1; 
         regressionEntries{index} = targets(:, i);
         regressionEntries{index + 1} = outputs(:, i);
-        regressionEntries{index + 2} = sprintf('%s x %s - Regression', legends{i}{:});
+        regressionEntries{index + 2} = sprintf('%s Prediction', legends{i}{1});
     end
-    figure('Name', sprintf('%Regressions: s x %s | %s x %s | %s x %s', legendNames{:}));
+    f = figure('Name', sprintf('%Regressions: s x %s | %s x %s | %s x %s', legendNames{:}));
     plotregression(regressionEntries{:});
+    f.Children(3).Children(1).Marker = '.';
+    f.Children(5).Children(1).Marker = '.';
+    f.Children(7).Children(1).Marker = '.';
+
+    if exist("exportFileName", 'var')
+        exportgraphics(f, sprintf('%s_regression.pdf', exportFileName), 'BackgroundColor', 'none', 'Resolution', 300)
+        exportgraphics(wellFig, sprintf('%s.pdf', exportFileName), 'BackgroundColor', 'none', 'Resolution', 1000)
+    end
 end
 

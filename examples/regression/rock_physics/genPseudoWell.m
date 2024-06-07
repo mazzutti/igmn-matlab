@@ -1,18 +1,32 @@
-function [modelData, wellData] = genPseudoWell(...
-    dataPath, nSim, stdVp, stdVs, stdRho, stdPhi, stdClay, stdSw, useFacies, showPlots)
+function [modelData, wellData] = genPseudoWell(nSim, useFacies, showPlots, exportPlots)
+
+
+    % Synthetic data configs
+    dataPath = 'data/pseudowell_2856667402688.las';
+    inputsStdMultiplyier = 5;
+    stdVp = 100 * inputsStdMultiplyier;
+    stdVs = 50 * inputsStdMultiplyier;
+    stdRho = 0.05 * inputsStdMultiplyier;
+   
+    
+    outputsStdMultiplyier = 0;
+    stdPhi = 0.01 * outputsStdMultiplyier;
+    stdClay = 0.01 * outputsStdMultiplyier;
+    stdSw = 0.01 * outputsStdMultiplyier;
+    
     well = read_las_file(dataPath);
 
-    Depth = well.curves(:,1);
-    facies = well.curves(:,2);
-    Phi = well.curves(:,3); Phi(Phi<=0.001) = 0.001;
-    v_clay = well.curves(:,5); v_clay(v_clay <=0.001) = 0.001;
-    sw = well.curves(:,4); sw (sw <=0.001) = 0.001;
+    Depth = well.curves(:, 1);
+    facies = well.curves(:, 2);
+    Phi = well.curves(:, 3); Phi(Phi <= 0.001) = 0.001;
+    v_clay = well.curves(:, 5); v_clay(v_clay <= 0.001) = 0.001;
+    sw = well.curves(:, 4); sw (sw <= 0.001) = 0.001;
 
     correlation_function = construct_correlation_function_beta(30, 1, Phi, 2);
 
-    Phi = Phi + stdPhi*FFT_MA_3D(correlation_function, randn(size(Phi)));
-    v_clay = v_clay + stdClay*FFT_MA_3D(correlation_function, randn(size(v_clay)));
-    sw = sw + stdSw*FFT_MA_3D(correlation_function, randn(size(sw)));
+    Phi = Phi + stdPhi * FFT_MA_3D(correlation_function, randn(size(Phi)));
+    v_clay = v_clay + stdClay * FFT_MA_3D(correlation_function, randn(size(v_clay)));
+    sw = sw + stdSw  *FFT_MA_3D(correlation_function, randn(size(sw)));
 
     Phi(Phi <= 0.001) = 0.001;
     v_clay(v_clay <= 0.001) = 0.001;
@@ -23,29 +37,49 @@ function [modelData, wellData] = genPseudoWell(...
     sw (sw >= 1) = 0.99;
     
     [Vp, Vs, Rho] = RPM(Phi ,v_clay, sw); 
-    Vp = 1000*Vp; 
-    Vs = 1000*Vs;
+    Vp = 1000 * Vp; 
+    Vs = 1000 * Vs;
     
-    Vp = Vp + stdVp*FFT_MA_3D(correlation_function, randn(size(Vp)));
-    Vs = Vs + stdVs*FFT_MA_3D(correlation_function, randn(size(Vp)));
-    Rho = Rho + stdRho*FFT_MA_3D(correlation_function, randn(size(Vp)));
+    Vp = Vp + stdVp * FFT_MA_3D(correlation_function, randn(size(Vp)));
+    Vs = Vs + stdVs * FFT_MA_3D(correlation_function, randn(size(Vp)));
+    Rho = Rho + stdRho * FFT_MA_3D(correlation_function, randn(size(Vp)));
 
     
     if showPlots
+        colormap('jet');
+        f = tiledlayout('horizontal', 'Padding', 'none', 'TileSpacing', 'tight');
         AI = Vp.*Rho;
-        figure
-        subplot(131)
-        scatter(Phi, Vp, 25, facies);
-        subplot(132)
-        scatter(AI, Vp./Vs, 25, sw);
-        subplot(133)
-        scatter(v_clay, Rho, 25, facies);
-
-        figure
-        subplot(121)
+        nexttile;
+        gscatter(Phi, Vp, facies, [], '+');
+        xlabel('Porosity'); ylabel('Vp');
+        legend('Facie I', 'Facie II', 'Facie III');
+        nexttile;
+        gscatter(AI, Vp./Vs, clusterdata(sw, 2), [], '+');
+        xlabel('AI'); ylabel('Vp/Vs');
+        legend('Water Sat. I', 'Water Sat. II');
+        nexttile;
+        gscatter(v_clay, Rho, facies, [], '+');
+        xlabel('Clay Vol.'); ylabel('Rho');
+        legend('Facie I', 'Facie II', 'Facie III');
+        
+        if exportPlots
+            exportgraphics(f, 'toy_welldata.pdf', 'BackgroundColor', 'none', 'Resolution', 1000);
+        end
+        figure;
+        f = tiledlayout('horizontal', 'Padding', 'none', 'TileSpacing', 'tight');
+        nexttile;
         plot_histogram(AI, facies);
-        subplot(122)
+        legend('Facie I', 'Facie II', 'Facie III');
+        xlabel('AI');
+        title('');
+        nexttile;
         plot_histogram(Vp./Vs, facies);
+        legend('Facie I', 'Facie II', 'Facie III');
+        xlabel('Vp/Vs');
+        title('');
+        if exportPlots
+            exportgraphics(f, 'toy_welldata_histogram.pdf', 'BackgroundColor', 'none', 'Resolution', 1000)
+        end
     end
 
     %% PRIOR SAMPLING

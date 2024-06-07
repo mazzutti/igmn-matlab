@@ -1,10 +1,18 @@
-classdef igmn
+classdef igmn %#codegen
 
     properties (Constant)
-        eta = realmin('double');
+        minimum = double(realmin('single'));
+        maximum = double(realmax('single'));
         minTau = 1.0e-5;
         defaultTau = 0.1;
         defaultDelta = 0.01;
+        defaultGamma = 1;
+        defaultPhi = 0.35;
+        defaultSPMin = 3;
+        defaultVMin = 4;
+        defaultRegValue = 0;
+        defaultMaxNc = 100;
+        defaultUseRankOne = 0;
     end
     
     properties
@@ -13,13 +21,19 @@ classdef igmn
         dimension;
         maxDistance;
         initialCov;
-        minCov;  
+        initialInvCov;
+        initialLogDet;
+
+        minCov;
+        useRankOne;
 
         %% Configuration params
         range;
         nc;
-        sampleSize;
+        maxNc;
         delta;
+        gamma;
+        phi;
         tau;
         spMin;
         vMin;
@@ -28,78 +42,76 @@ classdef igmn
         priors;
         means;
         covs;
-        sps;
+        invCovs;
+        logDets;
+        sp;
+        spu;
         vs;
 
         % Mahalanobis distance
         distances;
 
-        % components outputs
+        % Components outputs
         logLikes;
         posteriors;
+
+        % sample seen
+        numSamples;
+
+        converged;
     end
 
     methods
     
         %Constructor
-        function self = igmn(range, options) %#codegen
-            % IGMN Incremental Gaussian Mixture Network.
+        function self = igmn(options) %#codegen
+            % IGMN Incremental Gaussian Mixture Network Builder.
             %
             % Inputs:
-            %   range:       This is the only mandatory parameter in this 
-            %                method.This parameter represents the data 
-            %                range, i.e., [min(data), max(data)].
-            %   tau:         The tau is a are threshold which inform 
-            %                IGMN when to create new components. When a 
-            %                new input pattern is presented to this model, 
-            %                the likelihood  relative to the input and all 
-            %                components is computed. A given component can 
-            %                "absorbs" the input if it represents well 
-            %                enough the pattern,  i.e., if its likelihood 
-            %                is greater than tau. 
-            %   delta:       The delta parameter is a fraction of the data 
-            %                range which will be used to create the initial 
-            %                covariance matrices. In a practical view, this 
-            %                parameter defines the size of the distributions.
-            %   spMin|vMin:  The spMin and vMin parameters are used to 
-            %                remove noisy components. When a new input 
-            %                pattern is presented to the model, it verifies 
-            %                if some component is older than vMin and have 
-            %                less activation than spMin, if it is the case, 
-            %                the component is removed.
+            %   options: The igmn options as described in igmnoptions. 
             %
             % Output:
-            %   self:        The IGMN handle for the new instance.
+            %   self:    The IGMN handle for the new instance.
             arguments
-                range (2,:) {mustBeNumeric, mustBeNonempty};
-                options struct = struct();
+                options (1, 1) {mustBeA(options, 'igmnoptions')};
             end
-            self.range = range;
-            self.dimension = int32(size(self.range, 2));
-            defaults = struct(...                     
-                'tau', igmn.defaultTau, ...
-                'delta', igmn.defaultDelta, ...
-                'spMin', 2 * int32(self.dimension), ...
-                'vMin', int32(self.dimension  + 1), ...
-                'regValue', 0);
-            options = mergeOptions(defaults, options);
-            self.nc = int32(0);
-            self.sampleSize = int32(0);
-            self.vMin = options.vMin;
-            self.spMin = options.spMin;
-            self.tau = options.tau;
-            self.delta = options.delta;
-            self.initialCov = diag((self.delta * (self.range(2, :) - self.range(1, :))) .^ 2);
+            self.range = options.range;
+            self.dimension = size(self.range, 2);
+            self.nc = 0;
+            self.maxNc = options.MaxNc;
+            self.vMin = options.VMin;
+            self.spMin = options.SPMin;
+            self.tau = options.Tau;
+            self.phi = options.Phi;
+            self.delta = options.Delta;
+            self.gamma = options.Gamma;
+            self.useRankOne = logical(options.UseRankOne);
+            sigma = ((self.delta * (self.range(2, :) - self.range(1, :))) .^ 2);
+            self.initialCov = diag(sigma);
+            self.initialInvCov = diag(1.0 ./ sigma);
+            self.initialLogDet = prod(sigma);
             self.maxDistance = chi2inv(1 - self.tau, double(self.dimension));
-            self.minCov = eye(self.dimension) * (igmn.eta + options.regValue);
-            self.covs = [];
-            self.means = [];
-            self.priors = [];
-            self.sps = [];
-            self.vs = [];
-            self.distances = [];
-            self.logLikes = [];
-            self.posteriors = [];
+            minSigma = igmn.minimum + options.RegValue;
+            self.minCov = eye(self.dimension) * minSigma;
+            self.numSamples = 0;
+            self.converged = true;
+
+            % to make coder happy.
+            self.means = 1; self.priors = 1; self.covs = 1; self.invCovs = 1;
+            self.logDets = 1; self.sp = 1; self.spu = 1; self.vs = 1; 
+            self.distances = 1; self.posteriors = 1;  self.logLikes = 1;
+
+            self.covs = zeros(0, 0, 0);
+            self.invCovs = zeros(0, 0, 0);
+            self.logDets = zeros(0, 0);
+            self.means = zeros(0, 0);
+            self.priors = zeros(1, 0);
+            self.sp = zeros(1, 0);
+            self.spu = zeros(1, 0);
+            self.vs = zeros(1, 0);
+            self.distances = zeros(1, 0);
+            self.logLikes = zeros(1, 0);
+            self.posteriors = zeros(1, 0);
         end
     end
 end

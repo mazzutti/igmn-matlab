@@ -1,67 +1,92 @@
-function [trainData, testData, fullData] = ...
-        genSyntheticData(data, opts, ignoredVars, nSimTrain, nSimTest)
+function [trainData, testData, allData] = genSyntheticData(data, opts, vars, nSimTrain, nSimTest)
+
+    warning('off', 'stats:cvpartition:HOTrainingZero');
+    warning('off', 'stats:cvpartition:HOTestZero');
     
-    %% Split data by the cartesian product of the categorical variables
-    data = removevars(data, ignoredVars);
-    categoricalVarIndexes = strcmp(opts.VariableTypes(1:end-1), 'categorical');
-    categoricalVarIndexes(ismember(opts.VariableNames, ignoredVars)) = [];
+    data = data(:, vars);
+    data = data(randperm(size(data, 1)), :);
+    categoricalVarIndexes = strcmp(opts.VariableTypes, 'categorical');
     categoricalVarNames = opts.VariableNames(categoricalVarIndexes);
-    V = length(categoricalVarNames);
+    categoricals = data.Properties.VariableNames(ismember(data.Properties.VariableNames, categoricalVarNames));
+    V = length(categoricals);
     for i = 1:V
-        varName = categoricalVarNames{i};    
+        varName = categoricals{i};    
         data.(varName) = grp2idx(categorical(data.(varName)));
     end
-    classVar = opts.VariableNames{end};
+    classVar = categoricals{end};
     uniqueClasses = unique(data.(classVar));
     C = length(uniqueClasses);
-    subSets = cell(1, C);
-    class2OneHot = onehotencode(categorical(data.(classVar)), 2);
-    for i = 1:C
-        indexes = data.(classVar) == uniqueClasses(i);
-        subSets{i} = [table2array(data(indexes, 1:end-1)) class2OneHot(indexes, :)];
-    end
-  
-    
-    %% Gen the synthetic train and test data
-    
-    models = genSynthModels(subSets);
-    trainData = genSynthData(models, nSimTrain, subSets);
-    testData = genSynthData(models, nSimTest, subSets);
-    fullData = vertcat(subSets{:});
+    class2OneHot = onehotencode(categorical(data.(classVar)), C);
+    categoricalVars = ismember(vars, categoricals);
 
-    noise = 0.02;
-    trainData = addNoise(trainData, noise, categoricalVarIndexes);
-    testData = addNoise(testData, noise, categoricalVarIndexes);
-end
+    data = table2array(data);
+    p = data(:, 1:end-1);
+    % 
+    % p = gaussianize2(p);
+    % save("gaussianized_data_all_vars.mat", "p");
+    % load('gaussianized_data_all_vars.mat');
 
-function models = genSynthModels(subSets)
-    S = length(subSets);
-    models = cell(1, S);
-    for i = 1:S
-        subset = subSets{i};
-        models{i} = fitgmdist(subset(:, 1:end-2), 2 * size(subset, 2) - 2, ...
-            'RegularizationValue', 0.01,  'Options', statset(...
-                'Display','final','MaxIter', 1500, 'TolFun', 1e-5));
-    end
-end
+    p(:, ~categoricalVars) = gaussianize(p(:, ~categoricalVars));
 
-function synthData = genSynthData(models, nSim, subSets)
-    S = length(models);
-    N = size(subSets{1}, 2);
-    synthData = zeros(nSim * S, N);
-    for i = 1:S
-        rows = (i - 1) * nSim + 1:i * nSim;
-        subSet = subSets{i};
-        synthData(rows, 1:N-2) = random(models{i}, nSim);
-        synthData(rows, N-1:end) = repmat(subSet(1, N-1:end), nSim, 1);
-    end
-end
+    allData = [p, class2OneHot];
 
-function data = addNoise(data, noise, categoricalVarIndexes)
-    [N, M] = size(data);
-    for i = 1: M-2
-        if 	~ismember(i, categoricalVarIndexes)
-            data(:, i) = data(:, i) + noise*std(data(:, i)) * randn(N, 1);
+    categoricalData = data(:, categoricalVars);
+    catDataCells = arrayfun(@(c) categoricalData(:, c), 1:size(categoricalData, 2), 'UniformOutput', false);
+    groups = findgroups(catDataCells{:});
+
+   
+    counts = groupcounts(groups);
+    threshold = round(length(counts)/2);
+    % threshold = 4;
+    oversampledData = [];
+    oversampledClass2OneHot = [];
+    for i = 1:length(counts)
+        c = counts(i);
+        if c < threshold
+            if c == 1
+                oversampledData = [oversampledData; repmat(p(groups == i, :)', 1, threshold-c)']; %#ok<*AGROW>
+                oversampledClass2OneHot = [oversampledClass2OneHot; repmat(class2OneHot(groups == i, :)', 1, threshold-c)'];
+            else
+                [inputs, idx] = datasample(p(groups == i, :)', threshold - c, 2);
+                targets = class2OneHot(groups == i, :);
+                oversampledData = [oversampledData; inputs']; %#ok<*AGROW>
+                oversampledClass2OneHot = [oversampledClass2OneHot; targets(idx, :)];
+            end
         end
     end
-end
+
+    oversampledData = [p; oversampledData];
+    oversampledClass2OneHot = [class2OneHot; oversampledClass2OneHot];
+    oversampledData = [oversampledData, oversampledClass2OneHot];
+    oversampledData = oversampledData(randperm(size(oversampledData, 1)), :);
+
+    % oversampledData = [p, class2OneHot];
+
+    categoricalData = oversampledData(:, categoricalVars);
+    catDataCells = arrayfun(@(c) categoricalData(:, c), 1:size(categoricalData, 2), 'UniformOutput', false);
+    groups = findgroups(catDataCells{:});
+
+    numTrainSamples = round(size(groups, 1) * 0.8);
+
+    trainPartition = cvpartition(groups, 'HoldOut', numTrainSamples, 'Stratify', true);
+    trainIndexes = test(trainPartition);
+    testIndexes = training(trainPartition);
+    
+    trainData = oversampledData(trainIndexes, :);
+    testData = oversampledData(testIndexes, :);
+
+    categoricalData = trainData(:, categoricalVars);
+    catDataCells = arrayfun(@(c) categoricalData(:, c), 1:size(categoricalData, 2), 'UniformOutput', false);
+    groups = findgroups(catDataCells{:});
+
+    trainPartition = cvpartition(groups, 'HoldOut', nSimTrain, 'Stratify', true);
+    trainData = trainData(test(trainPartition), :);
+
+    categoricalData = testData(:, categoricalVars);
+    catDataCells = arrayfun(@(c) categoricalData(:, c), 1:size(categoricalData, 2), 'UniformOutput', false);
+    groups = findgroups(catDataCells{:});
+
+    testPartition = cvpartition(groups, 'HoldOut', nSimTest, 'Stratify', true);
+    testData = testData(test(testPartition), :);
+
+end 

@@ -1,0 +1,30 @@
+﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <BuildConfiguration Condition=" '$(Configuration)' == 'Ocean2020.1-Debug' ">Debug</BuildConfiguration>
+        <OceanVersion Condition=" '$(Configuration)' == 'Ocean2020.1-Debug' ">2020.1</OceanVersion>
+        <BuildConfiguration Condition=" '$(Configuration)' == 'Ocean2020.1-Release' ">Release</BuildConfiguration>
+        <OceanVersion Condition=" '$(Configuration)' == 'Ocean2020.1-Release' ">2020.1</OceanVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(OceanVersion)' == '2020.1'">
+        <TargetFrameworkVersion>4.7.2</TargetFrameworkVersion>
+        <UseOceanPluginManager>true</UseOceanPluginManager>
+        <OceanHome>$(Ocean2020Home)</OceanHome>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2020.1-Release|x64'">
+        <DefineConstants>TRACE;OCEAN2020</DefineConstants>
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2020.1-Release|x86'">
+        <DefineConstants>TRACE;OCEAN2020</DefineConstants>
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2020.1-Debug|x64'">
+        <DebugSymbols>true</DebugSymbols>
+        <DefineConstants>TRACE;DEBUG;OCEAN2020</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2020.1-Debug|x86'">
+        <DebugSymbols>true</DebugSymbols>
+        <DefineConstants>TRACE;DEBUG;OCEAN2020</DefineConstants>
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+</Project>

@@ -11,18 +11,19 @@ function net = learn(net, x) %#codegen
             mustBeNDimensional(net, x) ...
         };
     end
-    net = computeLikelihood(net, x);
-    if sum(net.distances <= net.maxDistance)
-        net = update(net, x);
-    else
-        net = createComponent(net, x); 
-        net = update(net, x);
+    coder.inline('always');
+    net = computeProbDensities(net, x);
+    if isempty(net.distances) || all(net.distances > net.maxDistance, 'all')
+        net = addComponent(net, x); 
     end
+    net = update(net, x);
 end
+	
 
 function net = update(net, x) %#codegen
-    net = computePosterior(net);
+    coder.inline('always');
+    net = computePosteriors(net);
     net = updateComponents(net, x);
-    net = removeSpurious(net);
-    net.sampleSize = net.sampleSize + int32(1);
+    net = pruneComponents(net);
+    net.numSamples = net.numSamples + 1;
 end

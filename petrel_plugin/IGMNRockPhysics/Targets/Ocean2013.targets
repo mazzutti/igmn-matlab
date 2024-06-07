@@ -1,0 +1,30 @@
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <BuildConfiguration Condition=" '$(Configuration)' == 'Ocean2013.1-Debug' ">Debug</BuildConfiguration>
+    <OceanVersion Condition=" '$(Configuration)' == 'Ocean2013.1-Debug' ">2013.1</OceanVersion>
+    <BuildConfiguration Condition=" '$(Configuration)' == 'Ocean2013.1-Release' ">Release</BuildConfiguration>
+    <OceanVersion Condition=" '$(Configuration)' == 'Ocean2013.1-Release' ">2013.1</OceanVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(OceanVersion)' == '2016.1'">
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseOceanPluginManager>false</UseOceanPluginManager>
+    <OceanHome>$(Ocean2013Home)</OceanHome>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2013.1-Release|x64'">
+    <DefineConstants>TRACE;OCEAN2014</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2013.1-Release|x86'">
+    <DefineConstants>TRACE;OCEAN2014</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2013.1-Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>TRACE;DEBUG;OCEAN2014</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ocean2013.1-Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>TRACE;DEBUG;OCEAN2014</DefineConstants>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+</Project>

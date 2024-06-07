@@ -5,146 +5,113 @@ clear all; %#ok<CLALL>
 close all;
 clc;
 
+rng('default');
+rng(42);
+
 %% Add some external dependencies
 addpath('../../../igmn');
 
-%% Options
-
-genSynthData = false;
-nSimTrain = 20000;
-nSimTest = 10000;
-
-% ignoredVars = {
-%     'Protocol', 'Service', 'Connection_Flag', 'Urgent', ...
-%     'Land', 'Wrong', 'SourceToDestPkts', 'DestToSourcePkts', ...
-%     'CountSameService', 'Serror_rate', 'Diff_srv_rate', ...
-%     'Diff_srv_rate', 'Same_src_port_rate', 'Srv_diff_host_rate', ...
-%     'Srv_serror_rate' ...
+% vars = {
+%     'Duration', 'Protocol', 'Service', 'Connection_Flag', 'SourceToDest', ...
+%     'DestToSource', 'STTL', 'DTTL', 'SourceToDestPkts', ...
+%     'DestToSourcePkts', 'CountSameHost', 'CountSameService', 'Serror_rate', ...
+%     'Srv_serror_rate', 'Same_srv_rate', 'Diff_srv_rate', 'Srv_diff_host_rate', ... 
+%     'Count', 'Srv_count', 'Same_srv_rate1', 'Diff_srv_rate1', 'Same_src_port_rate', ....
+%     'Srv_diff_host_rate1', 'Serror_rate1', 'Srv_serror_rate1', 'Class'
 % };
 
-% ignoredVars = {
-%     'Connection_Flag', 'Urgent',  'Land', 'Wrong', 'SourceToDestPkts', ...
-%     'DestToSourcePkts',  'CountSameService', 'Serror_rate', ...
-%     'Diff_srv_rate',  'Diff_srv_rate', 'Same_src_port_rate', ...
-%     'Srv_diff_host_rate', 'Srv_serror_rate' ...
-% };
-
-ignoredVars = {
-    'Land', 'Wrong'
+vars = {
+    'Count', 'CountSameHost', 'DestToSource', 'SourceToDest', 'DestToSourcePkts', ...
+    'CountSameService', 'SourceToDestPkts', 'Srv_diff_host_rate1', 'Srv_count',	...
+    'Diff_srv_rate1', 'DTTL', 'Same_srv_rate', 'Service', 'Protocol', 'Duration', 'Class'
 };
 
-lb = [
-    1.0e-9, ...       % min tau
-    1.0e-9, ...       % min delta
-    3, ...            % min spMin
-    4, ...            % min vMin
-    0 ...             % min regValue
-];
-ub = [
-    1.0 - lb(1), ...  % max tau
-    1.0 - lb(2) ...   % max delta 
-    4, ...            % max spMin
-    10, ...           % max vMin
-    1.0e-4, ...       % max regValue
-];
-
-algorithm = "particleswarm"; % "particleswarm" | "ga" | "patternsearch"
-
-% Compile Options
-useMex = true;
-options = {};
-options.isClassifyProblem = true;
-
-% Model Options
+genSynthData = true;
 normalize = true;
-doOptimization = true;
+N = 4075951;
+nSimTrain = round(N * 0.8);
+nSimTest = N - nSimTrain; 
 
-% IGMN default hyperparameters
-igmnParams = [
-    0.05, ... % tau 
-    0.66, ... % delta
-    2, ...    % spMin
-    14, ...   % vMin
-    2e-6      % regValue            
-]; 
+% nSimTrain = 2000;
+% nSimTest = 1000;
+maxNc = 20;
 
 if genSynthData 
     [data, opts] = loadData('data/tagged_data.csv');
-    [trainData, testData, fullData] = ...
-        genSyntheticData(data, opts, ignoredVars, nSimTrain, nSimTest);
-    save('data/synthData.mat', 'trainData', 'testData', 'fullData');
+    [trainData, testData, allData] = ...
+        genSyntheticData(data, opts, vars, nSimTrain, nSimTest);
+    save('data/synthData.mat', 'trainData', 'testData', 'allData');
 else
     load('data/synthData.mat');
 end
 
-I = size(fullData, 2) - 2;
-O = 2;
-
-inputVars = 1:I;
-outputVars = I+1:I+O;
-
-if useMex && (~exist('train_mex', 'file') || ~exist('classify_mex', 'file'))
-    compile(I + O, outputVars, options); 
-end
-
 if normalize
-    [normalizedFullData, minMaxProportion] = normalizeData(fullData);
-    range = [min(normalizedFullData); max(normalizedFullData)];
+    [allData, minMaxProportion] = normalizeData(allData);
     trainData = normalizeData(trainData, minMaxProportion);
     testData = normalizeData(testData, minMaxProportion);
-    dataCache = {trainData, testData, range, normalizedFullData};
+end
+
+% testData = allData;
+
+nvars = length(vars) + 1;
+numberOfOutputVars = 2;
+problem = Problem( ...
+    trainData, ...
+    testData, ...
+    'InputVarIndexes', 1:nvars - numberOfOutputVars, ...
+    'OutputVarIndexes', nvars - 1:nvars, ...
+    'AllData', allData, ...
+    'UseMex', true, ...
+    'DoParametersTuning', true, ...
+    'CompileOptions', compileoptions(...
+        size(trainData, 1), size(testData, 1), size(allData, 1), ...
+        'MaxNc', maxNc, ...
+        'EnableRecompile', true, ...
+        'IsOptimization', true, ...
+        'IsClassification', true, ...
+        'NumberOfVariables', nvars, ...
+        'NumberOfOutputVars', numberOfOutputVars));
+
+problem.OptimizeOptions.UseDefaultsFor = {'MaxNc'}; %, 'VMin', }; % 'Delta', 'Gamma', 'Phi', 'VMin', 'RegValue'};
+% problem.OptimizeOptions.hyperparameters{6}.ub = 1000;
+% problem.OptimizeOptions.hyperparameters{5}.lb = 2;
+% problem.OptimizeOptions.hyperparameters{3}.lb = 0.3;
+% problem.OptimizeOptions.hyperparameters{2}.lb = 0.3;
+% problem.OptimizeOptions.hyperparameters{1}.ub = 0.99;
+% problem.OptimizeOptions.hyperparameters{1}.lb = 0.2;
+problem.OptimizeOptions.hyperparameters{5}.ub = 5;
+problem.OptimizeOptions.hyperparameters{5}.lb = 2;
+% problem.OptimizeOptions.hyperparameters{7}.ub = 1e-5;
+
+problem.OptimizeOptions.Algorithm = 'pso';
+problem.OptimizeOptions.PopulationSize = 100;
+problem.OptimizeOptions.StallIterLimit = 100;
+problem.OptimizeOptions.MaxFunEval = 10000;
+problem.OptimizeOptions.UseParallel = true;
+% problem.OptimizeOptions.PopulationArquiveRate = 8.6;
+% problem.OptimizeOptions.ObjectiveLimit = 0;
+% problem.OptimizeOptions.TolFunValue = 1e-18;
+% problem.DefaultIgmnOptions.SPMin = 2;
+problem.DefaultIgmnOptions.MaxNc = maxNc;
+% problem.DefaultIgmnOptions.Tau = 0.2;
+% problem.DefaultIgmnOptions.Delta = 0.2; 
+% problem.DefaultIgmnOptions.RegValue = 4e-7;
+% problem.DefaultIgmnOptions.Tau = 1e-14;
+% problem.DefaultIgmnOptions.Gamma = 0.9997;
+% problem.DefaultIgmnOptions.VMin = 0;
+
+if problem.UseMex
+    compile(problem.CompileOptions);
+    if problem.DoParametersTuning
+        optimize = @optimize_mex;
+    end
+end
+
+legends = {{'normal', 'normal pred.'}, {'ataque', 'ataque pred.'}};
+
+if problem.DoParametersTuning
+    igmnOptions = optimize(problem);
+    runAndPlotResults(problem, igmnOptions, legends, true);
 else
-    range = [min(fullData); max(fullData)];
-    dataCache = {trainData, testData, range, fullData};
+    runAndPlotResults(problem, problem.DefaultIgmnOptions, legends, true);
 end
-
-
-if doOptimization
-        
-    tic; 
-    igmnParams(:) = optimize(...
-        algorithm, dataCache, lb, ub, inputVars, outputVars, useMex);
-    toc;
-
-    % Plot otimization results
-    
-    legends = {{'normal', 'normal pred.'}, {'ataque', 'ataque pred.'}};
-    plotOptimizationResults(...
-        dataCache, igmnParams, inputVars, outputVars, legends, useMex);
-end
-
-trainData = dataCache{1};
-testData = dataCache{4};
-targets = testData(:, outputVars);
-testData = testData(:, inputVars);
-trainSize = int32(size(trainData, 1));
-
-options = {}; 
-options.tau = igmnParams(1); 
-options.delta = igmnParams(2);
-options.spMin = int32(igmnParams(3));
-options.vMin = int32(igmnParams(4));
-options.regValue = igmnParams(5);
-
-range = dataCache{3};
-
-net = igmn(range, options);
-
-tic;
-if useMex
-    net = train_mex(net, trainData);
-    outputs = classify_mex(net, testData, outputVars);
-else
-    net = train(net, trainData);
-    outputs = classify(net, testData, outputVars);
-end
-toc;
-
-%% Do some plots
-
-classes = {legends{1}{1} legends{2}{1}};
-targets = onehotdecode(double(targets), classes, 2);
-outputs = onehotdecode(double(outputs), classes, 2);
-legendNames = horzcat(legends{:});
-figure('Name', sprintf('Confusion Matrix: s x %s | %s x %s', legendNames{:}));
-plotconfusion(targets, outputs);

@@ -1,4 +1,4 @@
-function mustBeNDimensional(self, x, y)
+function mustBeNDimensional(net, x, y)
     coder.extrinsic('MException')
     coder.extrinsic('throwAsCaller')
     if nargin == 3
@@ -6,7 +6,7 @@ function mustBeNDimensional(self, x, y)
     else
         D = size(x, 2); 
     end
-    if D ~= self.dimension
+    if D ~= net.dimension
         eidType = 'mustHaveSameDimension:notSameDimension';
         msgType = 'Input must have the same dimension of data range';
         throwAsCaller(MException(eidType,msgType))
