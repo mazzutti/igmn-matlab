@@ -5,6 +5,7 @@
 [submodule "GeoStatRockPhysics"]
 	path = GeoStatRockPhysics
 	url = https://github.com/leandrofgr/GeoStatRockPhysics.git
+    branch = main
 [submodule "matlab2tikz"]
 	path = matlab2tikz
 	url = https://github.com/matlab2tikz/matlab2tikz.git
