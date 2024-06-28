@@ -1,7 +1,6 @@
 [submodule "SeReM"]
 	path = SeReM
 	url = https://github.com/leandrofgr/SeReM.git
-	branch = 4D_project
 [submodule "examples/regression/Stanford-VI-E/data"]
 	path = examples/regression/Stanford-VI-E/data
 	url = https://github.com/SCRFpublic/Stanford-VI-E.git
