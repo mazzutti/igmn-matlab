@@ -5,9 +5,9 @@
 [submodule "examples/regression/Stanford-VI-E/data"]
 	path = examples/regression/Stanford-VI-E/data
 	url = https://github.com/SCRFpublic/Stanford-VI-E.git
-[submodule "4DStatisticalRockPhysics"]
-	path = 4DStatisticalRockPhysics
-	url = https://github.com/leandrofgr/4DStatisticalRockPhysics.git
+[submodule "GeoStatRockPhysics"]
+	path = GeoStatRockPhysics
+	url = https://github.com/leandrofgr/GeoStatRockPhysics.git
 [submodule "matlab2tikz"]
 	path = matlab2tikz
 	url = https://github.com/matlab2tikz/matlab2tikz.git
