@@ -14,8 +14,8 @@ rng('default');
 rng(23);
 
 addpath('../../../igmn/');
-addpath(genpath('../../../SeReM/'));
-addpath(genpath('../../../Seislab 3.02'));
+addpath(genpath('../../../GeoStatRockPhysics/SeReM/'));
+addpath(genpath('../../../Seislab 3.02/Seislab 3.02/'));
 
 load('cmaps.mat');
 
@@ -63,7 +63,7 @@ problem = Problem( ...
     'InputVarIndexes', inputVars, ...
     'OutputVarIndexes', outputVars, ...
     'AllData', valTrainData, ...
-    'UseMex', true, ...
+    'ExecutionMode', 'mex', ...
     'DoParametersTuning', true, ...
     'CompileOptions', compileoptions(...
         'EnableRecompile', true, ...
@@ -95,175 +95,178 @@ problem.DefaultIgmnOptions.Delta = 0.315811438338866;
 problem.DefaultIgmnOptions.Gamma = 0.591804495912762;
 problem.DefaultIgmnOptions.Phi = 0.620279050234828;
 
-if problem.UseMex
-    compile(problem.CompileOptions);
-    optimize = @optimize_mex;
-    igmn = @igmnBuilder_mex;
-    train = @train_mex;
-    predict = @predict_mex;
-else
-    predict = @predict;
+if strcmpi(problem.ExecutionMode, 'mex') || strcmpi(problem.ExecutionMode, 'native') 
+    compile(problem);
+    if strcmpi(problem.ExecutionMode, 'mex')
+        optimize = @optimize_mex;
+        igmn = @igmnBuilder_mex;
+        train = @train_mex;
+        predict = @predict_mex;
+    end
+% else
+%     predict = @predict;
 end
 
-disp(problem);
-igmnOptions = problem.DefaultIgmnOptions;
-if problem.DoParametersTuning
+if ~strcmpi(problem.ExecutionMode, 'native')
+    disp(problem);
+    igmnOptions = problem.DefaultIgmnOptions;
+    if problem.DoParametersTuning
+        tic;
+        igmnOptions = optimize(problem);
+        toc;
+    end
+    disp(igmnOptions);
+    
+    
+    % igmnOptions.MaxNc = size(trainData, 1) + 1;% 
+    % igmnOptions.VMin = 1000;
+    
     tic;
-    igmnOptions = optimize(problem);
+    net = igmn(igmnOptions);
+    net = train(net, trainData);
     toc;
+    
+    % filePath = 'data/seismic_noise.jpeg';
+    % noise = loadSeismicNoise(filePath);
+    
+    gridSize = 50;
+    noiseMultipliers = [0, 0.1, 0.5, 1];
+    % noiseMultipliers = [0, 2];
+    plotResults(net, predict, testData, inputVars, outputVars, selectedOutVar, ...
+        traceNumber, theta, initDeth, testTraces, traceSizes, waveSize, noiseMultipliers, gridSize);
+    
+    exportgraphics(gcf, sprintf('%s.pdf', 'std_with_noisy_seismic'), 'BackgroundColor', 'none', 'Resolution', 300)
+    
+    noiseMultipliers = [0.1, 0.5, 1];
+    plotStds(net, predict, testData, inputVars, outputVars, theta, ...
+        traceSizes, testTraces, initDeth, waveSize, traceNumber, noiseMultipliers, gridSize);
+    
+    % ends = cumsum(traceSizes(testTraces) - waveSize + 1);
+    % starts = ends - (traceSizes(testTraces) - waveSize + 1) + 1;
+    % noiseMultipliers = [0, 0.1, 1, 2, 4];
+    % indexes = (waveSize-1):-1:(-traceSize + waveSize);
+    % traceSize = traceSizes(testTraces(traceNumber));
+    % figure;
+    % for m = 1:numel(noiseMultipliers)
+    %     indexes = (waveSize-1):-1:(-traceSize + waveSize);
+    %     noiseData = addSeismicNoise(testData, theta, waveSize, noise, testTraces, traceSizes, starts, noiseMultipliers(m));
+    %     inputData = noiseData(starts(traceNumber):ends(traceNumber), inputVars);
+    %     outputValues = fliplr(predict(net, inputData, outputVars, 0));
+    %     outputs = arrayfun(@(k) mean(diag(outputValues, k)), indexes)';
+    %     stds = arrayfun(@(k) sqrt(std(diag(outputValues, k))), indexes)';
+    % 
+    %     time = initDeth:(initDeth + numel(outputs) - 1);
+    % 
+    %     minValues = min(outputs - stds);
+    %     maxValues = max(outputs + stds);
+    %     domain = linspace(floor(minValues), ceil(maxValues), gridSize);
+    %     grid = zeros(numel(time), gridSize);
+    %     for k = 1:numel(time)
+    %         grid(k, :) = gaussmf(domain, [stds(k)+eps outputs(k)]);
+    %     end
+    %     plot(max(grid, [], 2));
+    %     hold on;
+    % end
+    
+    % traceSize = traceSizes(testTraces(traceNumber));
+    % inputData = testData(starts(traceNumber):ends(traceNumber), inputVars);
+    % predictValues = fliplr(predict(net, inputData, outputVars, 0));
+    % targetValues = fliplr(testData(starts(traceNumber):ends(traceNumber), outputVars));
+    % seismicValues = fliplr(testData(starts(traceNumber):ends(traceNumber), inputVars(waveSize+1:2*waveSize)));
+    % indexes = (waveSize-1):-1:(-traceSize + waveSize);
+    % outputs = arrayfun(@(k) mean(diag(predictValues, k)), indexes)';
+    % targets = arrayfun(@(k) mean(diag(targetValues, k)), indexes)';
+    % seismic = arrayfun(@(k) mean(diag(seismicValues, k)), indexes)';
+    % stds = arrayfun(@(k) sqrt(std(diag(predictValues, k))), indexes)';
+    % 
+    % time = initDeth:(initDeth + numel(outputs) - 1);
+    % 
+    % ax = nexttile(layout);
+    % hold(ax, 'on');
+    % 
+    % gridSize = 50;
+    % minValues = min(outputs - stds);
+    % maxValues = max(outputs + stds);
+    % domain = linspace(floor(minValues), ceil(maxValues), gridSize);
+    % grid = zeros(numel(time), gridSize);
+    % for k = 1:numel(time)
+    %     grid(k, :) = gaussmf(domain, [stds(k)+eps outputs(k)]);
+    % end
+    % 
+    % pcolor(domain, time, grid);
+    % shading interp;
+    % 
+    % plot(ax, rescale(seismic, domain(1), domain(end)), time, 'm', 'LineWidth', 1);
+    % plot(ax, targets, time, 'k', 'LineWidth', 1);
+    % plot(ax, outputs, time, 'r', 'LineWidth', 1.5);
+    % 
+    % ylim(time([1, end]));
+    % legend(ax, '', 'Seismic', 'Vp', 'Pred. Vp');
+    % title(ax, sprintf('Trace: %d (without seismic noise)', testTraces(traceNumber)))
+    % ylabel(ax, 'Depth (ms)');
+    % set(ax, 'YDir','reverse');
+    % pbaspect(ax,[0.5, 2, 1])
+    % hold(ax, 'off');
+    % 
+    % inputData = noiseTestData(starts(traceNumber):ends(traceNumber), inputVars);
+    % predictValues = fliplr(predict(net, inputData, outputVars, 0));
+    % targetValues = fliplr(noiseTestData(starts(traceNumber):ends(traceNumber), outputVars));
+    % seismicValues = fliplr(noiseTestData(starts(traceNumber):ends(traceNumber), inputVars(waveSize+1:2*waveSize)));
+    % indexes = (waveSize-1):-1:(-traceSize + waveSize);
+    % outputsWithNoise = arrayfun(@(k) mean(diag(predictValues, k)), indexes)';
+    % targets = arrayfun(@(k) mean(diag(targetValues, k)), indexes)';
+    % seismicWithNoise = arrayfun(@(k) mean(diag(seismicValues, k)), indexes)';
+    % stdsWithNoise = arrayfun(@(k) sqrt(std(diag(predictValues, k))), indexes)';
+    % time = initDeth:(initDeth + numel(outputsWithNoise) - 1);
+    % ax = nexttile(layout);
+    % hold(ax, 'on');
+    % 
+    % gridSize = 50;
+    % minValues = min(outputsWithNoise - stdsWithNoise);
+    % maxValues = max(outputsWithNoise + stdsWithNoise);
+    % domain = linspace(floor(minValues), ceil(maxValues), gridSize);
+    % gridWithNoise = zeros(numel(time), gridSize);
+    % for k = 1:numel(time)
+    %     gridWithNoise(k, :) = gaussmf(domain, [stdsWithNoise(k)+eps outputsWithNoise(k)]);
+    % end
+    % 
+    % pcolor(domain, time, gridWithNoise);
+    % shading interp;
+    % 
+    % plot(ax, rescale(seismicWithNoise, domain(1), domain(end)), time, 'm', 'LineWidth', 1);
+    % plot(ax, targets, time, 'k', 'LineWidth', 1);
+    % plot(ax, outputsWithNoise, time, 'r', 'LineWidth', 1.5);
+    % 
+    % ylim(time([1, end]));
+    % legend(ax, '', 'Seismic', 'Vp', 'Pred. Vp');
+    % title(ax, sprintf('Trace: %d (with seismic noise)', testTraces(traceNumber)))
+    % set(ax, 'YDir','reverse');
+    % set(ax, 'yticklabel', [])
+    % pbaspect(ax,[0.5, 2, 1])
+    % hold(ax, 'off');
+    % 
+    % 
+    % ax = nexttile(layout);
+    % hold(ax, 'on');
+    % diff = gridWithNoise - grid;
+    % gridDiff = nan(size(grid));
+    % gridDiff(:) = eps;
+    % gridDiff(diff>1e-20) = diff(diff>1e-20);
+    % 
+    % pcolor(domain, time, gridDiff);
+    % shading interp;
+    % h = colorbar;
+    % 
+    % plot(ax, rescale(seismic, domain(1), domain(end)), time, 'm', 'LineWidth', 1);
+    % plot(ax, rescale(seismicWithNoise, domain(1), domain(end)), time, 'g', 'LineWidth', 1);
+    % plot(ax, outputs, time, 'r', 'LineWidth', 1);
+    % plot(ax, outputsWithNoise, time, 'k', 'LineWidth', 1);
+    % 
+    % ylim(time([1, end]));
+    % legend(ax, '', 'Seismic', 'Seismic (noise)', 'Pred. Vp', 'Pred. Vp (noise)');
+    % title(ax, sprintf('Trace: %d (uncertainty diff)', testTraces(traceNumber)))
+    % set(ax, 'YDir','reverse');
+    % set(ax, 'yticklabel', [])
+    % ylabel(h, 'Probability (addition off uncertainty)', 'FontSize', 10);
+    % hold(ax, 'off');
 end
-disp(igmnOptions);
-
-
-% igmnOptions.MaxNc = size(trainData, 1) + 1;% 
-% igmnOptions.VMin = 1000;
-
-tic;
-net = igmn(igmnOptions);
-net = train(net, trainData);
-toc;
-
-% filePath = 'data/seismic_noise.jpeg';
-% noise = loadSeismicNoise(filePath);
-
-gridSize = 50;
-noiseMultipliers = [0, 0.1, 0.5, 1];
-% noiseMultipliers = [0, 2];
-plotResults(net, predict, testData, inputVars, outputVars, selectedOutVar, ...
-    traceNumber, theta, initDeth, testTraces, traceSizes, waveSize, noiseMultipliers, gridSize);
-
-exportgraphics(gcf, sprintf('%s.pdf', 'std_with_noisy_seismic'), 'BackgroundColor', 'none', 'Resolution', 300)
-
-noiseMultipliers = [0.1, 0.5, 1];
-plotStds(net, predict, testData, inputVars, outputVars, noise, theta, ...
-    traceSizes, testTraces, initDeth, waveSize, traceNumber, noiseMultipliers, gridSize);
-
-% ends = cumsum(traceSizes(testTraces) - waveSize + 1);
-% starts = ends - (traceSizes(testTraces) - waveSize + 1) + 1;
-% noiseMultipliers = [0, 0.1, 1, 2, 4];
-% indexes = (waveSize-1):-1:(-traceSize + waveSize);
-% traceSize = traceSizes(testTraces(traceNumber));
-% figure;
-% for m = 1:numel(noiseMultipliers)
-%     indexes = (waveSize-1):-1:(-traceSize + waveSize);
-%     noiseData = addSeismicNoise(testData, theta, waveSize, noise, testTraces, traceSizes, starts, noiseMultipliers(m));
-%     inputData = noiseData(starts(traceNumber):ends(traceNumber), inputVars);
-%     outputValues = fliplr(predict(net, inputData, outputVars, 0));
-%     outputs = arrayfun(@(k) mean(diag(outputValues, k)), indexes)';
-%     stds = arrayfun(@(k) sqrt(std(diag(outputValues, k))), indexes)';
-% 
-%     time = initDeth:(initDeth + numel(outputs) - 1);
-% 
-%     minValues = min(outputs - stds);
-%     maxValues = max(outputs + stds);
-%     domain = linspace(floor(minValues), ceil(maxValues), gridSize);
-%     grid = zeros(numel(time), gridSize);
-%     for k = 1:numel(time)
-%         grid(k, :) = gaussmf(domain, [stds(k)+eps outputs(k)]);
-%     end
-%     plot(max(grid, [], 2));
-%     hold on;
-% end
-
-% traceSize = traceSizes(testTraces(traceNumber));
-% inputData = testData(starts(traceNumber):ends(traceNumber), inputVars);
-% predictValues = fliplr(predict(net, inputData, outputVars, 0));
-% targetValues = fliplr(testData(starts(traceNumber):ends(traceNumber), outputVars));
-% seismicValues = fliplr(testData(starts(traceNumber):ends(traceNumber), inputVars(waveSize+1:2*waveSize)));
-% indexes = (waveSize-1):-1:(-traceSize + waveSize);
-% outputs = arrayfun(@(k) mean(diag(predictValues, k)), indexes)';
-% targets = arrayfun(@(k) mean(diag(targetValues, k)), indexes)';
-% seismic = arrayfun(@(k) mean(diag(seismicValues, k)), indexes)';
-% stds = arrayfun(@(k) sqrt(std(diag(predictValues, k))), indexes)';
-% 
-% time = initDeth:(initDeth + numel(outputs) - 1);
-% 
-% ax = nexttile(layout);
-% hold(ax, 'on');
-% 
-% gridSize = 50;
-% minValues = min(outputs - stds);
-% maxValues = max(outputs + stds);
-% domain = linspace(floor(minValues), ceil(maxValues), gridSize);
-% grid = zeros(numel(time), gridSize);
-% for k = 1:numel(time)
-%     grid(k, :) = gaussmf(domain, [stds(k)+eps outputs(k)]);
-% end
-% 
-% pcolor(domain, time, grid);
-% shading interp;
-% 
-% plot(ax, rescale(seismic, domain(1), domain(end)), time, 'm', 'LineWidth', 1);
-% plot(ax, targets, time, 'k', 'LineWidth', 1);
-% plot(ax, outputs, time, 'r', 'LineWidth', 1.5);
-% 
-% ylim(time([1, end]));
-% legend(ax, '', 'Seismic', 'Vp', 'Pred. Vp');
-% title(ax, sprintf('Trace: %d (without seismic noise)', testTraces(traceNumber)))
-% ylabel(ax, 'Depth (ms)');
-% set(ax, 'YDir','reverse');
-% pbaspect(ax,[0.5, 2, 1])
-% hold(ax, 'off');
-% 
-% inputData = noiseTestData(starts(traceNumber):ends(traceNumber), inputVars);
-% predictValues = fliplr(predict(net, inputData, outputVars, 0));
-% targetValues = fliplr(noiseTestData(starts(traceNumber):ends(traceNumber), outputVars));
-% seismicValues = fliplr(noiseTestData(starts(traceNumber):ends(traceNumber), inputVars(waveSize+1:2*waveSize)));
-% indexes = (waveSize-1):-1:(-traceSize + waveSize);
-% outputsWithNoise = arrayfun(@(k) mean(diag(predictValues, k)), indexes)';
-% targets = arrayfun(@(k) mean(diag(targetValues, k)), indexes)';
-% seismicWithNoise = arrayfun(@(k) mean(diag(seismicValues, k)), indexes)';
-% stdsWithNoise = arrayfun(@(k) sqrt(std(diag(predictValues, k))), indexes)';
-% time = initDeth:(initDeth + numel(outputsWithNoise) - 1);
-% ax = nexttile(layout);
-% hold(ax, 'on');
-% 
-% gridSize = 50;
-% minValues = min(outputsWithNoise - stdsWithNoise);
-% maxValues = max(outputsWithNoise + stdsWithNoise);
-% domain = linspace(floor(minValues), ceil(maxValues), gridSize);
-% gridWithNoise = zeros(numel(time), gridSize);
-% for k = 1:numel(time)
-%     gridWithNoise(k, :) = gaussmf(domain, [stdsWithNoise(k)+eps outputsWithNoise(k)]);
-% end
-% 
-% pcolor(domain, time, gridWithNoise);
-% shading interp;
-% 
-% plot(ax, rescale(seismicWithNoise, domain(1), domain(end)), time, 'm', 'LineWidth', 1);
-% plot(ax, targets, time, 'k', 'LineWidth', 1);
-% plot(ax, outputsWithNoise, time, 'r', 'LineWidth', 1.5);
-% 
-% ylim(time([1, end]));
-% legend(ax, '', 'Seismic', 'Vp', 'Pred. Vp');
-% title(ax, sprintf('Trace: %d (with seismic noise)', testTraces(traceNumber)))
-% set(ax, 'YDir','reverse');
-% set(ax, 'yticklabel', [])
-% pbaspect(ax,[0.5, 2, 1])
-% hold(ax, 'off');
-% 
-% 
-% ax = nexttile(layout);
-% hold(ax, 'on');
-% diff = gridWithNoise - grid;
-% gridDiff = nan(size(grid));
-% gridDiff(:) = eps;
-% gridDiff(diff>1e-20) = diff(diff>1e-20);
-% 
-% pcolor(domain, time, gridDiff);
-% shading interp;
-% h = colorbar;
-% 
-% plot(ax, rescale(seismic, domain(1), domain(end)), time, 'm', 'LineWidth', 1);
-% plot(ax, rescale(seismicWithNoise, domain(1), domain(end)), time, 'g', 'LineWidth', 1);
-% plot(ax, outputs, time, 'r', 'LineWidth', 1);
-% plot(ax, outputsWithNoise, time, 'k', 'LineWidth', 1);
-% 
-% ylim(time([1, end]));
-% legend(ax, '', 'Seismic', 'Seismic (noise)', 'Pred. Vp', 'Pred. Vp (noise)');
-% title(ax, sprintf('Trace: %d (uncertainty diff)', testTraces(traceNumber)))
-% set(ax, 'YDir','reverse');
-% set(ax, 'yticklabel', [])
-% ylabel(h, 'Probability (addition off uncertainty)', 'FontSize', 10);
-% hold(ax, 'off');
-

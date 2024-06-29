@@ -10,3 +10,4 @@
 **/*.segy
 **/*.mat
 **/**/data/
+!examples/regression/marmousi/cmaps.mat
