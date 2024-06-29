@@ -7,5 +7,5 @@
 **/*.pdb
 **/*.prj
 **/*.pdf
+**/*.segy
 **/data/
-
