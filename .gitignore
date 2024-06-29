@@ -7,7 +7,5 @@
 **/*.pdb
 **/*.prj
 **/*.pdf
-**/data
-examples\regression\marmousi\data\processedSynthAI.mat
-examples\regression\marmousi\data\processedSynthFreq45.mat
-examples\regression\marmousi\data\synthData.mat
+**/data/
+
