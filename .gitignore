@@ -9,4 +9,4 @@
 **/*.pdf
 **/*.segy
 **/*.mat
-**/data/
+**/**/data/
