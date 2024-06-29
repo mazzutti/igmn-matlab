@@ -10,7 +10,7 @@ rng(42);
 %% Add some external dependencies
 addpath('../../../igmn/');
 addpath(genpath('../../../Seislab 3.02'));
-addpath(genpath('../../../SeReM/'))
+addpath(genpath('../../../GeoStatRockPhysics/SeReM/'))
 
 % colors = distinguishableColors(6);
 % colororder(colors);
@@ -20,11 +20,11 @@ colormap('jet');
 %% Do some configurations
 nSim = 100;
 discretizationSize = 20;
-showPlots = true;
+showPlots = false;
 useFacies = true;
 
 %% Create synthetic well data
-[modelData, wellData] = genPseudoWell(nSim, useFacies, showPlots, true);
+[modelData, wellData] = genPseudoWell(nSim, useFacies, showPlots, false);
 depth = wellData(:, 1);
 facies = wellData(:, 2);
 
@@ -64,10 +64,10 @@ problem = Problem( ...
     'InputVarIndexes', inputVars, ...
     'OutputVarIndexes', outputVars, ...
     'AllData', allData, ...
-    'UseMex', false, ...
+    'ExecutionMode', 'mex', ...
     'DoParametersTuning', true, ...
     'CompileOptions', compileoptions(...
-        'EnableRecompile', false, ...
+        'EnableRecompile', true, ...
         'NumberOfVariables', nvars, ...
         'NumberOfOutputVars', numberOfOutputVars, ...
         'IsOptimization', true));
@@ -105,12 +105,14 @@ problem.DefaultIgmnOptions.UseRankOne = 1;
 % problem.DefaultIgmnOptions.Gamma = 1;
 % problem.DefaultIgmnOptions.Phi = 1;
 
-if problem.UseMex
-    compile(problem.CompileOptions);
-    optimize = @optimize_mex;
-    igmn = @igmnBuilder_mex;
-    train = @train_mex;
-    predict = @predict_mex;
+if strcmpi(problem.ExecutionMode, 'mex') || strcmpi(problem.ExecutionMode, 'native') 
+    compile(problem);
+    if strcmpi(problem.ExecutionMode, 'mex')
+        optimize = @optimize_mex;
+        igmn = @igmnBuilder_mex;
+        train = @train_mex;
+        predict = @predict_mex;
+    end
 end
 
 legends = cell(1, numberOfOutputVars);
