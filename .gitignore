@@ -8,4 +8,5 @@
 **/*.prj
 **/*.pdf
 **/*.segy
+**/*.mat
 **/data/
