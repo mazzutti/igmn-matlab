@@ -82,8 +82,8 @@ function [modelData, wellData] = genPseudoWell(nSim, showPlots, exportPlots)
     Rhosim = Rhosim + noise_perc * std(Rhosim) * randn(size(Rhosim));
     
     % training dataset
-    mtrain = [Phi_sim Clay_sim Sw_sim, petroSim(:, 4)];
-    dtrain = [Vpsim Vssim Rhosim];
+    mtrain = [Phi_sim, Clay_sim, Sw_sim, petroSim(:, 4)];
+    dtrain = [Vpsim, Vssim, Rhosim];
     
     if showPlots
         generate_histograms([mtrain dtrain])

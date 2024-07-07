@@ -20,7 +20,6 @@ normalize = false;
 
 variableNames = {'Vp', 'Vs', 'Rho', 'lowVp', 'lowVs', 'lowRho', 'Phi', 'Clay', 'Sw'};
 
-
 if useFacies
     variableNames = ['Facies', variableNames];
     testData = wellData(:, 2:end);
@@ -63,9 +62,9 @@ problem = Problem( ...
     );
 
 problem.OptimizeOptions.Algorithm = 'psogsa';
-% problem.OptimizeOptions.UseDefaultsFor = {'Gamma', 'Phi' };
+problem.OptimizeOptions.UseDefaultsFor = {'UseRankOne'};
 problem.OptimizeOptions.MaxFunEval = 30000;
-problem.OptimizeOptions.PopulationSize = 300;
+problem.OptimizeOptions.PopulationSize = 100;
 problem.OptimizeOptions.StallIterLimit = 40;
 problem.OptimizeOptions.UseParallel = true;
 problem.OptimizeOptions.TolFunValue = 1e-18;
@@ -82,6 +81,7 @@ problem.OptimizeOptions.hyperparameters{5}.ub = 5;
 problem.OptimizeOptions.hyperparameters{5}.lb = 2;
 % problem.OptimizeOptions.hyperparameters{8}.ub = 1.0e-2;
 
+problem.DefaultIgmnOptions.UseRankOne = 1;
 % problem.DefaultIgmnOptions.MaxNc = 30;
 % problem.DefaultIgmnOptions.SPMin = 2;
 % problem.DefaultIgmnOptions.RegValue = 0;
