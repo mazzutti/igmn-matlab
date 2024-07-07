@@ -6,13 +6,11 @@ clc;
 
 %% Add some external dependencies
 addpath('../../../igmn/');
-addpath(genpath('../../../Seislab 3.02'));
-addpath(genpath('../../../SeReM/'))
-addpath(genpath('../../../4DStatisticalRockPhysics/'))
+addpath(genpath('../../../Seislab 3.02/'));
+addpath(genpath('../../../GeoStatRockPhysics/'))
 
 
 %% Configs
-useMex = true;
 nSubSamp = 20000;
 slice = 5;
 discretizationSize = 25;
@@ -57,7 +55,7 @@ problem = Problem( ...
     'InputVarIndexes', inputVars, ...
     'OutputVarIndexes', outputVars, ...
     'AllData', allData, ...
-    'UseMex', true, ...
+    'ExecutionMode', 'mex', ...
     'DoParametersTuning', true, ...
     'CompileOptions', compileoptions(...
         'EnableRecompile', false, ...
@@ -65,10 +63,10 @@ problem = Problem( ...
         'NumberOfOutputVars', O, ...
         'IsOptimization', true));
 
-problem.OptimizeOptions.Algorithm = 'pso';
+problem.OptimizeOptions.Algorithm = 'psogsa';
 % problem.OptimizeOptions.UseDefaultsFor = {'SPMin'};
 problem.OptimizeOptions.MaxFunEval = 30000;
-problem.OptimizeOptions.PopulationSize = 300;
+problem.OptimizeOptions.PopulationSize = 50;
 problem.OptimizeOptions.StallIterLimit = 40;
 problem.OptimizeOptions.UseParallel = true;
 problem.OptimizeOptions.TolFunValue = 1e-18;
@@ -95,69 +93,73 @@ problem.DefaultIgmnOptions.Delta = 0.66;
 problem.DefaultIgmnOptions.Gamma = 1;
 problem.DefaultIgmnOptions.Phi = 1;
 
-if problem.UseMex
-    compile(problem.CompileOptions);
-    optimize = @optimize_mex;
-    igmn = @igmnBuilder_mex;
-    train = @train_mex;
-    predict = @predict_mex;
+if strcmpi(problem.ExecutionMode, 'mex') || strcmpi(problem.ExecutionMode, 'native') 
+    compile(problem);
+    if strcmpi(problem.ExecutionMode, 'mex')
+        optimize = @optimize_mex;
+        igmn = @igmnBuilder_mex;
+        train = @train_mex;
+        predict = @predict_mex;
+    end
 end
 
-igmnOptions = problem.DefaultIgmnOptions;
-if problem.DoParametersTuning
-    tic;
-    igmnOptions = optimize(problem);
-    toc;
-    % igmnOptions.MaxNc = size(trainData, 1) + 1;
-    % % Plot otimization results
-    % legendsTrain = cell(1, numberOfOutputVars);
-    % for i = 1:numberOfOutputVars
-    %     variablenName = variableNames{outputVars(i)};
-    %     legendsTrain{i} = {variablenName,  sprintf('%s Pred.', variablenName)};
+if ~strcmpi(problem.ExecutionMode, 'native')
+    igmnOptions = problem.DefaultIgmnOptions;
+    if problem.DoParametersTuning
+        tic;
+        igmnOptions = optimize(problem);
+        toc;
+        % igmnOptions.MaxNc = size(trainData, 1) + 1;
+        % % Plot otimization results
+        % legendsTrain = cell(1, numberOfOutputVars);
+        % for i = 1:numberOfOutputVars
+        %     variablenName = variableNames{outputVars(i)};
+        %     legendsTrain{i} = {variablenName,  sprintf('%s Pred.', variablenName)};
+        % end
+        % plotOptimizationResults(trainData, inputs, targets, igmnOptions, ...
+        %     problem.UseMex, outputVars, depth, legendsTrain, xlabels, minMaxProportion, 'toy_train_results');
+    end
+    
+    %% IGMN petrophysical 4D inversion
+    
+    net = igmn(igmnOptions);
+    net = train(net, trainData);
+    outputs = predict(net, testData(:, inputVars), outputVars, 0);
+    
+    if normalize
+        outputs = denormalizeData(outputs, minMaxProportion, outputVars);
+    end
+    
+    f = figure;
+    plotregression(targets, outputs);
+    f.Children(3).Children(1).Marker = '.';
+    
+    if include5Years
+        climits = {[0.05, 0.3], [0 1], [0 1]};
+        titles = {'Porosity', 'Water Sat. 5 years', 'Water Sat. 10 years'};
+    else
+        climits = {[0.05, 0.3], [0 1]}; %#ok<UNRCH>
+        titles = {'Porosity', 'Water Sat.'};
+    end
+    plotResults(targets, outputs, cubeSize, titles, climits, 'IGMN Inversion');
+    
+    %% KDE-DMS petrophysical 4D inversion
+    % mtrain = origTrainData(:, outputVars);
+    % if useFacies
+    %     dtrain = origTrainData(:, inputVars(2:end)); %#ok<UNRCH>
+    %     dataCond = origTestData(:, inputVars(2:end));
+    % else
+    %     dtrain = origTrainData(:, inputVars);
+    %     dataCond = origTestData(:, inputVars);
     % end
-    % plotOptimizationResults(trainData, inputs, targets, igmnOptions, ...
-    %     problem.UseMex, outputVars, depth, legendsTrain, xlabels, minMaxProportion, 'toy_train_results');
+    % 
+    % tic;
+    % inverted_properties = RockPhysicsKDEInversion_DMS(mtrain, dtrain, dataCond, discretizationSize);
+    % toc;
+    % 
+    % plotResults(targets, inverted_properties, cubeSize, titles, climits, 'KDE-DMS Inversion');
+    % figure;
+    % plotregression(targets, outputs, 'IGMN Inversion', targets, inverted_properties, 'KDE-DMS Inversion');
 end
-
-%% IGMN petrophysical 4D inversion
-
-net = igmn(igmnOptions);
-net = train(net, trainData);
-outputs = predict(net, testData, outputVars, 0);
-
-if normalize
-    outputs = denormalizeData(outputs, minMaxProportion, outputVars);
-end
-
-f = figure;
-plotregression(targets, outputs);
-f.Children(3).Children(1).Marker = '.';
-
-if include5Years
-    climits = {[0.05, 0.3], [0 1], [0 1]};
-    titles = {'Porosity', 'Water Sat. 5 years', 'Water Sat. 10 years'};
-else
-    climits = {[0.05, 0.3], [0 1]}; %#ok<UNRCH>
-    titles = {'Porosity', 'Water Sat.'};
-end
-plotResults(targets, outputs, cubeSize, titles, climits, 'IGMN Inversion');
-
-%% KDE-DMS petrophysical 4D inversion
-% mtrain = origTrainData(:, outputVars);
-% if useFacies
-%     dtrain = origTrainData(:, inputVars(2:end)); %#ok<UNRCH>
-%     dataCond = origTestData(:, inputVars(2:end));
-% else
-%     dtrain = origTrainData(:, inputVars);
-%     dataCond = origTestData(:, inputVars);
-% end
-% 
-% tic;
-% inverted_properties = RockPhysicsKDEInversion_DMS(mtrain, dtrain, dataCond, discretizationSize);
-% toc;
-% 
-% plotResults(targets, inverted_properties, cubeSize, titles, climits, 'KDE-DMS Inversion');
-% figure;
-% plotregression(targets, outputs, 'IGMN Inversion', targets, inverted_properties, 'KDE-DMS Inversion');
 
 
