@@ -1,12 +1,13 @@
-function [Y, probabilities] = predict(net, X, features, discretizationSize) %#codegen
+function [Y, probabilities] = predict(net, X, ...
+        features, discretizationSize, featureRanges) %#codegen
     % PREDICT Classifies a given input.
     %   It returns a label-binarized vector where the predict class 
     %   have value.
     % Inputs:
     %   X : an NxM attributes array.
     %   features : an optional array of ints or names.
-    %   featureGrid : an optional integer with the size to be used 
-    %                 for the grid to compute probabilities.
+    %   featureRanges : an optional array with the range intervals to be 
+    %                   used to create the grid to compute probabilities.
     % Output:
     %   Y : an array containing the predicted data.
     %   probabilities: the computed posterior probabilities.
@@ -25,7 +26,12 @@ function [Y, probabilities] = predict(net, X, features, discretizationSize) %#co
         discretizationSize (1, 1) { ...
             mustBeNumeric, ...
             mustBeInteger ...
-        } = 0;
+        } = 0,
+        featureRanges { ...
+            mustBeNumeric, ...
+            mustBeNonempty, ...
+            mustBeNDimensional(net, X, featureRanges) ...
+        } = net.range(:, features);
     end
     F = length(features);
     N = int64(size(X, 1));
@@ -34,7 +40,7 @@ function [Y, probabilities] = predict(net, X, features, discretizationSize) %#co
     probabilities = zeros(N, discretizationSize ^ F);
     featureGrid = zeros(discretizationSize ^ F, F);
     if discretizationSize
-        domain = discretizeFeaturesRange(net.range(:, features), discretizationSize);
+        domain = discretizeFeaturesRange(featureRanges, discretizationSize);
         cellGrid = cell(1, F);
         [cellGrid{:}] = ndgrid(domain{:});
         featureGrid = zeros(discretizationSize ^ F, F);

@@ -10,7 +10,7 @@ inputData = 0:0.01:(2 * pi);
 inputData = inputData(randperm(size(inputData, 2)));
 outputData = linspace(0, 2 * pi, 100);
 
-maxNc = 8;
+maxNc = 3;
 
 problem = Problem( ...
     [inputData; sin(inputData)]', ...
@@ -26,19 +26,22 @@ problem = Problem( ...
     ));
 
 % problem.OptimizeOptions.PlotFcns = {};
-problem.OptimizeOptions.Algorithm = 'pso';
+problem.OptimizeOptions.Algorithm = 'imode';
 problem.OptimizeOptions.SelfAdjustment = 1.49;
 problem.OptimizeOptions.SocialAdjustment = 1.49;
 problem.OptimizeOptions.UseDefaultsFor = {'MaxNc', 'UseRankOne'};
 % problem.DefaultIgmnOptions.Phi = 1;
-problem.OptimizeOptions.MaxFunEval = 10000;
-problem.OptimizeOptions.PopulationSize = 100;
+problem.OptimizeOptions.MaxFunEval = 100000;
+problem.OptimizeOptions.PopulationSize = 30;
 problem.OptimizeOptions.UseParallel = true;
+problem.OptimizeOptions.StallIterLimit = 200;
 problem.OptimizeOptions.TolFunValue = 1e-12;
 problem.DefaultIgmnOptions.MaxNc = maxNc;
 problem.DefaultIgmnOptions.UseRankOne = 1;
-% problem.DefaultIgmnOptions.SPMin = 4
+problem.DefaultIgmnOptions.SPMin = 2;
 % problem.DefaultIgmnOptions.Delta = 0.1;
+problem.OptimizeOptions.hyperparameters{5}.ub = 6;
+problem.OptimizeOptions.hyperparameters{5}.lb = 2;
 
 
 if strcmpi(problem.ExecutionMode, 'mex') || strcmpi(problem.ExecutionMode, 'native') 
@@ -67,9 +70,14 @@ if ~strcmpi(problem.ExecutionMode, 'native')
     tic;
     net = igmnBuilder(igmnOptions);
     net = train(net, trainData);
-    Y = predict(net, testData(:, inputVarIndexes), outputVarIndexes, 0);
+    Y = predict(net, testData(:, inputVarIndexes), ...
+        outputVarIndexes, 0, zeros(size(net.range(:, outputVarIndexes))));
     toc;
     
     figure; plotregression(testData(:, outputVarIndexes), Y);
-    plotNet(net, 'sd', 4.5);
+    figure;
+    scatter(inputData + rand(1, size(inputData, 2)) .* 0.2, sin(inputData), 'Marker', '.' ,'Color', [0 0.4470 0.7410]);
+    plotNet(net, 'sd', 4.5, 'ax', gca, 'sd', 2);
+    exportgraphics(gcf, sprintf('%s.pdf', 'igmn_gaussians'), 'BackgroundColor', 'none', 'Resolution', 300)
+
 end

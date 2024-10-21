@@ -1,4 +1,4 @@
-function trace = genSyntheticTrace(theta, traceSize, Time, tl, Vp, Vs, Rho, wavelet, lowFreqFilter)
+function trace = genSyntheticTrace(theta, traceSize, Time, tl, Vp, Vs, Rho, timeSeis, wavelet, lowFreqFilter)
     
     VpInterp = interp1(tl, Vp, Time);
     VsInterp =  interp1(tl, Vs, Time);
@@ -11,6 +11,9 @@ function trace = genSyntheticTrace(theta, traceSize, Time, tl, Vp, Vs, Rho, wave
     lowFreqData = [lowFreqFilter(Vp)', lowFreqFilter(Vs)', lowFreqFilter(Rho)']; 
 
     nd = length(Time)-1;
-    trace = nan(traceSize, 1, numel(theta) + 6);
-    trace(1:nd, 1, :) = [reshape(Seis, nd, []), lowFreqData, Vp, Vs, Rho];
+    Seis = reshape(Seis, nd, []);
+    SeisNoisy = s_noise(Seis, {'ratio', 1}, {'type','gaussian'}, {'amplitude', 'median'}).traces;
+
+    trace = nan(traceSize, 1, numel(theta) + 11);
+    trace(1:nd, 1, :) = [reshape(Seis, nd, []), lowFreqData, Vp, Vs, Rho, Time(2:end), timeSeis, SeisNoisy];
 end

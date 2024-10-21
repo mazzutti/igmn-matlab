@@ -94,7 +94,7 @@ function [x,fval,exitFlag] = psogsacore(nhps, lbRow, ubRow, problem, hpNames, hp
         pause(0.000001);
     end
 
-    pIdx = 1:numParticles;
+    pIdx = (1:numParticles)';
 
     % Run the main loop until some exit condition becomes true
     while isempty(exitFlag)
@@ -123,7 +123,7 @@ function [x,fval,exitFlag] = psogsacore(nhps, lbRow, ubRow, problem, hpNames, hp
         state.Fvals = fvals(:);
 
         % Update state with best fvals and best individual positions.
-        state = updateState(state, numParticles, pIdx');
+        state = updateState(state, numParticles, pIdx);
 
         bestFvalsWindow(1 + mod(state.Iteration - 1, optOptions.StallIterLimit)) = min(state.IndividualBestFvals);
 

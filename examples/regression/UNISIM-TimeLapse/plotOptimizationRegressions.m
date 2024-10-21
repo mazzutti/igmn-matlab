@@ -1,5 +1,5 @@
-function plotOptimizationResults(trainData, inputVars, outputVars, ...
-    igmnOptions, useMex, legends, xlabels, exportFileName)
+function plotOptimizationRegressions(trainData, inputVars, outputVars, ...
+    igmnOptions, useMex, legends, exportFileName, useKriging, krigvars, krigmeans, min2norm, max2norm)
 
     inputs =  trainData(:, inputVars);
     targets = trainData(:, outputVars);
@@ -20,28 +20,14 @@ function plotOptimizationResults(trainData, inputVars, outputVars, ...
     net = igmn(igmnOptions);
     net = train(net, trainData);
     outputs = predict(net, inputs, outputVars, 0, zeros(2, length(outputVars)));
-    
-    legendNames = horzcat(legends{:});
-    figure;
-    wellFig = tiledlayout('horizontal', 'Padding', 'none', 'TileSpacing', 'tight');
-    wellFig.Parent.Name = sprintf('%s x %s | %s x %s | %s x %s', legendNames{:});
-    depth = 1:size(targets, 1);
-    for i = 1:O
-        ax = nexttile;
-        ax.FontSize = 10;
-        hold on;
-        plot(targets(:, i), depth, 'LineWidth', 0.5);
-        xlabel(xlabels{i}, 'FontSize', 10);
-        plot(outputs(:, i), depth, 'LineWidth', 1);
-        legend(legends{i}{:}, 'FontSize', 10, 'Location','southoutside');
-        set(ax, 'YDir','reverse');
-        set(ax, 'YTick', [])
-        hold off;
+    if useKriging
+        conditionedOutputs = zeros(size(trainData));
+        conditionedOutputs(:, outputVars) = outputs .* krigvars + krigmeans;
+        conditionedOutputs = normcdf(conditionedOutputs);
+        outputs = igmn_uniform_to_nonParametric(conditionedOutputs, trainData, cell_size, inputs);   
     end
 
-    pos = wellFig.Parent.Position;
-    wellFig.Parent.Position = [pos(1), 45, pos(3), pos(4)*3];
-    
+    legendNames = horzcat(legends{:});
     regressionEntries = cell(1, 3 * O);
     for i = 1:O
         index = (i - 1) * O + 1; 
@@ -57,7 +43,6 @@ function plotOptimizationResults(trainData, inputVars, outputVars, ...
 
     if exist("exportFileName", 'var')
         exportgraphics(f, sprintf('%s_regression.pdf', exportFileName), 'BackgroundColor', 'none', 'Resolution', 300)
-        exportgraphics(wellFig, sprintf('%s.pdf', exportFileName), 'BackgroundColor', 'none', 'Resolution', 1000)
     end
 end
 

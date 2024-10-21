@@ -8,7 +8,6 @@ function [modelData, wellData] = genPseudoWell(nSim, useFacies, showPlots, expor
     stdVs = 50 * inputsStdMultiplyier;
     stdRho = 0.05 * inputsStdMultiplyier;
    
-    
     outputsStdMultiplyier = 0;
     stdPhi = 0.01 * outputsStdMultiplyier;
     stdClay = 0.01 * outputsStdMultiplyier;
@@ -17,11 +16,11 @@ function [modelData, wellData] = genPseudoWell(nSim, useFacies, showPlots, expor
     well = read_las_file(dataPath);
 
     Depth = well.curves(:, 1);
-    facies = well.curves(:, 2);
+    facies = well.curves(:, 2); % 1 - shale
     Phi = well.curves(:, 3); Phi(Phi <= 0.001) = 0.001;
     v_clay = well.curves(:, 5); v_clay(v_clay <= 0.001) = 0.001;
     sw = well.curves(:, 4); sw (sw <= 0.001) = 0.001;
-
+    
     correlation_function = construct_correlation_function_beta(30, 1, Phi, 2);
 
     Phi = Phi + stdPhi * FFT_MA_3D(correlation_function, randn(size(Phi)));
@@ -36,7 +35,7 @@ function [modelData, wellData] = genPseudoWell(nSim, useFacies, showPlots, expor
     v_clay(v_clay >= 0.8) = 0.8;
     sw (sw >= 1) = 0.99;
     
-    [Vp, Vs, Rho] = RPM(Phi ,v_clay, sw); 
+    [Vp, Vs, Rho] = RPM(Phi, v_clay, sw); 
     Vp = 1000 * Vp; 
     Vs = 1000 * Vs;
     
@@ -45,22 +44,43 @@ function [modelData, wellData] = genPseudoWell(nSim, useFacies, showPlots, expor
     Rho = Rho + stdRho * FFT_MA_3D(correlation_function, randn(size(Vp)));
 
     
+    colors = parula(length(unique(facies)));
+    facie_colors = nan(size(facies, 1), 3);
+    facie_colors(facies == 1, :) = repmat(colors(1, :), sum(facies == 1), 1);
+    facie_colors(facies == 2, :) = repmat(colors(2, :), sum(facies == 2), 1);
+    facie_colors(facies == 3, :) = repmat(colors(3, :), sum(facies == 3), 1);
+
+    colors = parula(2);
+    sw_cluster = clusterdata(sw, 2);
+    sw_colors = nan(size(sw_cluster, 1), 3);
+    sw_colors(sw_cluster == 1, :) = repmat(colors(1, :), sum(sw_cluster == 1), 1);
+    sw_colors(sw_cluster == 2, :) = repmat(colors(2, :), sum(sw_cluster == 2), 1);
+    
     if showPlots
-        colormap('jet');
+        % colormap(parula);
         f = tiledlayout('horizontal', 'Padding', 'none', 'TileSpacing', 'tight');
         AI = Vp.*Rho;
         nexttile;
-        gscatter(Phi, Vp, facies, [], '+');
+        for i = unique(facies)'
+            indexes = facies == i;
+            scatter(Phi(indexes), Vp(indexes), 40, facies(indexes), 'Marker', '+');
+            hold on;
+        end
+        hold off;
         xlabel('Porosity'); ylabel('Vp');
-        legend('Facie I', 'Facie II', 'Facie III');
+        legend('Shale', 'Water Sand', 'Oil Sand');
         nexttile;
-        gscatter(AI, Vp./Vs, clusterdata(sw, 2), [], '+');
+        gscatter(AI, Vp./Vs, sw_colors, [], '+');
         xlabel('AI'); ylabel('Vp/Vs');
         legend('Water Sat. I', 'Water Sat. II');
         nexttile;
-        gscatter(v_clay, Rho, facies, [], '+');
+        for i = unique(facies)'
+            indexes = facies == i;
+            scatter(v_clay(indexes), Rho(indexes), 40, facies(indexes), 'Marker', '+');
+            hold on;
+        end
         xlabel('Clay Vol.'); ylabel('Rho');
-        legend('Facie I', 'Facie II', 'Facie III');
+        legend('Shale', 'Water Sand', 'Oil Sand');
         
         if exportPlots
             exportgraphics(f, 'toy_welldata.pdf', 'BackgroundColor', 'none', 'Resolution', 1000);
@@ -69,12 +89,12 @@ function [modelData, wellData] = genPseudoWell(nSim, useFacies, showPlots, expor
         f = tiledlayout('horizontal', 'Padding', 'none', 'TileSpacing', 'tight');
         nexttile;
         plot_histogram(AI, facies);
-        legend('Facie I', 'Facie II', 'Facie III');
+        legend('Shale', 'Water Sand', 'Oil Sand');
         xlabel('AI');
         title('');
         nexttile;
         plot_histogram(Vp./Vs, facies);
-        legend('Facie I', 'Facie II', 'Facie III');
+        legend('Shale', 'Water Sand', 'Oil Sand');
         xlabel('Vp/Vs');
         title('');
         if exportPlots
@@ -85,15 +105,27 @@ function [modelData, wellData] = genPseudoWell(nSim, useFacies, showPlots, expor
     %% PRIOR SAMPLING
     mtrain = [];
     dtrain = [];
+
+    % nv = 3;
+    % R = zeros(1, nv+1);
+    % X = [Phi v_clay sw, ones(size(Phi))];
+    % R(1,:) = regress(Vp, X); 
+    % R(2,:) = regress(Vs, X); 
+    % R(3,:) = regress(Rho, X);
+
     for facie = 1:length(unique(facies))    
         idx_facie = (facies==facie);
         Phi_train = mean(Phi(idx_facie)) + std(Phi(idx_facie))*randn(nSim,1);
         v_clay_train = mean(v_clay(idx_facie)) + std(v_clay(idx_facie))*randn(nSim,1);
         sw_train = mean(sw(idx_facie)) + std(sw(idx_facie))*randn(nSim,1);        
         mtrain = [mtrain; Phi_train, v_clay_train, sw_train]; %#ok<*AGROW>
+
+        % [Vp_train, Vs_train, Rho_train] = LinearizedRockPhysicsModel(Phi_train, v_clay_train, sw_train, R);
+
         [Vp_train, Vs_train, Rho_train] = RPM(Phi_train, v_clay_train, sw_train); 
         Vp_train = 1000*Vp_train; 
         Vs_train = 1000*Vs_train;
+
         if useFacies
             facie_train = zeros(nSim, 1) + facie;
             dtrain = [dtrain; facie_train, Vp_train, Vs_train, Rho_train];   

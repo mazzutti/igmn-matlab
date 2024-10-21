@@ -2,6 +2,8 @@ function stop = callPlotFcns(optimValues, flag)
     
     persistent Figure
     persistent Axes
+
+    set(0, 'DefaultAxesFontSize', 10);
     
     N = length(optimValues.plotFcns);
 

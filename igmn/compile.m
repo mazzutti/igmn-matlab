@@ -11,6 +11,7 @@ function compile(problem)
         if strcmp(problem.ExecutionMode,  'mex') 
             %% Create configuration object of class 'coder.MexCodeConfig'.
             cfg = coder.config('mex');
+            cfg.GenerateReport = true;
             cfg.EnableMexProfiling = options.EnableProfile;
             cfg.EnableVariableSizing = true;
             cfg.SIMDAcceleration = 'Full';
@@ -45,7 +46,7 @@ function compile(problem)
         end
 
 
-        cfg.NumberOfCpuThreads = 12;
+        cfg.NumberOfCpuThreads = 6;
         cfg.EnableAutoParallelization = true;
         cfg.OptimizeReductions = true;
         cfg.GenerateReport = options.EnableReport;
@@ -94,7 +95,7 @@ function compile(problem)
         ARGS{1}{1}.Properties.distances = coder.typeof(0, [1, inf], [0, 1]);
         ARGS{1}{1}.Properties.logLikes = coder.typeof(0, [1, inf], [0, 1]);
         ARGS{1}{1}.Properties.posteriors = coder.typeof(0, [1, inf], [0, 1]);
-        ARGS{1}{2} = coder.typeof(0, [testSize, numberOfVars - numberOfOutputVars], [~isfinite(testSize), 0]);
+        ARGS{1}{2} = coder.typeof(0, [testSize, numberOfVars - numberOfOutputVars], [~isfinite(testSize), 1]);
         ARGS{1}{3} = coder.typeof(0, [1, numberOfOutputVars], [0, 0]);
         if isClassification
             if ~exist('classify_mex', 'file') || enableRecompile
@@ -103,6 +104,7 @@ function compile(problem)
         else
             if ~exist('predict_mex', 'file') || enableRecompile
                 ARGS{1}{4} = coder.typeof(0);
+                ARGS{1}{5} = coder.typeof(0, [2, numberOfOutputVars], [0, 0]);
                 codegen -config cfg predict -args ARGS{1}
             end
         end
@@ -286,6 +288,15 @@ function compile(problem)
             ARGS{1}{1}.Properties.OptimizeOptions.Properties.PopulationArquiveRate = coder.typeof(0);
             ARGS{1}{1}.Properties.OptimizeOptions.Properties.GravitationalConstant = coder.typeof(0);
             ARGS{1}{1}.Properties.OptimizeOptions.Properties.Verbosity = coder.typeof(0);
+
+            extraEvalArgs = coder.newtype('cell', {coder.typeof(0, [inf inf], [1 1])}, [inf, inf], [1 1]);
+            extraEvalArgs = extraEvalArgs.makeHomogeneous();
+
+            extraEvalCellArgs = coder.newtype('cell', {extraEvalArgs}, [inf, inf], [1 1]);
+            extraEvalCellArgs = extraEvalCellArgs.makeHomogeneous();
+
+            ARGS{1}{1}.Properties.OptimizeOptions.Properties.ExtraEvalArgs = extraEvalArgs;
+            ARGS{1}{1}.Properties.OptimizeOptions.Properties.ExtraEvalCellArgs = extraEvalCellArgs;
               
             %% Invoke MATLAB Coder.
             if ~exist('optimize_mex', 'file') || enableRecompile

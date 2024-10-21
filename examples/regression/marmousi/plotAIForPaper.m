@@ -1,4 +1,6 @@
 function plotAIForPaper(AI, trainTraces, testTrace, initDepth, exportFileName)
+    set(0, 'DefaultAxesFontSize', 38);
+    f = figure('units','normalized', 'outerposition', [0 0 1 1.4]);
     im = imagesc(AI);
     hold('on');
     ax = get(get(im, 'Parent'));
@@ -11,19 +13,21 @@ function plotAIForPaper(AI, trainTraces, testTrace, initDepth, exportFileName)
     xconv = [xnorm(testTrace - 150), xnorm(testTrace)];
     yconv = [ynorm(ceil(size(AI, 1) * 0.6)), ynorm(ceil(size(AI, 1) * 0.6) + 20)];
     annotation('textarrow', xconv, yconv,'String', num2str(testTrace), ...
-        'Color', 'w', 'FontSize', 10, 'HeadLength', 5, 'HeadWidth', 5, 'TextMargin', 0.001, 'FontWeight', 'bold');
+        'Color', 'w', 'FontSize', 38, 'HeadLength', 5, 'HeadWidth', 5, 'TextMargin', 0.001, 'FontWeight', 'bold');
     for trace = trainTraces
         line([trace,trace], [0, size(AI, 1)], 'Color', 'r', 'LineWidth', 1.5);
         xconv = [xnorm(trace - 150), xnorm(trace)];
         yconv = [ynorm(ceil(size(AI, 1) * 0.8)), ynorm(ceil(size(AI, 1) * 0.8) + 20)];
         annotation('textarrow', xconv, yconv,'String', num2str(trace), ...
-            'Color', 'w', 'FontSize', 10, 'HeadLength', 5, 'HeadWidth', 5, 'TextMargin', 0.001, 'FontWeight', 'bold');
+            'Color', 'w', 'FontSize', 38, 'HeadLength', 5, 'HeadWidth', 5, 'TextMargin', 0.001, 'FontWeight', 'bold');
     end
     
-    ylabel('Time(ms)');
+    ylabel('Time(ms)', 'FontSize', 38);
     % xlabel('Trace #')
     % set(gcf, 'Position',  [613, 549, 1359, 691])
-    hold('off');
-    exportgraphics(gcf, sprintf('%s.pdf', exportFileName), 'BackgroundColor', 'none', 'Resolution', 1000)
+    hold('off'); 
+    if exportFileName
+        exportgraphics(f, sprintf('%s.pdf', exportFileName), 'BackgroundColor', [254/255 252/255 246/255], 'Resolution', 300)
+    end
 end
 

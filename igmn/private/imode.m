@@ -110,7 +110,8 @@ function [x,fval,exitFlag] = imodecore(nhps, lbRow, ubRow, problem, hpNames, hpI
         popSize = size(newPositions, 1);
         fvals = zeros(popSize, 1);
         if optOptions.UseParallel
-            parfor i = 1:popSize
+            setenv('OMP_NUM_THREADS', '12');
+            parfor (i = 1:popSize, 12)
                 fvals(i) = objFun(newPositions(i, :));
             end
         else

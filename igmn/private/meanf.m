@@ -1,5 +1,5 @@
 function m = meanf(x)
-    x(x > 2) = nan;
+    % x(x > 2) = nan;
     tfValid = ~isnan(x) ;
     n = sum(tfValid, "all");
     if n == 0

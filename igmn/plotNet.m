@@ -23,14 +23,14 @@ function [h] = plotNet(net, varargin)
     %
     %   h = self.PLOT('sd', SD, 'npts', NPTS, 'ax', AX) adds the 
     %   plot to the axes specified by the axis handle AX.
-    checkAx = @(ax) ~(isscalar(ax) && ...
-    ishandle(ax) && strcmp(get(ax,'type'), 'axes'));
+    % checkAx = @(ax) ~(isscalar(ax) && ...
+    % ishandle(ax) && strcmp(get(ax,'type'), 'axes'));
     
     parser = inputParser;
     
     addOptional(parser, 'sd', 1);
     addOptional(parser, 'npts', []);
-    addOptional(parser, 'ax', [], checkAx);
+    addOptional(parser, 'ax', []);
     
     parse(parser, varargin{:});
     
@@ -71,7 +71,7 @@ function h = show2d(mean, cov, sd, npts, ax)
     [v, d] = eig(cov); 
     d = (sd * sqrt(d)) / 2; % convert variance to sd*sd
     bp = (v * d * ap) + repmat(mean', 1, size(ap, 2)); 
-    h = plot(bp(1, :), bp(2, :), '-', 'parent', ax);
+    h = plot(bp(1, :), bp(2, :), '-', 'parent', ax, 'LineWidth', 2);
 end
 
 function h = show3d(mean, cov, sd, npts, ax)

@@ -26,6 +26,8 @@ classdef optimizeoptions
         PopulationArquiveRate
         GravitationalConstant
         Verbosity
+        ExtraEvalArgs
+        ExtraEvalCellArgs
     end
 
     methods(Static)
@@ -171,8 +173,10 @@ classdef optimizeoptions
                     mustBeInteger, ...
                     mustBeGreaterThan(options.MinPopulationSize, 3) ...
                 } = 4,
-                options.PopulationArquiveRate (1, 1) double {mustBeFinite, mustBeNonNan} = 2.6
-                options.GravitationalConstant (1, 1) double {mustBeFinite, mustBeNonNan} = 1
+                options.PopulationArquiveRate (1, 1) double {mustBeFinite, mustBeNonNan} = 2.6, ...
+                options.GravitationalConstant (1, 1) double {mustBeFinite, mustBeNonNan} = 1, ...
+                options.ExtraEvalArgs (:, :) cell = {}, ...
+                options.ExtraEvalCellArgs (:, :) cell = {}
             end
             self.hyperparameters = hyperparameters;
             self.Algorithm = options.Algorithm;
@@ -199,6 +203,8 @@ classdef optimizeoptions
             self.MinPopulationSize = options.MinPopulationSize;
             self.PopulationArquiveRate = options.PopulationArquiveRate;
             self.GravitationalConstant = options.GravitationalConstant;
+            self.ExtraEvalArgs = options.ExtraEvalArgs;
+            self.ExtraEvalCellArgs = options.ExtraEvalCellArgs;
             
             % Determine the verbosity
             switch  self.Display

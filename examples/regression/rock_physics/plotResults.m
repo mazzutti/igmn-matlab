@@ -1,40 +1,62 @@
 function plotResults(targets, outputs, xlabels, depth, facies, legends, ...
-         outputVars, variableRanges, variableNames, outputsDomain, probabilities, plotTitle, exportFileName)
+    outputVars, variableRanges, variableNames, outputsDomain, probabilities, initDeth, endDepth, plotTitle, exportFileName)
 
-    f = figure;
-    tiledlayout('horizontal', 'Padding', 'none', 'TileSpacing', 'compact');
+    f = figure('units','normalized', 'outerposition', [0.1 0.2 0.8 0.6]);
+    set(0, 'DefaultAxesFontSize', 16,  'defaultTextInterpreter', 'none');
+    tiledlayout('horizontal', 'Padding', 'none', 'TileSpacing', 'tight');
     O = length(probabilities);
+
+    depth = depth(initDeth:endDepth, :);
+    facies = facies(initDeth:endDepth, :);
+
     nexttile;
+    colormap(parula);
     imagesc(1, depth, facies);
     xlabel(variableNames{1});
     ylabel('Depth (m)');
+
+    % hold on;
+    % for K = 1 : 3; hidden_h(K) = surf(uint8(K-[1 1;1 1]), 'facealpha', 0, 'edgecolor', 'none'); end
+    % hold off
+    % uistack(hidden_h, 'bottom');
+
+    hold on
+    cmap = parula(3); 
+    L = line(ones(3),ones(3), 'LineWidth',12);               % generate line 
+    set(L,{'color'}, mat2cell(cmap,ones(1,3),3));            % set the colors according to cmap
+    legend('Shale', 'Water Sand', 'Oil Sand');       
+
+    % legend(hidden_h, {'Shale', 'Water Sand', 'Oil Sand'} )
+    hold off;
+    
+
+    prob_color_map = load("prob_color_map.mat").prob_color_map;
     
     for i = 1:O
         ax = nexttile;
-        ax.FontSize = 10;
-        pcolor(outputsDomain{i}, depth, probabilities{i});
+        ax.FontSize = 16;
+        pcolor(outputsDomain{i}, depth, probabilities{i}(initDeth:endDepth, :));
         hold on; 
         shading interp;
         h = colorbar;
         if i == O
-            ylabel(h, 'Probability', 'FontSize', 10);
+            ylabel(h, 'Probability', 'FontSize', 16);
         end
+        yticklabels([]);
         set(ax, 'YDir','reverse');
         xlim(variableRanges(:, outputVars(i)));
-        plot(targets(:, i), depth, 'k', 'LineWidth', 0.5); 
-        plot(outputs(:, i), depth, 'r', 'LineWidth', 1);
-        xlabel(xlabels{i}, 'FontSize', 10);
-        legend(legends{i}{:}, 'Location','southoutside');
+        plot(targets(initDeth:endDepth, i), depth, 'k', 'LineWidth', 0.5); 
+        plot(outputs(initDeth:endDepth, i), depth, 'r', 'LineWidth', 1);
+        xlabel(xlabels{i}, 'FontSize', 16);
+        legend({'', 'Reference', 'Prediction'}, 'Location','best');
+        colormap(ax, prob_color_map);
         hold off; 
     end
-
-    pos = f.Position;
-    f.Position = [pos(1)/1.8, pos(2)/1.5, pos(3)*1.5, pos(4)*1.8];
 
     if ~exist('exportFileName', 'var')
         sgtitle(plotTitle);
     else
-        exportgraphics(f, sprintf('%s.pdf', exportFileName), 'BackgroundColor', 'none', 'Resolution', 1000)
+        exportgraphics(gcf, sprintf('%s.pdf', exportFileName), 'BackgroundColor', 'none', 'Resolution', 1000)
     end
 end
 

@@ -81,10 +81,10 @@ function [Y, probabilities] = recall(net, X, features, featureGrid) %#codegen
         end
     end
     pajs = pajs ./ sum(pajs, 3);
-    pajs = fillmissing(pajs, 'constant', 0);
+    pajs(isnan(pajs)) = 0;
     Y = sum(bsxfun(@times, xm, pajs), 3);
     if computeGrid
         probabilities = probabilities ./ sum(probabilities, 2);
-        probabilities = fillmissing(probabilities, 'constant', 0);
+        probabilities(isnan(probabilities)) = 0;
     end
 end
