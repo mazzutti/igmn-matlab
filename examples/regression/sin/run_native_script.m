@@ -5,13 +5,14 @@
 % See also CODER, CODER.CONFIG, CODER.TYPEOF, CODEGEN.
 
 %% Create configuration object of class 'coder.EmbeddedCodeConfig'.
-cfg = coder.config('lib','ecoder',true);
+cfg = coder.config('lib', 'ecoder', true);
 cfg.TargetLang = 'C++';
 cfg.CppNamespace = 'igmnplugin';
 cfg.CppNamespaceForMathworksCode = 'igmnplugin';
 cfg.CppInterfaceClassName = 'IgmnPlugin';
+cfg.CppInterfaceStyle = 'Methods';
 cfg.DynamicMemoryAllocationInterface = 'C';
-cfg.GenerateMakefile = false;
+cfg.GenerateMakefile = true;
 cfg.GenerateReport = true;
 cfg.MATLABFcnDesc = false;
 cfg.MaxIdLength = 1024;
