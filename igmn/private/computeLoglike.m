@@ -1,5 +1,42 @@
-% Compute the log probability density of a multivariate normal 
-% distribution.
+% computeLoglike - Computes the log-likelihood and distance for given data.
+%
+% Syntax:
+%   [logLike, distance] = computeLoglike(X, cov, data, options)
+%
+% Inputs:
+%   X       - (double) Input data matrix of size [M, D], where M is the number
+%             of samples and D is the dimensionality of the data.
+%   cov     - (double) Covariance matrix of size [D, D].
+%   data    - (double) Data matrix of size [N, D], where N is the number of
+%             data points.
+%   options - (struct) Optional parameters:
+%             - isProbability: (logical) If true, computes probabilities
+%               instead of distances. Default is false.
+%             - useRankOne: (logical) If true, uses a rank-one update
+%               approach. Default is false.
+%             - determinant: (double) Determinant of the covariance matrix.
+%               Default is 1.
+%
+% Outputs:
+%   logLike  - (double) Log-likelihood values of size [N, M] or [N, 1],
+%              depending on the options.
+%   distance - (double) Distance values of size [N, M] or [N, 1], depending
+%              on the options.
+%
+% Description:
+%   This function computes the log-likelihood and distance for the given
+%   data points using the provided covariance matrix. It supports both
+%   standard and rank-one update approaches, and can optionally compute
+%   probabilities instead of distances.
+%
+% Notes:
+%   - The function uses Cholesky decomposition for efficient computation
+%     when the 'useRankOne' option is false.
+%   - Parallel computation (parfor) is used for certain operations to
+%     improve performance when the 'isProbability' option is true.
+%
+% See also:
+%   computeChol
 function [logLike, distance] = computeLoglike(X, cov, data, options) %#codegen
     arguments
         X double

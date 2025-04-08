@@ -1,3 +1,64 @@
+% TRANSPILE Transpile MATLAB code to MEX functions using MATLAB Coder.
+%
+%   transpile(options) generates MEX functions for various entry points
+%   ('predict', 'classify', 'train', 'igmnBuilder', and optionally 'optimize')
+%   based on the provided options. The function uses MATLAB Coder to
+%   configure and compile the code for performance optimization.
+%
+%   INPUT:
+%       options - A structure of type 'compileoptions' containing the
+%                 following fields:
+%           - EnableReport: Boolean, enables or disables the generation of
+%                           a code generation report.
+%           - EnableRecompile: Boolean, forces recompilation of MEX files
+%                              if set to true.
+%           - IsClassification: Boolean, specifies whether the task is
+%                               classification or regression.
+%           - IsOptimization: Boolean, specifies whether optimization
+%                             routines should be compiled.
+%           - NumberOfVariables: Integer, the total number of input
+%                                variables.
+%           - NumberOfOutputVars: Integer, the number of output variables.
+%           - trainSize: Integer, the size of the training dataset.
+%           - testSize: Integer, the size of the testing dataset.
+%           - allDataSize: Integer, the size of the complete dataset
+%                          (used for optimization).
+%
+%   FUNCTIONALITY:
+%       - Configures MATLAB Coder with various optimization settings such
+%         as parallelization, variable sizing, and report generation.
+%       - Defines argument types for entry points ('predict', 'classify',
+%         'train', 'igmnBuilder', and 'optimize') based on the provided
+%         options.
+%       - Invokes MATLAB Coder to generate MEX files for the specified
+%         entry points.
+%
+%   ENTRY POINTS:
+%       - 'predict' or 'classify': Generates MEX files for prediction or
+%         classification tasks based on the 'IsClassification' flag.
+%       - 'train': Generates MEX files for training the IGMN model.
+%       - 'igmnBuilder': Generates MEX files for building IGMN options.
+%       - 'optimize': (Optional) Generates MEX files for optimization
+%         routines if 'IsOptimization' is true.
+%
+%   NOTES:
+%       - The function checks for the existence of MEX files before
+%         recompiling, unless 'EnableRecompile' is set to true.
+%       - The function supports heterogeneous data types and variable
+%         sizing for flexibility in input data.
+%
+%   EXAMPLES:
+%       options = compileoptions();
+%       options.EnableReport = true;
+%       options.EnableRecompile = false;
+%       options.IsClassification = true;
+%       options.NumberOfVariables = 10;
+%       options.NumberOfOutputVars = 2;
+%       options.trainSize = 1000;
+%       options.testSize = 200;
+%       transpile(options);
+%
+%   See also: coder.CodeConfig, coder.newtype, codegen
 function transpile(options)
     arguments
         options (1, 1) compileoptions;

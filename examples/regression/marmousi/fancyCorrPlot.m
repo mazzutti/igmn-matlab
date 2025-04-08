@@ -1,3 +1,35 @@
+% FANCYCORRPLOT Generates a fancy correlation plot with labeled scatter points.
+%
+%   fancyCorrPlot(R, labels) creates a scatter plot visualizing the 
+%   correlation matrix R with annotations and labels. The plot includes 
+%   a color-coded representation of the correlation values, grid lines, 
+%   and axis labels.
+%
+%   Inputs:
+%       R      - A square matrix representing the correlation coefficients.
+%       labels - A cell array of strings containing the labels for the 
+%                rows and columns of the correlation matrix.
+%
+%   Features:
+%       - Displays the correlation values as scatter points with sizes 
+%         proportional to the absolute value of the correlation coefficients.
+%       - Annotates each scatter point with the corresponding correlation value.
+%       - Includes grid lines to enclose the scatter points.
+%       - Adds axis labels and a colorbar to indicate the p-values.
+%       - Customizes the appearance of the plot, including font size, 
+%         colors, and layout.
+%       - Exports the plot as a high-resolution PDF file.
+%
+%   Example:
+%       R = [1, 0.8, 0.5; 0.8, 1, 0.3; 0.5, 0.3, 1];
+%       labels = {'Var1', 'Var2', 'Var3'};
+%       fancyCorrPlot(R, labels);
+%
+%   Notes:
+%       - The function uses the 'parula' colormap by default.
+%       - The exported PDF file is named "vartestn.pdf".
+%       - The function assumes that the input matrix R is square and 
+%         symmetric.
 function fancyCorrPlot(R, labels)
     f = figure('units','normalized', 'outerposition', [0.1 0.1 0.9 0.9]);
     set(0, 'DefaultAxesFontSize', 22,  'defaultTextInterpreter', 'latex');

@@ -1,83 +1,100 @@
-% ProgressBar (for MATLAB 2017a ~ 2020a)
-% 
-%     LEGACY-COMPATIBLE version of ProgressBar
-%     Compatibility: MATLAB 2017a ~ latest
-%     
-%     Handy progress bar that can be used in GUI or text interface.
-%     - Faster than waitbar (MATLAB builtin)
-%     - GUI interface
-%     - CLI interface
-%     - Parfor compatibility
+% ProgressBar Class
 %
-%     -=#( Monospaced fonts are recommended for the CLI interface )#=-
-% 
-%     GUI progress bar
-%     |   N = 100;
-%     |   task_name = 'Task name';
-%     |
-%     |   PB = ProgressBar(N, task_name);        % or ProgressBar(N);
-%     |   for n = 1:N
-%     |       pause(0.5)          % Loop body
-%     |       PB.count            % or count(PB)
-%     |   end
-% 
-%     GUI progress bar (parfor loop)
-%     |   N = 500;
-%     |   task_name = 'Task name';
-%     |
-%     |   PB = ProgressBar(N, task_name);        % or ProgressBar(N);
-%     |   parfor n = 1:N
-%     |       pause(0.5*rand)     % Loop body
-%     |       count(PB)           % It is recommended to use count(PB)
-%     |                           % instead of PB.count in parfor loop.
-%     |   end
+% A versatile progress bar implementation for MATLAB, compatible with 
+% MATLAB versions 2017a through 2024a. This class provides both GUI and 
+% CLI progress bar interfaces and supports parallel processing with 
+% `parfor` loops.
 %
-%     CLI progress bar
-%     |   N = 100;
-%     |   task_name = 'Task name';
-%     |
-%     |   PB = ProgressBar(N, task_name, 'cli');
-%     |   % or ProgressBar(N, [], 'cli');
-%     |   for n = 1:N
-%     |       pause(0.5)          % Loop body
-%     |       PB.count            % or count(PB)
-%     |   end
-% 
-%     CLI progress bar (parfor loop)
-%     |   N = 500;
-%     |   task_name = 'Task name';
-%     |
-%     |   PB = ProgressBar(N, task_name, 'cli');
-%     |   % or ProgressBar(N, [], 'cli');
-%     |   parfor n = 1:N
-%     |       pause(0.5*rand)     % Loop body
-%     |       count(PB)           % It is recommended to use count(PB)
-%     |                           % instead of PB.count in parfor loop.
-%     |   end
+% Features:
+% - Faster than MATLAB's built-in `waitbar`.
+% - Supports both GUI and CLI interfaces.
+% - Compatible with `parfor` loops for parallel processing.
+% - Displays elapsed and estimated remaining time.
+% - Customizable character sets for CLI progress bar.
 %
-%     CLI progress bar
-%     |███████████████████████████ 1 min, 18 sec ███████████████████████████|100%
-%     Task name |██████████████████████████ 8 sec ██████████████████████████|100%
-%     Task name |███████████████████████████████████████████████            | 80%
-%     Elapsed: 2 hour, 1 min, Remaining: 30 min
+% Usage Examples:
+% 1. GUI Progress Bar:
+%    ```matlab
+%    N = 100;
+%    task_name = 'Task name';
+%    PB = ProgressBar(N, task_name); % or ProgressBar(N);
+%    for n = 1:N
+%        pause(0.5); % Loop body
+%        PB.count;   % or count(PB)
+%    end
+%    ```
 %
+% 2. GUI Progress Bar with `parfor`:
+%    ```matlab
+%    N = 500;
+%    task_name = 'Task name';
+%    PB = ProgressBar(N, task_name); % or ProgressBar(N);
+%    parfor n = 1:N
+%        pause(0.5 * rand); % Loop body
+%        count(PB);         % Recommended for `parfor` loops
+%    end
+%    ```
 %
-%     created 2023. 07. 14.
-%     edited  2023. 09. 28.
-%     author  Cho HyunGwang
-% 
-%     https://github.com/elgar328/matlab-code-examples/tree/main/tools/ProgressBar
-% Note for character set
-%   char_set{1}↓↓char_set{4}    ↓char_set{2}    ↓char_set{3}  ↓char_set{4}
-% downloading.. |██████████████████████████████               | 80%
-% downloading.. |██████████████████████████████---------------| 80%
-% downloading.. |██████████████████████████████•••••••••••••••| 80%
-% downloading.. |==============================•••••••••••••••| 80%
-% downloading.. |==============================               | 80%
-% downloading.. |******************************               | 80%
-% downloading.. |##############################...............| 80%
-% 0        1         2         3         4         5         6         7
-% 123456789012345678901234567890123456789012345678901234567890123456789012345
+% 3. CLI Progress Bar:
+%    ```matlab
+%    N = 100;
+%    task_name = 'Task name';
+%    PB = ProgressBar(N, task_name, 'cli'); % or ProgressBar(N, [], 'cli');
+%    for n = 1:N
+%        pause(0.5); % Loop body
+%        PB.count;   % or count(PB)
+%    end
+%    ```
+%
+% 4. CLI Progress Bar with `parfor`:
+%    ```matlab
+%    N = 500;
+%    task_name = 'Task name';
+%    PB = ProgressBar(N, task_name, 'cli'); % or ProgressBar(N, [], 'cli');
+%    parfor n = 1:N
+%        pause(0.5 * rand); % Loop body
+%        count(PB);         % Recommended for `parfor` loops
+%    end
+%    ```
+%
+% CLI Progress Bar Example Output:
+% ```
+% |███████████████████████████ 1 min, 18 sec ███████████████████████████|100%
+% Task name |██████████████████████████ 8 sec ██████████████████████████|100%
+% Task name |███████████████████████████████████████████████            | 80%
+% Elapsed: 2 hour, 1 min, Remaining: 30 min
+% ```
+%
+% Constructor:
+% - `ProgressBar(N, task_name, ui)`
+%   - `N`: Total number of iterations (positive integer).
+%   - `task_name`: (Optional) Name of the task (string or character array).
+%   - `ui`: (Optional) Interface type, either `'gui'` (default) or `'cli'`.
+%
+% Methods:
+% - `count`: Increment the progress bar by one step. Use `count(PB)` in 
+%   `parfor` loops for compatibility.
+%
+% Properties:
+% - `N`: Total number of iterations.
+% - `task_name`: Name of the task.
+% - `ui_type`: Interface type (`'gui'` or `'cli'`).
+% - `counter`: Current progress count.
+% - `start_time`: Start time of the progress bar.
+% - `end_time`: End time of the progress bar (when completed).
+%
+% Notes:
+% - The CLI progress bar adapts to the terminal width and supports 
+%   customizable character sets.
+% - The GUI progress bar uses MATLAB's `waitbar` for visualization.
+% - The class automatically handles cleanup of GUI resources upon 
+%   completion or deletion.
+%
+% Author:
+% - Created: 2023-07-14
+% - Edited: 2023-09-28
+% - Author: Cho HyunGwang
+% - GitHub: https://github.com/elgar328/matlab-code-examples/tree/main/tools/ProgressBar
 classdef ProgressBar < handle
     % -------------------- Properties for asynchronous --------------------
     properties (SetAccess = immutable, GetAccess = private)

@@ -1,14 +1,36 @@
+% highPassFilter - Applies a high-pass FIR filter to a 2D signal or column vector.
+%
+% Syntax:
+%   [filteredSignal, h] = highPassFilter(signal, Ts, Ncoef, cutFreq)
+%
+% Inputs:
+%   signal   - 2D signal matrix or column vector (e.g., impedance matrix).
+%              Each column of the matrix will be filtered independently.
+%   Ts       - Sampling interval in milliseconds (ms).
+%   Ncoef    - Number of filter coefficients (analogous to overlap in Jason).
+%   cutFreq  - Cutoff frequency in Hertz (Hz).
+%
+% Outputs:
+%   filteredSignal - The filtered signal after applying the high-pass filter.
+%   h              - The FIR filter coefficients.
+%
+% Description:
+%   This function applies a high-pass FIR filter to the input signal. The
+%   signal can be a 2D matrix or a column vector. The function ensures that
+%   the signal is padded appropriately to avoid edge effects during filtering.
+%
+% Example:
+%   % Apply a high-pass filter to a signal with a sampling interval of 4 ms,
+%   % 110 filter coefficients, and a cutoff frequency of 8 Hz.
+%   filteredSignal = highPassFilter(signal, 4, 110, 8);
+%
+% Notes:
+%   - The input signal should be a matrix or a column vector.
+%   - The function pads the signal at the beginning and end to minimize
+%     boundary effects during filtering.
+%   - The cutoff frequency should be less than half the sampling frequency
+%     (Nyquist frequency).
 function[filteredSignal, h] =  highPassFilter(signal, Ts, Ncoef, cutFreq)
-    % highPassFilter(signal, Ts, Ncoef, cutFreq)
-    % signal - Sinal 2d, matriz de impedancia no caso.
-    %       obs. signal deve ser uma matriz ou um vetor coluna. No caso da
-    %       cada coluna que ser· filtrada
-    % Ts - Intervalo de amostragem  em ms
-    % Ncoef - Numero de coeficientes do filtro (analogo ao overlap do Jason)
-    % cutFreq - Frequencia de corte em HZ
-    %
-    % Exemplo  dado_filtrado = highPassFilter2(signal, 4, 110, 8);
-    
     Ts = Ts * 1e-3;
     Fnorm = cutFreq*2*Ts;
     

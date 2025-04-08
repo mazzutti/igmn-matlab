@@ -1,3 +1,78 @@
+% PSO - Particle Swarm Optimization Algorithm
+%
+% This script implements a Particle Swarm Optimization (PSO) algorithm for
+% hyperparameter optimization. The main function `pso` initializes the
+% optimization process and calls the core algorithm `psocore`. The algorithm
+% iteratively updates particle positions and velocities to minimize an
+% objective function.
+%
+% Functions:
+%   pso(problem) - Main entry point for the PSO algorithm.
+%       Inputs:
+%           problem - A structure containing the optimization problem
+%                     definition, including hyperparameters, bounds, and
+%                     objective function.
+%       Outputs:
+%           x        - Best solution found by the algorithm.
+%           fval     - Objective function value at the best solution.
+%           exitFlag - Exit condition flag.
+%
+%   psocore(...) - Core implementation of the PSO algorithm.
+%       Inputs:
+%           nhps                 - Number of hyperparameters.
+%           lbRow, ubRow         - Lower and upper bounds for hyperparameters.
+%           problem              - Problem structure with optimization details.
+%           hpNames, hpIndexes   - Names and indexes of hyperparameters.
+%       Outputs:
+%           x, fval, exitFlag    - Best solution, objective value, and exit flag.
+%
+%   generateBestNeighborIndex(...) - Generates the best neighbor index for each
+%                                    particle based on their fitness values.
+%       Inputs:
+%           state                  - Current state of the optimization.
+%           adaptiveNeighborhoodSize - Size of the adaptive neighborhood.
+%           numParticles           - Number of particles in the swarm.
+%       Outputs:
+%           bestNeighborIndex      - Index of the best neighbor for each particle.
+%
+%   updateVelocities(...) - Updates the velocities of particles based on
+%                           inertia, self-adjustment, and social adjustment.
+%       Inputs:
+%           state, adaptiveInertia, bestNeighborIndex, cSelf, cSocial, pIdx, nhps
+%       Outputs:
+%           newVelocities - Updated velocities for the particles.
+%
+%   updatePositions(...) - Updates the positions of particles and enforces
+%                          boundary constraints.
+%       Inputs:
+%           state, lbMatrix, ubMatrix, pIdx, numParticles, nhps, hyperparameters, hpIndexes
+%       Outputs:
+%           newPositions - Updated positions for the particles.
+%           tfInvalid    - Logical array indicating invalid positions.
+%
+%   updateInertia(...) - Updates the inertia coefficient and neighborhood size
+%                        adaptively based on the progress of the optimization.
+%       Inputs:
+%           state, minInertia, maxInertia, bestFvals, adaptiveInertiaCounter,
+%           adaptiveNeighborhoodSize, adaptiveInertia, numParticles, minNeighborhoodSize
+%       Outputs:
+%           state, adaptiveInertiaCounter, bestFvals, adaptiveNeighborhoodSize, adaptiveInertia
+%
+%   updateParticles(...) - Updates both velocities and positions of particles,
+%                          and enforces boundary constraints.
+%       Inputs:
+%           state, adaptiveInertia, bestNeighborIndex, cSelf, cSocial, pIdx,
+%           numParticles, nhps, lbMatrix, ubMatrix, hyperparameters, hpIndexes
+%       Outputs:
+%           state - Updated state of the optimization.
+%
+% Notes:
+% - The algorithm supports parallel computation for evaluating the objective
+%   function across particles.
+% - Adaptive parameters such as inertia and neighborhood size are updated
+%   dynamically to improve convergence.
+% - Plot functions can be used to visualize the optimization progress.
+% - The algorithm checks for stopping criteria at each iteration.
 function [x, fval, exitFlag] = pso(problem) %#codegen
     
     optOptions = problem.OptimizeOptions;

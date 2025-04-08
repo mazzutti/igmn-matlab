@@ -1,3 +1,46 @@
+% stratifiedPartition - Partitions data into stratified training, testing, and validation sets.
+%
+% Syntax:
+%   [trainData, testData, valTrainData] = stratifiedPartition(allData, blockSize, traceSize, nBlockSamples)
+%
+% Inputs:
+%   allData       - A structure containing the dataset with fields representing variables.
+%   blockSize     - Size of the blocks to partition the data into.
+%   traceSize     - Total size of the data in the trace dimension.
+%   nBlockSamples - Number of samples to generate per block.
+%
+% Outputs:
+%   trainData     - Stratified training data generated from Gaussian Mixture Models (GMMs).
+%   testData      - Stratified testing data generated from GMMs.
+%   valTrainData  - Validation data extracted from the original dataset.
+%
+% Description:
+%   This function partitions the input data into stratified training, testing, and validation
+%   datasets. It divides the data into blocks of size `blockSize` and fits Gaussian Mixture
+%   Models (GMMs) to each block. The GMMs are used to generate synthetic training and testing
+%   data. The function also saves the GMMs and validation data to a file for reuse.
+%
+%   If the file 'data/stratifiedData.mat' exists, the function loads the GMMs and validation
+%   data from the file instead of recomputing them.
+%
+% Notes:
+%   - The function uses parallel processing (parfor) to speed up GMM fitting.
+%   - If a GMM fails to converge for a block, the function reduces the number of components
+%     until convergence is achieved or throws an error if no convergence is possible.
+%   - The training and testing data are shuffled before being returned.
+%
+% Example:
+%   % Define input parameters
+%   allData = struct('Vp', rand(100, 100), 'Vs', rand(100, 100), 'Density', rand(100, 100));
+%   blockSize = 10;
+%   traceSize = 100;
+%   nBlockSamples = 50;
+%
+%   % Call the function
+%   [trainData, testData, valTrainData] = stratifiedPartition(allData, blockSize, traceSize, nBlockSamples);
+%
+% See also:
+%   fitgmdist, random, ProgressBar
 function [trainData, testData, valTrainData] = stratifiedPartition(allData, blockSize, traceSize, nBlockSamples) %#codegen
     numVars = numel(fieldnames(allData));
     if ~isfile('data/stratifiedData.mat')

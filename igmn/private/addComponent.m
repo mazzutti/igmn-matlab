@@ -1,5 +1,28 @@
-% Create a component when a data point x matches the novelty 
-% criterion.
+% ADDCOMPONENT Adds a new component to the network.
+%
+%   net = addComponent(net, x) adds a new component to the given network
+%   structure `net` using the input data point `x`. This function updates
+%   the network's parameters, including the means, priors, and covariance
+%   matrices, to account for the new component.
+%
+%   Inputs:
+%       net - A structure representing the network. It contains fields
+%             such as means, priors, covariances, and other parameters
+%             required for the network's operation.
+%       x   - A vector representing the data point to be added as a new
+%             component in the network.
+%
+%   Outputs:
+%       net - The updated network structure with the new component added.
+%
+%   Notes:
+%       - The function initializes the covariance matrix for the new
+%         component using the `nonOverlappingInitialCov` function.
+%       - If the `useRankOne` flag is set in the network, the function
+%         updates the inverse covariance matrices and log determinants.
+%       - Otherwise, it updates the full covariance matrices.
+%       - The function also recalculates the probability density for the
+%         new component using the `computeProbDensity` function.
 function net = addComponent(net, x) %#codegen
     initialCov = nonOverlappingInitialCov(net, x);
     net.nc = net.nc + 1;

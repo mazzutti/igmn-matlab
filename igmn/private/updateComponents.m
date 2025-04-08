@@ -1,3 +1,45 @@
+% UPDATECOMPONENTS Updates the components of the network based on input data.
+%
+%   net = updateComponents(net, x)
+%
+%   This function updates the parameters of a network structure `net` 
+%   using the input data `x`. It modifies the means, covariances, priors, 
+%   and other internal parameters of the network based on the posterior 
+%   probabilities and the input data.
+%
+%   Inputs:
+%       net - A structure representing the network, containing fields such as:
+%             - vs: A vector of component counts.
+%             - sp: A vector of posterior sums.
+%             - spu: A vector of posterior sums (used for updates).
+%             - means: A matrix of component means.
+%             - invCovs: A matrix of inverse covariances.
+%             - logDets: A vector of log determinants of covariances.
+%             - priors: A vector of component priors.
+%             - posteriors: A vector of posterior probabilities.
+%             - minCov: A minimum covariance value to ensure numerical stability.
+%             - dimension: Dimensionality of the data.
+%             - nc: Number of components.
+%             - useRankOne: A flag indicating whether to use rank-one updates.
+%             - covs: A matrix of component covariances.
+%       x   - A vector representing the input data point.
+%
+%   Outputs:
+%       net - The updated network structure with modified fields:
+%             - Updated means, covariances, priors, and other parameters.
+%
+%   Notes:
+%       - If `useRankOne` is true, the function performs rank-one updates 
+%         and downdates for the inverse covariance matrices.
+%       - If `useRankOne` is false, the function updates the covariance 
+%         matrices directly.
+%       - The function ensures numerical stability by adding `minCov` to 
+%         the covariance updates.
+%
+%   Example:
+%       net = updateComponents(net, x);
+%
+%   See also: Other related functions in the IGMN framework.
 function net = updateComponents(net, x) %#codegen
     net.vs = net.vs + 1;
     net.sp = net.sp + net.posteriors;

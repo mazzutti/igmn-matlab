@@ -1,3 +1,42 @@
+% Hyperparameter Class
+% 
+% The `Hyperparameter` class represents a hyperparameter with associated
+% properties such as its value, name, bounds, and whether it is discrete.
+%
+% Properties:
+%   - value (double): 
+%       The current or default value of the hyperparameter.
+%   - name (char): 
+%       The name of the hyperparameter.
+%   - lb (double): 
+%       The lower bound for the hyperparameter value. Default is -Inf.
+%   - ub (double): 
+%       The upper bound for the hyperparameter value. Default is Inf.
+%   - isDiscrete (logical): 
+%       Indicates whether the hyperparameter is discrete. Default is false.
+%
+% Methods:
+%   - Hyperparameter(value, name, options):
+%       Constructor to create a new `Hyperparameter` object.
+%       Arguments:
+%           - value (1,1 double): 
+%               The hyperparameter default/current value. Must be numeric and non-NaN.
+%           - name (1,: char): 
+%               The hyperparameter name. Must be a finite text scalar.
+%           - options.lb (1,1 double): 
+%               The hyperparameter lower bound. Default is -Inf.
+%           - options.ub (1,1 double): 
+%               The hyperparameter upper bound. Default is Inf.
+%           - options.isDiscrete (1,1 logical): 
+%               Indicates whether the hyperparameter is discrete. Default is false.
+%
+% Static Private Methods:
+%   - mustBeInRange(value, lb, ub):
+%       Validates that the value is within the range [lb, ub].
+%   - mustBeIntegerIfDiscrete(value, isDiscrete, argname):
+%       Ensures that the value is an integer if the hyperparameter is discrete.
+%   - mustBeValidBounds(lb, ub):
+%       Validates that the lower bound (lb) is less than the upper bound (ub).
 classdef Hyperparameter
     
     properties

@@ -1,23 +1,48 @@
+% RECALL Performs the Gaussian Mixture Regression for a given input.
+%   This function estimates the missing values in the input data `X` 
+%   using the Incremental Gaussian Mixture Network (IGMN). The known 
+%   attributes are specified by the `features` parameter, and the 
+%   optional `featureGrid` parameter can be used to compute posterior 
+%   probabilities over a grid.
+%
+% Inputs:
+%   net (1, 1) igmn:
+%       An instance of the IGMN model containing the learned parameters.
+%
+%   X (:, :) numeric:
+%       A numeric matrix where each row represents an input sample with 
+%       known values for some attributes.
+%
+%   features (1, :) numeric (optional):
+%       An array of integers specifying the indices of the known attributes 
+%       in `X`. If not provided, the function assumes that the first `M` 
+%       attributes are known, where `M` is the number of columns in `X`.
+%
+%   featureGrid (:, :) numeric (optional):
+%       A numeric matrix representing a grid of values over which the 
+%       posterior probabilities are computed. If not provided, no grid 
+%       computation is performed.
+%
+% Outputs:
+%   Y (:, :) numeric:
+%       A numeric matrix containing the estimated values for the missing 
+%       attributes in `X`.
+%
+%   probabilities (:, :) numeric:
+%       A numeric matrix containing the computed posterior probabilities 
+%       for the given `featureGrid`. If `featureGrid` is not provided, 
+%       this output will be an empty matrix.
+%
+% Notes:
+%   - The function uses the learned parameters of the IGMN model, such as 
+%     means, covariances, and priors, to perform the regression.
+%   - If `features` is not specified, the function assumes that the known 
+%     attributes are the first `M` columns of `X`.
+%   - The `useRankOne` property of the IGMN model determines whether a 
+%     rank-one update is used for covariance computations.
+%   - The function handles cases where probabilities or posterior 
+%     assignments (`pajs`) result in NaN values by setting them to zero.
 function [Y, probabilities] = recall(net, X, features, featureGrid) %#codegen
-    % RECALL Performs the Gaussian Mixture Regression for a given 
-    %        input.
-    %   This method returns an estimate for the missing values. The 
-    %   X parameter defines the known values while the features
-    %   defines which attributes are know. 
-    %   
-    %   **Notice**: if features is  not given, IGMN assumes that 
-    %   the firsts M attributes are known, where M is the dimension 
-    %   of X.
-    %
-    % Inputs:
-    %   Y : an NxM attributes array.
-    %   features : an optional array of ints or names.
-    %   featureGrid : an optional array to doubles with the grid 
-    %   to compute probabilities.
-    % Output:
-    %   Y : an array with the estimate for the missing 
-    %       values.
-    %   probabilities: the computed posterior probabilities.
     arguments
         net (1, 1) igmn;
         X (:, :) { ...

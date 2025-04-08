@@ -1,3 +1,51 @@
+% COMPILE - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.
+%
+% Syntax:
+%   compile(problem)
+%
+% Description:
+%   This function compiles MATLAB functions into MEX or library files using MATLAB Coder. 
+%   The compilation process is determined by the execution mode and compile options specified 
+%   in the input 'problem' object. It supports different configurations for classification, 
+%   prediction, training, and optimization tasks.
+%
+% Input Arguments:
+%   problem - An object of class 'Problem' containing the following properties:
+%       ExecutionMode          - A string specifying the execution mode ('script', 'mex', or 'lib').
+%       CompileOptions         - A structure containing compile options such as:
+%           EnableProfile       - Enable profiling for MEX files.
+%           EnableReport        - Enable generation of code generation reports.
+%           EnableRecompile     - Force recompilation of MEX or library files.
+%           IsClassification    - Boolean indicating if the task is classification.
+%           IsOptimization      - Boolean indicating if the task is optimization.
+%           NumberOfVariables   - Number of input variables.
+%           NumberOfOutputVars  - Number of output variables.
+%           trainSize           - Size of the training dataset.
+%           testSize            - Size of the testing dataset.
+%       Other properties specific to the problem configuration.
+%
+% Functionality:
+%   - Configures MATLAB Coder for MEX or library generation based on the execution mode.
+%   - Defines argument types for entry-point functions such as 'predict', 'classify', 'train', 
+%     'igmnBuilder', and 'optimize'.
+%   - Invokes MATLAB Coder to generate MEX or library files for the specified functions.
+%   - Supports additional configurations for optimization tasks, including hyperparameter tuning.
+%
+% Notes:
+%   - The function checks for the existence of previously compiled files and recompiles them 
+%     only if 'EnableRecompile' is set to true.
+%   - The generated code can be configured for different toolchains, target languages, and 
+%     optimization settings.
+%
+% Example:
+%   problem = Problem();
+%   problem.ExecutionMode = 'mex';
+%   problem.CompileOptions.EnableProfile = true;
+%   problem.CompileOptions.EnableReport = true;
+%   compile(problem);
+%
+% See also:
+%   coder.config, codegen
 function compile(problem)
     arguments
         problem (1, 1) Problem;

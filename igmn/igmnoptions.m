@@ -1,3 +1,51 @@
+% IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.
+%
+% This class defines the configuration options for the IGMN algorithm, which
+% is used for incremental learning and clustering. The options include various
+% thresholds, regularization parameters, and other settings that control the
+% behavior of the algorithm.
+%
+% Properties:
+%   range       - A two-row matrix representing the data range. Each column
+%                 must be sorted in ascending order. This is a mandatory parameter.
+%   Tau         - Threshold for creating new components. A component absorbs
+%                 an input if its likelihood is greater than Tau. Must be in
+%                 the range (0, 1).
+%   Delta       - Fraction of the data range used to create initial covariance
+%                 matrices. Must be in the range (0, 1).
+%   Gamma       - Fractional part of the accumulators to maintain after a restart.
+%                 Must be in the range (0, 1].
+%   Phi         - Fractional parameter for controlling distribution updates.
+%                 Must be in the range (0, 1].
+%   SPMin       - Minimum activation threshold for removing noisy components.
+%                 Must be greater than or equal to 2.
+%   VMin        - Minimum age threshold for removing noisy components. Must be
+%                 an integer greater than or equal to 2.
+%   RegValue    - Regularization value for numerical stability. Must be greater
+%                 than or equal to 0.
+%   MaxNc       - Maximum number of Gaussian components allowed. Must be in the
+%                 range [3, 10000].
+%   UseRankOne  - Experimental flag to enable Rank-One updates in IGMN. Must be
+%                 either 0 (disabled) or 1 (enabled).
+%
+% Methods:
+%   igmnoptions(range, options) - Constructor to initialize the IGMN options.
+%                                 The `range` parameter is mandatory, while
+%                                 other parameters are optional and have default
+%                                 values.
+%   from(options, names, values) - Static method to create a copy of an
+%                                  igmnoptions object with updated properties
+%                                  based on the provided names and values.
+%
+% Static Private Methods:
+%   extractValue(propName, options, names, values) - Helper method to extract
+%                                                    property values from the
+%                                                    provided names and values.
+%
+% Validation Functions:
+%   mustBeSortedInAscendingOrder(range) - Ensures that the `range` matrix is
+%                                         sorted in ascending order for each
+%                                         column.
 classdef igmnoptions
     
     properties

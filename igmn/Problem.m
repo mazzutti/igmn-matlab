@@ -1,3 +1,50 @@
+% Problem Class
+% 
+% This class defines a problem setup for training and testing an Incremental Gaussian Mixture Network (IGMN) model.
+%
+% Properties:
+%   - trainData: A matrix containing the data used for training the IGMN model.
+%   - testData: A matrix containing the data used for testing the IGMN model.
+%   - ExecutionMode: Specifies the execution mode for the IGMN model. Possible values are:
+%       - 'script': Runs the code in pure MATLAB (default).
+%       - 'mex': Compiles and uses the IGMN and associated code as a Mex configuration/code.
+%       - 'native': Compiles and uses the IGMN and associated code as native compiled code.
+%   - DoParametersTuning: A logical value indicating whether to perform hyperparameter tuning for the IGMN model.
+%       - true: Perform hyperparameter tuning.
+%       - false: Use the default IGMN options instead (default).
+%   - AllData: An optional matrix containing all available data, including training and testing data.
+%       - Default value: [trainData; testData].
+%   - InputVarIndexes: Column indexes of trainData and testData to be used as input variables for the IGMN model.
+%       - Default value: 1:(size(trainData, 2) - 1).
+%   - OutputVarIndexes: Column indexes of trainData and testData to be used as output variables for the IGMN model.
+%       - Default value: The last column of trainData/testData.
+%   - DefaultIgmnOptions: Default options for the IGMN model, obtained using getDefaultIgmnOptions([trainData; testData]).
+%   - CompileOptions: Default compile options, obtained using getDefaultCompileOptions().
+%   - OptimizeOptions: Default optimization options, obtained using getDefaultOptimizeOptions().
+%
+% Methods:
+%   - getDefaultIgmnOptions(data): Static method to generate default IGMN options based on the provided data.
+%   - getDefaultCompileOptions(): Static method to generate default compile options.
+%   - getDefaultOptimizeOptions(): Static method to generate default optimization options, including hyperparameter definitions.
+%   - Problem(trainData, testData, options): Constructor to initialize a Problem instance with the provided training data,
+%       testing data, and optional configuration options.
+%
+% Constructor Arguments:
+%   - trainData: A numeric, non-NaN, non-empty, finite matrix for training data.
+%   - testData: A numeric, non-NaN, non-empty, finite matrix for testing data.
+%   - options.ExecutionMode: (Optional) Execution mode ('script', 'mex', 'native'). Default is 'script'.
+%   - options.DoParametersTuning: (Optional) Logical value for hyperparameter tuning. Default is false.
+%   - options.AllData: (Optional) Matrix containing all data. Default is [trainData; testData].
+%   - options.InputVarIndexes: (Optional) Column indexes for input variables. Default is 1:(size(trainData, 2) - 1).
+%   - options.OutputVarIndexes: (Optional) Column indexes for output variables. Default is the last column.
+%   - options.DefaultIgmnOptions: (Optional) Default IGMN options. Default is obtained using getDefaultIgmnOptions().
+%   - options.CompileOptions: (Optional) Default compile options. Default is obtained using getDefaultCompileOptions().
+%   - options.OptimizeOptions: (Optional) Default optimization options. Default is obtained using getDefaultOptimizeOptions().
+%
+% Notes:
+%   - The constructor performs additional validations to ensure consistency between trainData, testData, and options.
+%   - If the size of options.AllData does not match the combined size of trainData and testData, the default IGMN options
+%     are recalculated using options.AllData.
 classdef Problem
     
     properties

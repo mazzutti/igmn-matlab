@@ -1,3 +1,66 @@
+% COMPILEOPTIONS Class
+% 
+% The `compileoptions` class is used to configure various options for code
+% generation and compilation processes. It provides properties to specify
+% dataset sizes, enable profiling and reporting, and define problem-specific
+% parameters such as the number of variables and output variables.
+%
+% Properties:
+%   trainSize (double): 
+%       The size of the training dataset. Default is `inf`.
+%   testSize (double): 
+%       The size of the testing dataset. Default is `inf`.
+%   allDataSize (double): 
+%       The total size of the dataset, calculated as `trainSize + testSize`.
+%   EnableProfile (logical): 
+%       Indicates whether profiling instrumentation is included in the 
+%       generated code. Default is `false`.
+%   EnableReport (logical): 
+%       Indicates whether a code generation report is produced. Default is `false`.
+%   EnableRecompile (logical): 
+%       Forces the generation/compilation process to be redone if set to `true`.
+%       Default is `false`.
+%   IsClassification (logical): 
+%       Specifies if the problem is a classification problem. Default is `false`.
+%   IsOptimization (logical): 
+%       Specifies if the problem is an optimization problem. Default is `false`.
+%   NumberOfVariables (double): 
+%       The number of problem variables to consider during code generation.
+%       Must be a positive integer. Default is `2`.
+%   NumberOfOutputVars (double): 
+%       The number of problem output variables to consider during code generation.
+%       Must be a positive integer. Default is `1`.
+%
+% Methods:
+%   compileoptions(trainSize, testSize, allDataSize, options):
+%       Constructor method to initialize the `compileoptions` object.
+%
+%       Arguments:
+%           trainSize (double): 
+%               The size of the training dataset. Default is `inf`.
+%           testSize (double): 
+%               The size of the testing dataset. Default is `inf`.
+%           allDataSize (double): 
+%               The total size of the dataset, calculated as `trainSize + testSize`.
+%               Default is `trainSize + testSize`.
+%           options (struct): 
+%               A structure containing the following optional fields:
+%               - NumberOfVariables (double): 
+%                   Number of problem variables. Default is `2`.
+%               - NumberOfOutputVars (double): 
+%                   Number of output variables. Default is `1`.
+%               - MaxNc (double): 
+%                   Maximum number of clusters. Default is `trainSize + 1`.
+%               - EnableProfile (logical): 
+%                   Enable profiling instrumentation. Default is `false`.
+%               - EnableReport (logical): 
+%                   Enable code generation report. Default is `false`.
+%               - IsClassification (logical): 
+%                   Specify if it is a classification problem. Default is `false`.
+%               - IsOptimization (logical): 
+%                   Specify if it is an optimization problem. Default is `false`.
+%               - EnableRecompile (logical): 
+%                   Force recompilation. Default is `false`.
 classdef compileoptions
     
     properties

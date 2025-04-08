@@ -1,8 +1,9 @@
 **/*.mexw64
 **/*.mexmaci64
+**/*.mexmaca64
 **/*.asv
 **/codegen/
-**/.DS_store/
+**/.DS_store
 **/*.exe
 **/*.pdb
 **/*.prj
@@ -11,3 +12,5 @@
 **/*.mat
 **/**/data/
 !examples/regression/marmousi/cmaps.mat
+**/examples.env
+**/examples/**/data/

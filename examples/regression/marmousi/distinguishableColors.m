@@ -1,60 +1,60 @@
-function colors = distinguishableColors(n_colors, bg,func)
-% DISTINGUISHABLE_COLORS: pick colors that are maximally perceptually distinct
+% DISTINGUISHABLE_COLORS: Generate a set of maximally perceptually distinct colors
 %
-% When plotting a set of lines, you may want to distinguish them by color.
-% By default, Matlab chooses a small set of colors and cycles among them,
-% and so if you have more than a few lines there will be confusion about
-% which line is which. To fix this problem, one would want to be able to
-% pick a much larger set of distinct colors, where the number of colors
-% equals or exceeds the number of lines you want to plot. Because our
-% ability to distinguish among colors has limits, one should choose these
-% colors to be "maximally perceptually distinguishable."
-%
-% This function generates a set of colors which are distinguishable
-% by reference to the "Lab" color space, which more closely matches
-% human color perception than RGB. Given an initial large list of possible
-% colors, it iteratively chooses the entry in the list that is farthest (in
-% Lab space) from all previously-chosen entries. While this "greedy"
-% algorithm does not yield a global maximum, it is simple and efficient.
-% Moreover, the sequence of colors is consistent no matter how many you
-% request, which facilitates the users' ability to learn the color order
-% and avoids major changes in the appearance of plots when adding or
-% removing lines.
+% This function generates a set of colors that are distinguishable by 
+% reference to the "Lab" color space, which closely matches human color 
+% perception. It is useful for plotting multiple lines or objects where 
+% distinct colors are required.
 %
 % Syntax:
-%   colors = distinguishable_colors(n_colors)
-% Specify the number of colors you want as a scalar, n_colors. This will
-% generate an n_colors-by-3 matrix, each row representing an RGB
-% color triple. If you don't precisely know how many you will need in
-% advance, there is no harm (other than execution time) in specifying
-% slightly more than you think you will need.
+%   colors = distinguishableColors(n_colors)
+%   colors = distinguishableColors(n_colors, bg)
+%   colors = distinguishableColors(n_colors, bg, func)
 %
-%   colors = distinguishable_colors(n_colors,bg)
-% This syntax allows you to specify the background color, to make sure that
-% your colors are also distinguishable from the background. Default value
-% is white. bg may be specified as an RGB triple or as one of the standard
-% "ColorSpec" strings. You can even specify multiple colors:
-%     bg = {'w','k'}
-% or
-%     bg = [1 1 1; 0 0 0]
-% will only produce colors that are distinguishable from both white and
-% black.
+% Inputs:
+%   n_colors - (scalar) Number of distinct colors to generate.
+%   bg       - (optional) Background color(s) to ensure generated colors 
+%              are distinguishable from. Can be:
+%                - RGB triple (e.g., [1 1 1] for white)
+%                - Standard "ColorSpec" string (e.g., 'w' for white)
+%                - Cell array of colors (e.g., {'w', 'k'})
+%                - Numeric array of colors (n-by-3 matrix)
+%              Default: [1 1 1] (white background).
+%   func     - (optional) Custom function for RGB-to-Lab color conversion.
+%              Default: Uses MATLAB's image processing toolbox functions 
+%              `makecform` and `applycform`.
 %
-%   colors = distinguishable_colors(n_colors,bg,rgb2labfunc)
-% By default, distinguishable_colors uses the image processing toolbox's
-% color conversion functions makecform and applycform. Alternatively, you
-% can supply your own color conversion function.
+% Outputs:
+%   colors - (n_colors-by-3 matrix) Each row represents an RGB color triple.
 %
-% Example:
-%   c = distinguishable_colors(25);
-%   figure
-%   image(reshape(c,[1 size(c)]))
+% Examples:
+%   % Generate 25 distinguishable colors
+%   c = distinguishableColors(25);
+%   figure;
+%   image(reshape(c, [1 size(c)]));
 %
-% Example using the file exchange's 'colorspace':
-%   func = @(x) colorspace('RGB->Lab',x);
-%   c = distinguishable_colors(25,'w',func);
-% Copyright 2010-2011 by Timothy E. Holy
-  % Parse the inputs
+%   % Generate colors distinguishable from white and black backgrounds
+%   c = distinguishableColors(25, {'w', 'k'});
+%
+%   % Use a custom RGB-to-Lab conversion function
+%   func = @(x) colorspace('RGB->Lab', x);
+%   c = distinguishableColors(25, 'w', func);
+%
+% Notes:
+% - The function uses a "greedy" algorithm to iteratively select colors 
+%   that maximize perceptual distance in Lab space.
+% - If the number of requested colors exceeds the available distinguishable 
+%   colors, an error is thrown.
+%
+% Dependencies:
+% - MATLAB's image processing toolbox (for default RGB-to-Lab conversion).
+% - Alternatively, a custom RGB-to-Lab conversion function can be provided.
+%
+% Author:
+%   Timothy E. Holy, 2010-2011
+%
+% See also:
+%   makecform, applycform, colorspace
+function colors = distinguishableColors(n_colors, bg,func)
   if (nargin < 2)
     bg = [1 1 1];  % default white background
   else

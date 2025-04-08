@@ -1,3 +1,70 @@
+% OPTIMIZEOPTIONS Class for configuring optimization options.
+%
+%   The `optimizeoptions` class provides a flexible way to configure
+%   optimization settings for algorithms such as 'pso', 'psogsa', and 'imode'.
+%   It allows users to specify hyperparameters, algorithm-specific settings,
+%   and other options to control the optimization process.
+%
+% PROPERTIES:
+%   hyperparameters          - Array of Hyperparameters to be used as inputs.
+%                              Default is an empty array.
+%   Algorithm                - Optimizer name as a char. Options are 'pso',
+%                              'psogsa', or 'imode'. Default is 'pso'.
+%   UseDefaultsFor           - Array of Hyperparameters to be used as inputs
+%                              without optimization. Default is an empty cell array.
+%   InitialPopulation        - Initial or partial population of individuals
+%                              as an M-by-nvars matrix. Default is [].
+%   InitialPopulationSpan    - Initial range of individual positions. Default
+%                              is based on hyperparameter bounds.
+%   PlotFcns                 - Cell array of plot function names. Default is
+%                              {'plotbestf', 'plotpopulation'}.
+%   Display                  - Level of display output ('off', 'final', 'iter').
+%                              Default is 'iter'.
+%   DisplayInterval          - Interval for iterative display. Default is 1.
+%   PopulationSize           - Number of individuals in the population. Default
+%                              is min(100, 10*nvars).
+%   UseParallel              - Boolean to compute objective function in parallel.
+%                              Default is false.
+%   StallIterLimit           - Maximum iterations without improvement. Default is 20.
+%   StallTimeLimit           - Maximum time in seconds without improvement.
+%                              Default is Inf.
+%   TolFunValue              - Tolerance for function value change. Default is 1e-6.
+%   InertiaRange             - Adaptive inertia range for 'pso'. Default is [0.1, 1.1].
+%   MaxIter                  - Maximum number of iterations. Default is 200*nvars.
+%   MaxTime                  - Maximum runtime in seconds. Default is Inf.
+%   MaxFunEval               - Maximum number of function evaluations. Default
+%                              is max(10000, PopulationSize * 100).
+%   MinFractionNeighbors     - Minimum adaptive neighborhood size for 'pso'.
+%                              Default is 0.25.
+%   ObjectiveLimit           - Minimum objective value as a stopping criterion.
+%                              Default is -Inf.
+%   SelfAdjustment           - Weight for individual's best position in 'pso'.
+%                              Default is 1.49.
+%   SocialAdjustment         - Weight for neighborhood's best position in 'pso'.
+%                              Default is 1.49.
+%   MinPopulationSize        - Minimum population size for 'imode'. Default is 4.
+%   PopulationArquiveRate    - Archive size ratio for 'imode'. Default is 2.6.
+%   GravitationalConstant    - Gravitational constant. Default is 1.
+%   ExtraEvalArgs            - Additional arguments for evaluation. Default is {}.
+%   ExtraEvalCellArgs        - Additional cell arguments for evaluation. Default is {}.
+%   Verbosity                - Verbosity level based on Display property.
+%
+% METHODS:
+%   optimizeoptions          - Constructor to initialize the optimization options.
+%   initialPopulationSpan    - Static method to compute the initial population span
+%                              based on hyperparameter bounds.
+%
+% USAGE:
+%   options = optimizeoptions(hyperparameters, options);
+%   - `hyperparameters`: Array of Hyperparameters.
+%   - `options`: Struct with fields corresponding to the properties above.
+%
+% EXAMPLE:
+%   hyperparams = {Hyperparameter('x', 0, 10), Hyperparameter('y', -5, 5)};
+%   options = optimizeoptions(hyperparams, ...
+%       'Algorithm', 'pso', ...
+%       'PopulationSize', 50, ...
+%       'Display', 'iter');
 classdef optimizeoptions
     
     properties

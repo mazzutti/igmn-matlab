@@ -1,3 +1,49 @@
+%{
+
+This script performs regression analysis using the Incremental Gaussian Mixture Network (IGMN) 
+and compares its performance with Ensemble Smoother with Multiple Data Assimilation (ES-MDA). 
+The script includes data preparation, model training, optimization, and visualization of results.
+
+Key functionalities:
+1. Data Preparation:
+    - Generates synthetic data or loads pre-existing data.
+    - Configures training and testing datasets with specified trace numbers and noise levels.
+
+2. Model Configuration:
+    - Defines input and output variables for the regression problem.
+    - Configures hyperparameters and optimization settings for the IGMN model.
+
+3. Model Training and Optimization:
+    - Compiles the IGMN model for execution in 'mex' or 'native' mode.
+    - Tunes model parameters or loads pre-tuned parameters.
+    - Trains the IGMN model on the training dataset.
+
+4. Visualization:
+    - Plots results, including predictions, uncertainties, and comparisons with ES-MDA.
+    - Exports visualizations to PDF files for further analysis.
+
+5. Statistical Analysis:
+    - Computes and visualizes variance and uncertainty metrics for different noise levels.
+    - Normalizes and compares the performance of IGMN and ES-MDA.
+
+Global Variables:
+- traceSizes: Stores the sizes of seismic traces.
+- testTraces: Contains indices of test traces.
+- targets: Stores target values for regression.
+
+Dependencies:
+- Requires external libraries: 'igmn', 'GeoStatRockPhysics/SeReM', and 'Seislab 3.02'.
+- Uses custom functions such as `prepareData`, `optimize`, `igmnBuilder_mex`, `train_mex`, 
+  `predict_mex`, `plotResults`, `plotStds`, and `runSeReM`.
+
+Execution Modes:
+- 'mex': Executes compiled MATLAB code for improved performance.
+- 'native': Executes MATLAB code without compilation.
+
+Note:
+- Ensure all required dependencies and data files are available in the specified paths.
+- Modify hyperparameter bounds and optimization settings as needed for specific use cases.
+%}
 %#ok<*UNRCH>
 %#ok<*CLALL> 
 
@@ -13,6 +59,7 @@ global targets
 rng('default');
 rng(23);
 
+addpath(genpath('../../../examples/'));
 addpath('../../../igmn/');
 addpath(genpath('../../../GeoStatRockPhysics/SeReM/'));
 addpath(genpath('../../../Seislab 3.02/Seislab 3.02/')); presets;
@@ -27,9 +74,6 @@ noiseMultipliers = [0, 0.1, 0.5, 1];
 trainTraces = [680, 2040, 3400, 4760, 6120, 7481, 8841, 10201, 11561, 12921];
 testTraces = [2334, 6941, 8277, 11238];
 waveSize = 5;
-% selectedOutVar = 'Rho';
-% variableNames = [arrayfun(@num2str, 15:3:45, ...
-%     'UniformOutput', 0), {'lowVp'}, {'lowVs'}, {'lowRho'}, {'Vp'}, {'Vs'}, {'Rho'}];
 
 selectedOutVar = 'AI';
 variableNames = [arrayfun(@num2str, 15:15:45, 'UniformOutput', 0), {'lowAI'}, {'AI'}];
@@ -45,16 +89,7 @@ nvars = (numel(theta) + 1) * waveSize + numberOfOutputVars;
 inputVars = 1:(nvars - numberOfOutputVars);
 outputVars = (numel(inputVars) + 1):nvars;
 
-% logIndexes = [inputVars(end-waveSize)+1:inputVars(end), outputVars];
 logIndexes = outputVars;
-% 
-% trainData(:, logIndexes) = log(trainData(:, logIndexes));
-% testData(:, logIndexes) = log(testData(:, logIndexes));
-
-% trainData = trainData(:, [inputVars, outputVars]);
-% testData = testData(:,  [inputVars, outputVars]);
-% outputVars = outputVars-waveSize;
-
 valTrainData = [trainData ; testData];
 
 problem = Problem( ...
@@ -64,14 +99,14 @@ problem = Problem( ...
     'OutputVarIndexes', outputVars, ...
     'AllData', valTrainData, ...
     'ExecutionMode', 'mex', ...
-    'DoParametersTuning', false, ...
+    'DoParametersTuning', true, ...
     'CompileOptions', compileoptions(...
         'EnableRecompile', false, ...
         'NumberOfVariables', nvars, ...
         'NumberOfOutputVars', numberOfOutputVars, ...
         'IsOptimization', true));
 
-problem.OptimizeOptions.Algorithm = 'imode';
+problem.OptimizeOptions.Algorithm = 'gsapso';
 problem.OptimizeOptions.UseDefaultsFor = {'MaxNc', 'UseRankOne'};
 problem.OptimizeOptions.MaxFunEval = 3000000;
 problem.OptimizeOptions.PopulationSize = 120;
@@ -91,13 +126,6 @@ problem.OptimizeOptions.hyperparameters{7}.ub = 1e-2;
 
 problem.DefaultIgmnOptions.UseRankOne = 1;
 problem.DefaultIgmnOptions.MaxNc = 100;
-% problem.DefaultIgmnOptions.SPMin = 3;
-% problem.DefaultIgmnOptions.VMin = 24;
-% problem.DefaultIgmnOptions.RegValue = 8.318713393298100e-05;
-% problem.DefaultIgmnOptions.Tau = 0.533771951767000;
-% problem.DefaultIgmnOptions.Delta = 0.315811438338866;
-% problem.DefaultIgmnOptions.Gamma = 0.591804495912762;
-% problem.DefaultIgmnOptions.Phi = 0.620279050234828;
 
 if strcmpi(problem.ExecutionMode, 'mex') || strcmpi(problem.ExecutionMode, 'native') 
     compile(problem);
@@ -107,8 +135,6 @@ if strcmpi(problem.ExecutionMode, 'mex') || strcmpi(problem.ExecutionMode, 'nati
         train = @train_mex;
         predict = @predict_mex;
     end
-% else
-%     predict = @predict;
 end
 
 if ~strcmpi(problem.ExecutionMode, 'native')
@@ -136,15 +162,6 @@ if ~strcmpi(problem.ExecutionMode, 'native')
         traceSizes, testTraces, initDeth, waveSize, traceNumber, noiseMultipliers, gridSize);
 
     stds_esmda = runSeReM(waveSize, theta, true, traceNoisyTestData);
-    
-    % N = length(noiseMultipliers);
-    % R = zeros(N, N);
-    % for i = 1:N
-    %     for j = 1:N
-    %         disp([i, j]);
-    %         R(i, j) = vartestn([stds_esmda(:, (j-1)*waveSize+1:j*waveSize), stds_igmn(:, (i-1)*waveSize+1:i*waveSize)]);
-    %     end
-    % end
 
     stds_fig = figure('units','normalized', 'outerposition', [0.3 0.15 0.5 0.8]);
     set(stds_fig, 'color', [254/255, 252/255, 246/255]);
@@ -177,135 +194,4 @@ if ~strcmpi(problem.ExecutionMode, 'native')
     exportgraphics(gcf, "esmda_x_ann_variance.pdf", 'Resolution', 300)
 
     labels = {'0.0', '0.1', '0.5', '1'};
-    % fancyCorrPlot(R, labels);
-    % corrplot([stds_igmn, stds_esmda]);
-    
-    % ends = cumsum(traceSizes(testTraces) - waveSize + 1);
-    % starts = ends - (traceSizes(testTraces) - waveSize + 1) + 1;
-    % noiseMultipliers = [0, 0.1, 1, 2, 4];
-    % indexes = (waveSize-1):-1:(-traceSize + waveSize);
-    % traceSize = traceSizes(testTraces(traceNumber));
-    % figure;
-    % for m = 1:numel(noiseMultipliers)
-    %     indexes = (waveSize-1):-1:(-traceSize + waveSize);
-    %     noiseData = addSeismicNoise(testData, theta, waveSize, noise, testTraces, traceSizes, starts, noiseMultipliers(m));
-    %     inputData = noiseData(starts(traceNumber):ends(traceNumber), inputVars);
-    %     outputValues = fliplr(predict(net, inputData, outputVars, 0));
-    %     outputs = arrayfun(@(k) mean(diag(outputValues, k)), indexes)';
-    %     stds = arrayfun(@(k) sqrt(std(diag(outputValues, k))), indexes)';
-    % 
-    %     time = initDeth:(initDeth + numel(outputs) - 1);
-    % 
-    %     minValues = min(outputs - stds);
-    %     maxValues = max(outputs + stds);
-    %     domain = linspace(floor(minValues), ceil(maxValues), gridSize);
-    %     grid = zeros(numel(time), gridSize);
-    %     for k = 1:numel(time)
-    %         grid(k, :) = gaussmf(domain, [stds(k)+eps outputs(k)]);
-    %     end
-    %     plot(max(grid, [], 2));
-    %     hold on;
-    % end
-    
-    % traceSize = traceSizes(testTraces(traceNumber));
-    % inputData = testData(starts(traceNumber):ends(traceNumber), inputVars);
-    % predictValues = fliplr(predict(net, inputData, outputVars, 0));
-    % targetValues = fliplr(testData(starts(traceNumber):ends(traceNumber), outputVars));
-    % seismicValues = fliplr(testData(starts(traceNumber):ends(traceNumber), inputVars(waveSize+1:2*waveSize)));
-    % indexes = (waveSize-1):-1:(-traceSize + waveSize);
-    % outputs = arrayfun(@(k) mean(diag(predictValues, k)), indexes)';
-    % targets = arrayfun(@(k) mean(diag(targetValues, k)), indexes)';
-    % seismic = arrayfun(@(k) mean(diag(seismicValues, k)), indexes)';
-    % stds = arrayfun(@(k) sqrt(std(diag(predictValues, k))), indexes)';
-    % 
-    % time = initDeth:(initDeth + numel(outputs) - 1);
-    % 
-    % ax = nexttile(layout);
-    % hold(ax, 'on');
-    % 
-    % gridSize = 50;
-    % minValues = min(outputs - stds);
-    % maxValues = max(outputs + stds);
-    % domain = linspace(floor(minValues), ceil(maxValues), gridSize);
-    % grid = zeros(numel(time), gridSize);
-    % for k = 1:numel(time)
-    %     grid(k, :) = gaussmf(domain, [stds(k)+eps outputs(k)]);
-    % end
-    % 
-    % pcolor(domain, time, grid);
-    % shading interp;
-    % 
-    % plot(ax, rescale(seismic, domain(1), domain(end)), time, 'm', 'LineWidth', 1);
-    % plot(ax, targets, time, 'k', 'LineWidth', 1);
-    % plot(ax, outputs, time, 'r', 'LineWidth', 1.5);
-    % 
-    % ylim(time([1, end]));
-    % legend(ax, '', 'Seismic', 'Vp', 'Pred. Vp');
-    % title(ax, sprintf('Trace: %d (without seismic noise)', testTraces(traceNumber)))
-    % ylabel(ax, 'Depth (ms)');
-    % set(ax, 'YDir','reverse');
-    % pbaspect(ax,[0.5, 2, 1])
-    % hold(ax, 'off');
-    % 
-    % inputData = noiseTestData(starts(traceNumber):ends(traceNumber), inputVars);
-    % predictValues = fliplr(predict(net, inputData, outputVars, 0));
-    % targetValues = fliplr(noiseTestData(starts(traceNumber):ends(traceNumber), outputVars));
-    % seismicValues = fliplr(noiseTestData(starts(traceNumber):ends(traceNumber), inputVars(waveSize+1:2*waveSize)));
-    % indexes = (waveSize-1):-1:(-traceSize + waveSize);
-    % outputsWithNoise = arrayfun(@(k) mean(diag(predictValues, k)), indexes)';
-    % targets = arrayfun(@(k) mean(diag(targetValues, k)), indexes)';
-    % seismicWithNoise = arrayfun(@(k) mean(diag(seismicValues, k)), indexes)';
-    % stdsWithNoise = arrayfun(@(k) sqrt(std(diag(predictValues, k))), indexes)';
-    % time = initDeth:(initDeth + numel(outputsWithNoise) - 1);
-    % ax = nexttile(layout);
-    % hold(ax, 'on');
-    % 
-    % gridSize = 50;
-    % minValues = min(outputsWithNoise - stdsWithNoise);
-    % maxValues = max(outputsWithNoise + stdsWithNoise);
-    % domain = linspace(floor(minValues), ceil(maxValues), gridSize);
-    % gridWithNoise = zeros(numel(time), gridSize);
-    % for k = 1:numel(time)
-    %     gridWithNoise(k, :) = gaussmf(domain, [stdsWithNoise(k)+eps outputsWithNoise(k)]);
-    % end
-    % 
-    % pcolor(domain, time, gridWithNoise);
-    % shading interp;
-    % 
-    % plot(ax, rescale(seismicWithNoise, domain(1), domain(end)), time, 'm', 'LineWidth', 1);
-    % plot(ax, targets, time, 'k', 'LineWidth', 1);
-    % plot(ax, outputsWithNoise, time, 'r', 'LineWidth', 1.5);
-    % 
-    % ylim(time([1, end]));
-    % legend(ax, '', 'Seismic', 'Vp', 'Pred. Vp');
-    % title(ax, sprintf('Trace: %d (with seismic noise)', testTraces(traceNumber)))
-    % set(ax, 'YDir','reverse');
-    % set(ax, 'yticklabel', [])
-    % pbaspect(ax,[0.5, 2, 1])
-    % hold(ax, 'off');
-    % 
-    % 
-    % ax = nexttile(layout);
-    % hold(ax, 'on');
-    % diff = gridWithNoise - grid;
-    % gridDiff = nan(size(grid));
-    % gridDiff(:) = eps;
-    % gridDiff(diff>1e-20) = diff(diff>1e-20);
-    % 
-    % pcolor(domain, time, gridDiff);
-    % shading interp;
-    % h = colorbar;
-    % 
-    % plot(ax, rescale(seismic, domain(1), domain(end)), time, 'm', 'LineWidth', 1);
-    % plot(ax, rescale(seismicWithNoise, domain(1), domain(end)), time, 'g', 'LineWidth', 1);
-    % plot(ax, outputs, time, 'r', 'LineWidth', 1);
-    % plot(ax, outputsWithNoise, time, 'k', 'LineWidth', 1);
-    % 
-    % ylim(time([1, end]));
-    % legend(ax, '', 'Seismic', 'Seismic (noise)', 'Pred. Vp', 'Pred. Vp (noise)');
-    % title(ax, sprintf('Trace: %d (uncertainty diff)', testTraces(traceNumber)))
-    % set(ax, 'YDir','reverse');
-    % set(ax, 'yticklabel', [])
-    % ylabel(h, 'Probability (addition off uncertainty)', 'FontSize', 10);
-    % hold(ax, 'off');
 end

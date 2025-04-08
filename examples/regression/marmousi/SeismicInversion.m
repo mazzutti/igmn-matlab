@@ -1,23 +1,38 @@
+% SEISMIC INVERSION
+% Computes the posterior distribution of elastic properties according to 
+% the Bayesian linearized AVO inversion (Buland and Omre, 2003).
+%
+% INPUT:
+%   Seis       - Vector of seismic data of size (nsamples x nangles, 1).
+%   TimeSeis   - Vector of seismic time of size (nsamples, 1).
+%   Vpprior    - Vector of prior (low frequency) Vp model (nsamples+1, 1).
+%   Vsprior    - Vector of prior (low frequency) Vs model (nsamples+1, 1).
+%   Rhoprior   - Vector of prior (low frequency) density model (nsamples+1, 1).
+%   sigmaprior - Prior covariance matrix (nv*(nsamples+1), nv*(nsamples+1)).
+%   sigmaerr   - Covariance matrix of the error (nv*nsamples, nv*nsamples).
+%   wavelet    - Wavelet used in the inversion process.
+%   theta      - Vector of reflection angles (1, nangles).
+%   nv         - Number of model variables.
+%
+% OUTPUT:
+%   mmap       - MAP of posterior distribution (nv*(nsamples+1), 1).
+%   mlp        - P2.5 of posterior distribution (nv*(nsamples+1), 1).
+%   mup        - P97.5 of posterior distribution (nv*(nsamples+1), 1).
+%   Time       - Time vector of elastic properties (nsamples+1, 1).
+%   sigmapost  - Posterior covariance matrix.
+%
+% REFERENCES:
+%   Buland, A., & Omre, H. (2003). Bayesian linearized AVO inversion.
+%
+% NOTES:
+%   - The function assumes input data is pre-processed and formatted correctly.
+%   - The logarithm of prior models is used for computations.
+%   - The Aki-Richards approximation is utilized for the forward model.
+%   - The posterior distribution is computed analytically.
+%
+% AUTHOR:
+%   Written by Dario Grana (August 2020).
 function [mmap, mlp, mup, Time, sigmapost] = SeismicInversion(Seis, TimeSeis, Vpprior, Vsprior, Rhoprior, sigmaprior, sigmaerr, wavelet, theta, nv)
-
-% SEISMIC INVERSION computes the posterior distribution of elastic
-% properties according to the Bayesian linearized AVO inversion (Buland and
-% Omre, 2003)
-% INPUT Seis = vector of seismic data of size (nsamples x nangles, 1)
-%       TimeSeis = vector of seismic time of size (nsamples, 1)
-%       Vpprior = vector of prior (low frequency) Vp model (nsamples+1, 1)
-%       Vsprior = vector of prior (low frequency) Vs model (nsamples+1, 1)
-%       Rhoprior = vector of prior (low frequency) density model (nsamples+1, 1)
-%       sigmaprior = prior covariance matrix (nv*(nsamples+1),nv*(nsamples+1))
-%       sigmaerr = covariance matrix of the error (nv*nsamples,nv*nsamples)
-%       theta = vector of reflection angles (1,nangles)
-%       nv = number of model variables
-% OUTUPT mmap = MAP of posterior distribution (nv*(nsamples+1),1)
-%        mlp = P2.5 of posterior distribution (nv*(nsamples+1),1)
-%        mup = P97.5 of posterior distribution (nv*(nsamples+1),1)
-%        Time = time vector of elastic properties (nsamples+1,1)
-
-% Written by Dario Grana (August 2020)
 
 % parameters
 ntheta = length(theta);

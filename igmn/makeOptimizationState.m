@@ -1,3 +1,57 @@
+% makeOptimizationState - Initializes the optimization state structure for an optimization algorithm.
+%
+% Syntax:
+%   state = makeOptimizationState(nhps, lbMatrix, ubMatrix, optOptions, objFun, hpIndexes)
+%
+% Inputs:
+%   nhps       - Number of hyperparameters (scalar).
+%   lbMatrix   - Lower bounds matrix for the hyperparameters (matrix of size [1, nhps]).
+%   ubMatrix   - Upper bounds matrix for the hyperparameters (matrix of size [1, nhps]).
+%   optOptions - Structure containing optimization options, including:
+%                - PopulationSize: Number of individuals in the population.
+%                - Algorithm: Algorithm type ('pso', 'psogsa', etc.).
+%                - InitialPopulation: Initial population matrix (optional).
+%                - InitialPopulationSpan: Span for initializing velocities.
+%                - PlotFcns: Plot functions for visualization (optional).
+%                - UseParallel: Boolean flag for parallel computation.
+%                - Verbosity: Verbosity level for logging.
+%   objFun     - Objective function handle to evaluate the fitness of individuals.
+%   hpIndexes  - Indices of hyperparameters (vector).
+%
+% Outputs:
+%   state - Structure containing the optimization state, including:
+%           - PopulationRange: Range of the population ([lb; ub]).
+%           - Iteration: Current generation counter.
+%           - StartTime: Start time of the optimization process.
+%           - StopFlag: Flag to indicate termination of optimization.
+%           - LastImprovement: Counter for the last generation with improvement.
+%           - LastImprovementTime: Time since the last improvement.
+%           - FunEval: Total number of function evaluations.
+%           - Fvals: Objective function values for the population.
+%           - IndividualBestFvals: Best objective function values for individuals.
+%           - IndividualBestPositions: Best positions of individuals.
+%           - PlotFcns: Plot functions for visualization.
+%           - Velocities: Velocities of individuals (for PSO-based algorithms).
+%           - Accelerations: Accelerations of individuals (for PSOGSA algorithm).
+%           - Mass: Mass of individuals (for PSOGSA algorithm).
+%           - Forces: Forces acting on individuals (for PSOGSA algorithm).
+%           - Archive: Archive for storing additional data (optional).
+%           - MCR: Memory control rate for optimization.
+%           - MF: Mutation factor for optimization.
+%           - k: Counter for specific optimization processes.
+%           - MOP: Multi-objective optimization parameters.
+%           - Positions: Current positions of individuals in the population.
+%
+% Description:
+%   This function initializes the optimization state structure for use in
+%   optimization algorithms such as PSO (Particle Swarm Optimization) and
+%   PSOGSA (Particle Swarm Optimization with Gravitational Search Algorithm).
+%   It sets up the initial population, velocities, and other algorithm-specific
+%   parameters. The function also enforces bounds on the population and evaluates
+%   the objective function for the initial population.
+%
+% See also:
+%   createUniformPopulation
 function state = makeOptimizationState(nhps, lbMatrix, ubMatrix, optOptions, objFun, hpIndexes) %#codegen
     % Create an initial set of individuals and objective function values
 

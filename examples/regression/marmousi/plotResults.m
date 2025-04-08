@@ -1,3 +1,61 @@
+%{
+plotResults - Visualizes the results of predictions and target values for 
+              multiple datasets with varying noise levels.
+
+Syntax:
+    plotResults(net, predict, data, inputVars, outputVars, ...
+                selectedOutVar, traceNumber, initDeth, traces, ...
+                traceSizes, waveSize, noiseMultipliers, gridSize)
+
+Inputs:
+    net               - Neural network model used for predictions.
+    predict           - Function handle for making predictions with the model.
+    data              - Cell array containing datasets for different noise levels.
+                        Each dataset is a cell array where the first element 
+                        contains the noisy data.
+    inputVars         - Indices of input variables in the dataset.
+    outputVars        - Indices of output variables in the dataset.
+    selectedOutVar    - Name of the selected output variable for visualization.
+    traceNumber       - Index of the trace to be visualized.
+    initDeth          - Initial depth or time offset for the visualization.
+    traces            - Array of trace indices.
+    traceSizes        - Array of trace sizes corresponding to the traces.
+    waveSize          - Size of the wavelet used in the analysis.
+    noiseMultipliers  - Array of noise multipliers for each dataset.
+    gridSize          - Number of grid points for probability visualization.
+
+Outputs:
+    A figure displaying the predicted and target values for each dataset 
+    with varying noise levels. The visualization includes probability 
+    distributions, target traces, and predicted traces.
+
+Internal Function:
+    plotTrace - Helper function to plot individual traces with probability 
+                distributions and overlayed target and predicted values.
+
+    Inputs:
+        outputValues   - Predicted output values.
+        targetValues   - Target output values.
+        indexes        - Indices for diagonal extraction of values.
+        initDeth       - Initial depth or time offset.
+        ax             - Axes handle for plotting.
+        legends        - Cell array of legend labels.
+        titleText      - Title text for the plot.
+        gridSize       - Number of grid points for probability visualization.
+        ylabelText     - Label for the y-axis.
+        withColorBar   - Boolean indicating whether to include a color bar.
+        addYTicks      - Boolean indicating whether to add y-axis ticks.
+
+    Outputs:
+        A subplot displaying the probability distribution, target trace, 
+        and predicted trace for a single dataset.
+
+Notes:
+    - The function uses a preloaded colormap from "prob_color_map.mat".
+    - The y-axis is reversed to match typical seismic data visualization.
+    - The function supports tiled layouts for side-by-side comparison of 
+      multiple datasets.
+%}
 function plotResults(net, predict, data, inputVars, outputVars, ...
         selectedOutVar, traceNumber, initDeth, traces, traceSizes, waveSize, noiseMultipliers, gridSize)
 
@@ -32,7 +90,6 @@ function plotResults(net, predict, data, inputVars, outputVars, ...
         hold(ax, 'off');
     end
 end
-
 
 
 function plotTrace(outputValues, targetValues, indexes, initDeth, ...

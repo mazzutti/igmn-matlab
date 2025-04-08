@@ -1,3 +1,55 @@
+%{
+PLOTSTDS - Computes and optionally plots the standard deviations of predictions 
+           for the Incremental Gaussian Mixture Network (IGMN) model under 
+           different noise conditions.
+
+Syntax:
+    stds = plotStds(net, predict, data, inputVars, outputVars, ...
+                    traceSizes, testTraces, initDeth, waveSize, ...
+                    traceNumber, noiseMultipliers, gridSize)
+
+Inputs:
+    net              - IGMN model used for predictions.
+    predict          - Function handle for making predictions with the IGMN model.
+    data             - Cell array containing noisy data for each noise multiplier.
+    inputVars        - Indices of input variables in the data.
+    outputVars       - Indices of output variables in the predictions.
+    traceSizes       - Array specifying the size of each trace in the dataset.
+    testTraces       - Indices of traces used for testing.
+    initDeth         - Initial depth or starting point for the analysis.
+    waveSize         - Size of the wave window used for processing.
+    traceNumber      - Index of the trace to be analyzed.
+    noiseMultipliers - Array of noise multipliers applied to the data.
+    gridSize         - Grid size for visualization (not used in the current implementation).
+
+Outputs:
+    stds - Matrix containing the computed standard deviations for each noise 
+           multiplier and the non-noisy case.
+
+Description:
+    This function computes the standard deviations of the predictions made by 
+    the IGMN model for a given trace under different noise conditions. 
+    The function processes the data for each noise multiplier, extracts the 
+    relevant input variables, and computes the diagonal elements of the 
+    prediction covariance matrix for each wave window. The results are 
+    concatenated into a single matrix.
+
+    The function includes commented-out sections for plotting the results, 
+    which can be enabled for visualization purposes.
+
+Notes:
+    - The function assumes that the input data is organized in a cell array, 
+      where each cell corresponds to a specific noise multiplier.
+    - The commented-out sections provide additional functionality for 
+      visualization and debugging but are not executed by default.
+
+Example:
+    stds = plotStds(net, @predictFunction, data, [1, 2], [3], ...
+                    traceSizes, testTraces, 0, 50, 1, [0.1, 0.5, 1.0], 100);
+
+    This example computes the standard deviations for the IGMN model 
+    using the specified parameters and noise multipliers.
+%}
 function stds = plotStds(net, predict, data, inputVars, outputVars, ...
         traceSizes, testTraces, initDeth, waveSize, traceNumber, noiseMultipliers, gridSize)
     ends = cumsum(traceSizes(testTraces) - waveSize + 1);

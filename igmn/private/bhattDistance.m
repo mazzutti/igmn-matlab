@@ -1,3 +1,44 @@
+% bhattDistance - Computes the Bhattacharyya distance between two distributions.
+%
+% Syntax:
+%   bhattDist = bhattDistance(meanX, meanY, covX, covY, useRankOne, logDetX, logDetY)
+%
+% Inputs:
+%   meanX      - Mean vector of the first distribution.
+%   meanY      - Mean vector of the second distribution.
+%   covX       - Covariance matrix of the first distribution.
+%   covY       - Covariance matrix of the second distribution.
+%   useRankOne - Logical flag indicating whether to use a rank-one update
+%                for the covariance matrix inversion.
+%   logDetX    - Logarithm of the determinant of the covariance matrix of
+%                the first distribution.
+%   logDetY    - Logarithm of the determinant of the covariance matrix of
+%                the second distribution.
+%
+% Outputs:
+%   bhattDist  - The Bhattacharyya distance between the two distributions.
+%
+% Description:
+%   This function calculates the Bhattacharyya distance, which is a measure
+%   of similarity between two probability distributions. It takes into
+%   account the means and covariance matrices of the distributions. The
+%   computation can optionally use a rank-one update for efficiency.
+%
+% Notes:
+%   - The function assumes that the input covariance matrices are positive
+%     definite.
+%   - The `useRankOne` flag determines the method used for covariance
+%     matrix inversion and affects the computation of the distance.
+%
+% Example:
+%   meanX = [1; 2];
+%   meanY = [2; 3];
+%   covX = [1, 0.5; 0.5, 1];
+%   covY = [1, 0.2; 0.2, 1];
+%   useRankOne = false;
+%   logDetX = log(det(covX));
+%   logDetY = log(det(covY));
+%   bhattDist = bhattDistance(meanX, meanY, covX, covY, useRankOne, logDetX, logDetY);
 function bhattDist = bhattDistance( ...
     meanX, meanY, covX, covY, useRankOne, logDetX, logDetY) %# codegen
     dmu =  bsxfun(@minus, meanX, meanY);

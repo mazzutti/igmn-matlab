@@ -1,3 +1,69 @@
+%{
+imode.m - Perform optimization using the IMODE algorithm.
+
+This script contains the implementation of the IMODE (Improved Multi-Operator Differential Evolution) 
+algorithm for optimization. It includes the main function `imode` and its core implementation 
+`imodecore`, along with helper functions for updating positions and managing the optimization state.
+
+FUNCTIONS:
+1. imode(problem)
+    - Main entry point for the IMODE optimization algorithm.
+    - Parameters:
+      - problem: A structure containing the optimization problem definition and options.
+    - Returns:
+      - x: The best solution found.
+      - fval: The objective function value at the best solution.
+      - exitFlag: A flag indicating the reason for termination.
+
+2. imodecore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes)
+    - Core implementation of the IMODE algorithm.
+    - Parameters:
+      - nhps: Number of hyperparameters.
+      - lbRow: Lower bounds for hyperparameters.
+      - ubRow: Upper bounds for hyperparameters.
+      - problem: The optimization problem structure.
+      - hpNames: Names of hyperparameters.
+      - hpIndexes: Indexes of hyperparameters.
+    - Returns:
+      - x: The best solution found.
+      - fval: The objective function value at the best solution.
+      - exitFlag: A flag indicating the reason for termination.
+
+3. updatePositions(state, lbRow, ubRow, pIdx, numIndividuals, nhps, hyperparameters, hpIndexes, F, OP, CR)
+    - Updates the positions of individuals in the population.
+    - Parameters:
+      - state: Current state of the optimization process.
+      - lbRow: Lower bounds for hyperparameters.
+      - ubRow: Upper bounds for hyperparameters.
+      - pIdx: Indexes of the current population.
+      - numIndividuals: Number of individuals in the population.
+      - nhps: Number of hyperparameters.
+      - hyperparameters: Hyperparameter definitions.
+      - hpIndexes: Indexes of hyperparameters.
+      - F: Scaling factors for mutation.
+      - OP: Operators for generating offspring.
+      - CR: Crossover probabilities.
+    - Returns:
+      - newPositions: Updated positions of individuals.
+
+NOTES:
+- The IMODE algorithm uses a combination of mutation, crossover, and selection operators to evolve 
+  a population of candidate solutions.
+- The algorithm supports parallel computation for evaluating the objective function.
+- Stopping criteria include maximum function evaluations, stall iterations, and user-defined conditions.
+- The implementation includes support for plotting and monitoring the optimization process.
+
+USAGE:
+- Define the optimization problem and options in the `problem` structure.
+- Call the `imode` function with the problem structure to perform optimization.
+- The best solution and its objective function value are returned upon completion.
+
+DEPENDENCIES:
+- This implementation relies on several helper functions, such as `extractHyperarameterNames`, 
+  `extractBounds`, `validateOptimizationOptions`, `initialPopulationCheck`, `evaluate`, 
+  `makeOptimizationState`, `stopOptimization`, and `roundDiscreteHyperparameters`.
+
+%}
 function [x, fval, exitFlag] = imode(problem) %#codegen
 
     optOptions = problem.OptimizeOptions;

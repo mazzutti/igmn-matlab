@@ -1,9 +1,50 @@
+% PLOTPPOPULATION Plots the positions of individuals in a population.
+%
+%   plotpopulation(optimValues, flag, ijk) visualizes the positions of 
+%   individuals in a population during an optimization process. The function 
+%   supports one-dimensional, two-dimensional, and three-dimensional plots.
+%
+%   INPUTS:
+%       optimValues - A structure containing the following fields:
+%           population       - A matrix where each row represents an individual 
+%                              in the population, and each column represents 
+%                              a dimension.
+%           hpNames          - A cell array of strings containing the names 
+%                              of the dimensions (used for axis labels).
+%           populationRange  - A 2xN matrix specifying the range of each 
+%                              dimension in the population. The first row 
+%                              contains the minimum values, and the second 
+%                              row contains the maximum values.
+%       flag         - A string indicating the current state of the 
+%                      optimization process. Possible values:
+%                          'init' - Initialization phase.
+%                          'iter' - Iteration phase.
+%       ijk          - (Optional) A 1x3 vector specifying the dimensions to 
+%                      be plotted. If not provided, the function defaults to 
+%                      plotting the first three dimensions (or fewer if the 
+%                      problem has fewer dimensions).
+%
+%   FUNCTIONALITY:
+%       - During the 'init' phase, the function initializes the plot, 
+%         displaying the initial positions of the population.
+%       - During the 'iter' phase, the function updates the plot to show 
+%         the current positions of the population.
+%       - The function automatically adjusts axis limits based on the 
+%         population range.
+%       - For one-dimensional problems, the function plots points along 
+%         the x-axis. For two-dimensional problems, it creates a 2D scatter 
+%         plot. For three-dimensional problems, it creates a 3D scatter plot.
+%
+%   NOTES:
+%       - If more than three dimensions are specified in ijk, only the first 
+%         three dimensions are plotted, and a warning is issued.
+%       - The function uses different colors and markers to distinguish 
+%         between initial and current positions of the population.
+%
+%   EXAMPLE USAGE:
+%       plotpopulation(optimValues, 'init', [1, 2, 3]);
+%       plotpopulation(optimValues, 'iter');
 function plotpopulation(optimValues, flag, ijk)
-    % Plots the positions of individuals.
-    %
-    % ijk is an additional parameter, in the form of a 1x3 vector. It lists the
-    % dimension of the problem to be plotted, for a multidimensional problem.
-
     labels = optimValues.hpNames;
 
     if nargin < 3

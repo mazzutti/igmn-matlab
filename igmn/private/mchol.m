@@ -1,8 +1,32 @@
+% MCHOL Perform modified Cholesky decomposition on a symmetric matrix.
+%
+%   [L, G] = MCHOL(G) computes a lower triangular matrix L and a modified
+%   symmetric matrix G such that G + E is positive definite, where E is a
+%   matrix of small norm. The decomposition satisfies:
+%
+%       G + E = L * D * L'
+%
+%   where D is a diagonal matrix.
+%
+%   Input:
+%       G - A symmetric matrix (NxN) to be decomposed.
+%
+%   Output:
+%       L - A lower triangular matrix (NxN) with unit diagonal elements.
+%       G - The modified symmetric matrix (NxN) after adding the matrix E.
+%
+%   Notes:
+%       - The function ensures that the modified matrix G + E is positive
+%         definite by adjusting the diagonal elements of G.
+%       - The algorithm uses a threshold beta to control the adjustment
+%         and ensure numerical stability.
+%
+%   Example:
+%       G = [4, 2; 2, 3];
+%       [L, G_mod] = mchol(G);
+%
+%   See also: CHOL
 function [L, G] = mchol(G) %#codegen
-    %  MCHOL Given a symmetric matrix G, find a matrix E of "small" norm 
-    %        such that  G+E is Positive Definite, and 
-    %
-    %        G+E = L*D*L'
     N = size(G, 1);
     beta = max([ ...
         max(diag(G)), ...

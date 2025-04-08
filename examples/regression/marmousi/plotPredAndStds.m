@@ -1,3 +1,52 @@
+%{
+% plotPredAndStds - Plots predictions and standard deviations for seismic data.
+
+% Syntax:
+%   plotPredAndStds(net, predict, data, inputVars, outputVars, noise, theta, ...
+%       traceSizes, testTraces, initDeth, waveSize, traceNumber, noiseMultipliers, gridSize)
+
+% Inputs:
+%   net              - Neural network model used for predictions.
+%   predict          - Function handle for making predictions with the neural network.
+%   data             - Matrix containing the input seismic data.
+%   inputVars        - Indices of the input variables in the data matrix.
+%   outputVars       - Indices of the output variables in the data matrix.
+%   noise            - Noise parameters for adding seismic noise.
+%   theta            - Parameter controlling the noise characteristics.
+%   traceSizes       - Vector containing the sizes of seismic traces.
+%   testTraces       - Indices of the test traces in the data.
+%   initDeth         - Initial depth value for plotting.
+%   waveSize         - Size of the wave window used for processing.
+%   traceNumber      - Index of the trace to be plotted.
+%   noiseMultipliers - Array of multipliers for scaling the noise levels.
+%   gridSize         - Grid size for plotting (not used in the function).
+
+% Outputs:
+%   This function does not return any outputs. It generates a figure with
+%   subplots showing the predictions and standard deviations for the selected
+%   seismic trace under different noise levels.
+
+% Description:
+%   The function visualizes the effect of noise on seismic data predictions
+%   by plotting the predicted outputs and their standard deviations for a
+%   selected trace. It compares the predictions with and without noise and
+%   highlights the absolute differences in standard deviations. The function
+%   uses a tiled layout to display results for different noise multipliers.
+
+% Example:
+%   plotPredAndStds(net, @predictFunction, seismicData, [1, 2], [3], noiseParams, ...
+%       thetaValue, traceSizesArray, testTraceIndices, 100, 50, 1, [0.5, 1.0, 1.5], gridSize);
+
+% Notes:
+%   - The function assumes that the input data is preprocessed and formatted
+%     appropriately for the neural network.
+%   - The `addSeismicNoise` function is used to add noise to the data.
+%   - The `predict` function should return a matrix where each diagonal
+%     corresponds to predictions for a specific time lag.
+
+% See also:
+%   addSeismicNoise, predict
+%}
 function plotPredAndStds(net, predict, data, inputVars, outputVars, noise, theta, ...
         traceSizes, testTraces, initDeth, waveSize, traceNumber, noiseMultipliers, gridSize)
     ends = cumsum(traceSizes(testTraces) - waveSize + 1);

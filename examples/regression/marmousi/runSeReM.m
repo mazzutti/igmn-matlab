@@ -1,3 +1,62 @@
+%{
+runSeReM - Performs seismic reservoir modeling and inversion using the
+           Ensemble Smoother with Multiple Data Assimilation (ESMDA).
+
+Syntax:
+    stds_esmda = runSeReM(waveSize, theta, reRun, noisyTestData)
+
+Inputs:
+    waveSize      - Number of realizations (ensemble size) for the simulation.
+    theta         - Array of reflection angles used in seismic modeling.
+    reRun         - Boolean flag indicating whether to re-run the simulation
+                    or load previously saved results.
+    noisyTestData - Cell array containing noisy seismic data for testing.
+
+Outputs:
+    stds_esmda    - Matrix containing the processed seismic data after
+                    applying the ESMDA inversion.
+
+Description:
+    This function performs seismic reservoir modeling and inversion using
+    the ESMDA method. It generates prior realizations of elastic properties
+    (Vp, Vs, Rho), simulates seismic data, and iteratively updates the
+    realizations using the ESMDA algorithm. The function supports multiple
+    noisy test datasets and saves the results to a file for reuse.
+
+    If `reRun` is set to true, the function performs the full simulation
+    and inversion process. Otherwise, it loads previously saved results
+    from a file.
+
+    The function includes the following steps:
+    1. Initialization of parameters and wavelet generation.
+    2. Filtering of well logs to create prior models.
+    3. Generation of spatially correlated prior realizations.
+    4. Seismic modeling for prior realizations.
+    5. Iterative ESMDA inversion to update the realizations.
+    6. Extraction and storage of processed seismic data.
+
+Dependencies:
+    - RickerWavelet: Generates a Ricker wavelet.
+    - butter, filtfilt: Used for filtering well logs.
+    - CorrelatedSimulation: Generates spatially correlated realizations.
+    - SeismicModel: Simulates seismic data based on elastic properties.
+    - EnsembleSmootherMDA: Performs the ESMDA inversion.
+
+Example:
+    waveSize = 100;
+    theta = [0, 15, 30];
+    reRun = true;
+    noisyTestData = load('noisyTestData.mat').data;
+    stds_esmda = runSeReM(waveSize, theta, reRun, noisyTestData);
+
+Notes:
+    - The function assumes that the input noisyTestData is structured as a
+      cell array where each cell contains a dataset with specific columns
+      for seismic and elastic properties.
+    - The results are saved to a file named 'stds_esmda.mat' in the current
+      working directory.
+
+%}
 function stds_esmda = runSeReM(waveSize, theta, reRun, noisyTestData)
 
     if reRun

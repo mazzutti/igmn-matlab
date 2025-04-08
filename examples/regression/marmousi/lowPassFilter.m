@@ -1,14 +1,37 @@
+% LOWPASSFILTER Applies a low-pass FIR filter to a given signal.
+%
+% Syntax:
+%   [filteredSignal, h] = lowPassFilter(signal, Ts, Ncoef, cutFreq)
+%
+% Description:
+%   This function applies a low-pass FIR filter to a 2D signal (e.g., an 
+%   impedance matrix). Each column of the input signal is filtered 
+%   independently. The filter is designed using the `fir1` function.
+%
+% Inputs:
+%   signal   - Input signal, either a matrix or a column vector. Each 
+%              column of the matrix will be filtered independently.
+%   Ts       - Sampling interval in milliseconds (ms).
+%   Ncoef    - Number of filter coefficients (analogous to overlap in Jason).
+%   cutFreq  - Cutoff frequency in Hertz (Hz).
+%
+% Outputs:
+%   filteredSignal - The filtered signal, with the same dimensions as the 
+%                    input signal.
+%   h              - The FIR filter coefficients.
+%
+% Example:
+%   % Apply a low-pass filter to a signal with a sampling interval of 4 ms,
+%   % 110 filter coefficients, and a cutoff frequency of 8 Hz.
+%   filteredSignal = lowPassFilter(signal, 4, 110, 8);
+%
+% Notes:
+%   - The input signal is extended at the beginning and end to reduce 
+%     boundary effects during filtering.
+%   - The sampling interval `Ts` is converted from milliseconds to seconds 
+%     internally.
+%   - The normalized cutoff frequency is calculated as `cutFreq * 2 * Ts`.
 function[filteredSignal, h] = lowPassFilter(signal, Ts, Ncoef, cutFreq)
-    % lowPassFilter2(signal, Ts, Ncoef, cutFreq)
-    % signal - Sinal 2d, matriz de impedancia no caso.
-    %       obs. signal deve ser uma matriz ou um vetor coluna. No caso da
-    %       cada coluna que ser· filtrada
-    % Ts - Intervalo de amostragem  em ms
-    % Ncoef - Numero de coeficientes do filtro (analogo ao overlap do Jason)
-    % cutFreq - Frequencia de corte em HZ
-    %
-    % Exemple  dado_filtrado = lowPassFilter(signal, 4, 110, 8);
-    
     Ts = Ts*1e-3;
    
     Fnorm = cutFreq*2*Ts;

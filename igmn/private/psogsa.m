@@ -1,3 +1,54 @@
+%{
+psogsa - Particle Swarm Optimization with Gravitational Search Algorithm (PSOGSA)
+
+This function implements a hybrid optimization algorithm combining Particle 
+Swarm Optimization (PSO) and Gravitational Search Algorithm (GSA) to solve 
+optimization problems. The algorithm is designed to optimize hyperparameters 
+for a given problem.
+
+Inputs:
+    problem - A structure containing the following fields:
+        OptimizeOptions - A structure with optimization options, including:
+            PopulationSize - Number of particles in the swarm.
+            SelfAdjustment - Coefficient for self-adjustment in velocity update.
+            SocialAdjustment - Coefficient for social adjustment in velocity update.
+            MinFractionNeighbors - Minimum fraction of neighbors for adaptive neighborhood size.
+            InertiaRange - Range for inertia coefficient [min, max].
+            hyperparameters - Hyperparameter bounds and types.
+            StallIterLimit - Maximum number of iterations without improvement before stopping.
+            PlotFcns - Plot functions for visualization during optimization.
+            Verbosity - Level of verbosity for displaying progress.
+            UseParallel - Boolean indicating whether to use parallel computation.
+        DefaultIgmnOptions - Default options for the IGMN algorithm, including:
+            range - Range of output variables.
+        OutputVarIndexes - Indexes of output variables.
+
+Outputs:
+    x - The best solution found by the algorithm.
+    fval - The objective function value of the best solution.
+    exitFlag - A flag indicating the reason for termination.
+
+Subfunctions:
+    psogsacore - Core implementation of the PSOGSA algorithm.
+    generateBestNeighborIndex - Generates the index of the best neighbor for each particle.
+    updateVelocities - Updates the velocities of particles based on PSO and GSA rules.
+    updatePositions - Updates the positions of particles and enforces bounds.
+    updateInertia - Updates the adaptive inertia and neighborhood size.
+    calculateMass - Calculates the mass of particles based on their fitness values.
+    updateForces - Updates the gravitational forces acting on particles.
+    updateAccelerations - Updates the accelerations of particles based on forces and mass.
+    update - Updates the state of the swarm, including positions, velocities, forces, and accelerations.
+
+Notes:
+- The algorithm uses adaptive parameters for inertia and neighborhood size to balance exploration and exploitation.
+- Parallel computation can be enabled for faster evaluation of the objective function.
+- Plot functions can be used to visualize the optimization process.
+
+Example Usage:
+    problem.OptimizeOptions = struct(...);
+    [x, fval, exitFlag] = psogsa(problem);
+
+%}
 function [x, fval, exitFlag] = psogsa(problem) %#codegen
     
     optOptions = problem.OptimizeOptions;
