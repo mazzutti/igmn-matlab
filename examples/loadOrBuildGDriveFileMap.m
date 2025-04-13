@@ -129,6 +129,7 @@ function fileMap = recurseFolder(folderId, apiKey, indent, fileMap)
                 fileMap(name) = id;
             catch
                 newKey = sprintf('%s_%s', name, id(1:6));
+                disp(newKey);
                 fileMap(newKey) = id;
             end
 

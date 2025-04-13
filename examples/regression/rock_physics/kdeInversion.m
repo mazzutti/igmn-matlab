@@ -1,3 +1,42 @@
+% kdeInversion - Perform kernel density estimation-based inversion for rock physics data.
+%
+% Syntax:
+%   [outputs, probabilities, outputsDomain] = kdeInversion(modelData, wellData)
+%
+% Description:
+%   This function performs a non-parametric inversion using kernel density
+%   estimation (KDE) to estimate petrophysical properties (e.g., porosity,
+%   clay content, and water saturation) from elastic properties (e.g., Vp,
+%   Vs, and density). The inversion is based on a probabilistic framework
+%   that computes posterior distributions for the petrophysical properties.
+%
+% Inputs:
+%   modelData - A matrix containing the model data. The first columns
+%               represent elastic properties (Vp, Vs, Rho), and the
+%               remaining columns represent petrophysical properties.
+%   wellData  - A matrix containing the well log data. The columns represent
+%               depth, Vp, Vs, and density measurements.
+%
+% Outputs:
+%   outputs        - A matrix containing the maximum a posteriori (MAP)
+%                    estimates of petrophysical properties (porosity,
+%                    clay content, and water saturation) for each sample.
+%   probabilities   - A cell array containing the marginal posterior
+%                    distributions for porosity, clay content, and water
+%                    saturation.
+%   outputsDomain   - A cell array containing the discretized domains for
+%                    porosity, clay content, and water saturation.
+%
+% Notes:
+%   - The function uses a fixed kernel bandwidth for KDE, which is computed
+%     based on the range of the discretized domains.
+%   - The inversion is performed for each sample in the well log data.
+%
+% Example:
+%   [outputs, probabilities, outputsDomain] = kdeInversion(modelData, wellData);
+%
+% See also:
+%   RockPhysicsKDEInversion
 function [outputs, probabilities, outputsDomain] = kdeInversion(modelData, wellData)
     %% Non-parametric case (Kernel density estimation)
 

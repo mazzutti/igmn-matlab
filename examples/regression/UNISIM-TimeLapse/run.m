@@ -1,3 +1,66 @@
+%{
+run.m - Script for performing regression analysis using IGMN and Kriging
+
+This script performs regression analysis on UNISIM Time-Lapse data using 
+Incremental Gaussian Mixture Networks (IGMN) and Kriging for spatial 
+conditioning. It includes data preprocessing, model training, prediction, 
+and evaluation of results.
+
+Dependencies:
+- IGMN library (addpath('../../../igmn/'))
+- GeoStatRockPhysics library (addpath(genpath('../../../GeoStatRockPhysics/'))
+
+Global Variables:
+- iterationCount: Tracks the number of iterations.
+- inKrigingMode: Indicates whether Kriging is being used.
+- numCores: Number of CPU cores to use for parallel processing.
+- useKriging: Flag to enable or disable Kriging.
+- krigingStartIteration: Iteration number to start Kriging.
+
+Key Parameters:
+- nSim: Number of simulations to load.
+- discretizationSize: Size of discretization for predictions.
+- showPlots: Flag to enable or disable plot visualization.
+- exportPlots: Flag to enable or disable exporting plots.
+- variableNames: Names of the variables used in the analysis.
+- nanIndexes: Indexes of variables to check for NaN values.
+
+Main Steps:
+1. Load and preprocess UNISIM data:
+    - Load model and well data.
+    - Normalize data if Kriging is enabled.
+    - Extract input and output variable indexes.
+
+2. Kriging setup (if enabled):
+    - Prepare conditioning data from well information.
+    - Normalize conditioning data.
+    - Perform Kriging to compute means and variances for predictions.
+
+3. Problem setup:
+    - Define the regression problem using the Problem class.
+    - Configure optimization options and hyperparameters.
+
+4. Optimization and training:
+    - Perform hyperparameter tuning if enabled.
+    - Train the IGMN model using the training data.
+
+5. Prediction and evaluation:
+    - Predict outputs for test data.
+    - Compute unconditioned and conditioned outputs.
+    - Evaluate results using RMSE metrics.
+    - Generate plots for visualization of results.
+
+6. Comparison with DMS inversion:
+    - Load DMS inversion results and compare RMSE values.
+
+Outputs:
+- RMSE values for unconditioned and conditioned predictions.
+- Plots comparing real vs predicted values and regression analysis.
+
+Note:
+- Ensure all dependencies are correctly added to the MATLAB path.
+- Modify parameters and flags as needed for specific use cases.
+%}
 clear all; %#ok<CLALL>
 clear mex; %#ok<CLMEX>
 close all;
@@ -6,6 +69,7 @@ rng('default');
 rng(42);
 
 addpath('../../../igmn/');
+addpath('../../');
 addpath(genpath('../../../GeoStatRockPhysics/'))
 
 global iterationCount %#ok<*GVMIS>
@@ -16,11 +80,11 @@ global krigingStartIteration
 
 inKrigingMode = false;
 iterationCount = 0;
-numCores = str2double(getenv('NUMBER_OF_PROCESSORS')) / 2 + 1;
+numCores = 8; % maxNumCompThreads;
 useKriging = true;
 krigingStartIteration = 2000;
 
-nSim = 20000;
+nSim = 18000;
 discretizationSize = 20;
 showPlots = true;
 exportPlots = true;
@@ -80,6 +144,7 @@ if useKriging
 
     conditioningDataUniform = nonParametricToUniform(conditioningData, trainData, cell_size);
     conditioningDataGaussian_2krig = norminv(conditioningDataUniform);
+    conditioningDataGaussian_2krig(isnan(conditioningDataGaussian_2krig)) = 0;
 
     numInputVars = numel(inputVars);
     numOutputVars = length(outputVars);

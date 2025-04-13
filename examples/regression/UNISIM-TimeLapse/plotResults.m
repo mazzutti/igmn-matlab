@@ -1,3 +1,52 @@
+%{
+% plotResults - Function to visualize and export results of predictions and uncertainties.
+
+% Syntax:
+%   plotResults(net, WELLS, targets, outputs, unconditioned_outputs, ...
+%               targetsIndexes, I, J, probabilities, minMaxProportion, ...
+%               plotTitle, exportFileName, refFig)
+
+% Inputs:
+%   net                  - Neural network or model object containing prediction parameters.
+%   WELLS                - Struct or data containing well locations for plotting.
+%   targets              - Cell array of target values for different variables.
+%   outputs              - Matrix of conditioned outputs (predictions).
+%   unconditioned_outputs- Matrix of unconditioned outputs (predictions).
+%   targetsIndexes       - Linear indices of target locations in the grid.
+%   I                    - Number of rows in the grid.
+%   J                    - Number of columns in the grid.
+%   probabilities        - Cell array of probability distributions for each variable.
+%   minMaxProportion     - Normalization range for denormalizing data.
+%   plotTitle            - Title for the plot (string).
+%   exportFileName       - (Optional) File name for exporting the plot as a PDF.
+%   refFig               - Reference figure handle for plotting.
+
+% Outputs:
+%   None. The function generates plots and optionally exports them as PDF files.
+
+% Description:
+%   This function generates a series of plots to visualize the results of 
+%   predictions and their uncertainties. It includes:
+%     - Unconditioned predictions for porosity (Phi) and water saturation (Sw).
+%     - Conditioned predictions for porosity (Phi) and water saturation (Sw).
+%     - Standard deviations of predictions for each variable.
+%   The function also supports exporting the plots to PDF files if a file name 
+%   is provided.
+
+% Notes:
+%   - The function uses MATLAB's tiledlayout and imagesc for plotting.
+%   - Color limits and colormaps are set for better visualization.
+%   - Well locations are overlaid on the plots using the plot_wells function.
+%   - If probabilities are provided, standard deviation plots are generated.
+
+% Example:
+%   plotResults(net, WELLS, targets, outputs, unconditioned_outputs, ...
+%               targetsIndexes, 100, 100, probabilities, [0, 1], ...
+%               'Prediction Results', 'results', figure(1));
+
+% See also:
+%   plot_wells, exportgraphics, imagesc, tiledlayout
+%}
 function plotResults(net, WELLS, targets, outputs, unconditioned_outputs, ...
     targetsIndexes, I, J, probabilities, minMaxProportion, plotTitle, exportFileName, refFig)
 

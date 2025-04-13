@@ -1,3 +1,34 @@
+%{
+PLOT_HISTOGRAM - Plots histograms of a parameter `p` grouped by categories.
+
+This function generates histograms for the values in the input vector `p`,
+grouped by the unique integer values in the input vector `cat`. Each unique
+category is assigned a distinct color for visualization.
+
+Syntax:
+    plot_histogram(p, cat)
+
+Inputs:
+    p   - A numeric vector containing the data to be plotted in histograms.
+    cat - A numeric vector of the same length as `p`, containing integer
+          category labels corresponding to the elements of `p`.
+
+Outputs:
+    None. The function generates a plot.
+
+Example:
+    % Example usage of plot_histogram
+    p = randn(100, 1); % Random data
+    cat = randi([1, 3], 100, 1); % Random categories (1, 2, or 3)
+    plot_histogram(p, cat);
+
+Notes:
+    - The function uses a predefined set of three colors for the histograms.
+      If there are more than three unique categories in `cat`, an error may
+      occur due to insufficient colors.
+    - The histograms are overlaid with transparency for better visualization.
+
+%}
 function [] = plot_histogram(p, cat)
 
 % Get unique integer values from cat variable

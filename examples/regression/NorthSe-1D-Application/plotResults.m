@@ -72,46 +72,44 @@ function plotResults(net, targets, inputs, outputs, useFacies, depth, facies, le
 
     titles = {'(d)', '(e)', '(f)', '(g)', '(h)', '(i)'};
     O = size(outputs, 2);
-
+    
     prob_color_map = load("prob_color_map.mat").prob_color_map;
    
-    f = figure('units','normalized', 'outerposition', [0.02 0.02 0.96 0.96]);
+    f = figure('units','normalized', 'outerposition', [0.02 0.02 0.96/2 0.96]);
     set(0, 'DefaultAxesFontSize', 22,  'defaultTextInterpreter', 'latex');
     % tiledlayout(f, 1, 6, 'Padding', 'loose', 'TileSpacing', 'compact');
 
-    ha = tight_subplot(1, 6, [.01 .015], [0.01 .04], [.064 .036]);
+    ha = tight_subplot(1, 3, [.01 .015], [0.01 .04], [.064 .036]);
 
-    for ii = 1:2
-        for i = 1:O
-            ax = ha((ii -1) * O + i);
-            axes(ax); %#ok<LAXES>
-            probs = probabilities{i};
-            pcolor(ax, outputsDomain{i}, depth, probs);
-            hold('on');
-            shading interp;
-            h = colorbar;
-            if (i + ii) == 5
-                ylabel(h, '\boldmath{$Probability$}', 'FontSize', 22, 'Interpreter', 'latex');
-            end
-            if i + (ii - 1) == 1
-                ylabel('\boldmath{$Depth$} \boldmath{$(m)$}', 'FontSize', 22, 'Interpreter', 'latex');
-            end
-            set(ax, 'YDir','reverse');
-            xlim(variableRanges(:, i));
-            xticks(variableRanges(1, i):(variableRanges(2, i) - variableRanges(1, i))/2:variableRanges(2, i));
-            plot(targets(:, i), depth, 'k', 'LineWidth', 2); 
-            plot(outputs(:, i), depth, 'r', 'LineWidth', 2);
-            xlabel(variableNames{ i + I + 1}, 'FontWeight', 'bold', 'FontSize', 22);
-            if i + (ii - 1) ~= 1
-                set(ax, 'Yticklabel', []);
-            end
-            legend({'', 'Reference', 'Prediction'}, 'Location', 'southoutside', 'FontSize', 22);
-            tt = title(titles{i + (ii - 1) * 3}, 'FontSize', 22, 'FontWeight', 'bold', 'Interpreter', 'none');
-            tt.Position(2) = tt.Position(2) - 0.6;
-            colormap(ax, prob_color_map);
-            grid;
-            hold('off');
+    for i = 1:O
+        ax = ha(i);
+        axes(ax); %#ok<LAXES>
+        probs = probabilities{i};
+        pcolor(ax, outputsDomain{i}, depth, probs);
+        hold('on');
+        shading interp;
+        h = colorbar;
+        if i == 3
+            ylabel(h, '\boldmath{$Probability$}', 'FontSize', 22, 'Interpreter', 'latex');
         end
+        if i == 1
+            ylabel('\boldmath{$Depth$} \boldmath{$(m)$}', 'FontSize', 22, 'Interpreter', 'latex');
+        end
+        set(ax, 'YDir','reverse');
+        xlim(variableRanges(:, i));
+        xticks(variableRanges(1, i):(variableRanges(2, i) - variableRanges(1, i))/2:variableRanges(2, i));
+        plot(targets(:, i), depth, 'k', 'LineWidth', 2); 
+        plot(outputs(:, i), depth, 'r', 'LineWidth', 2);
+        xlabel(variableNames{ i + I + 1}, 'FontWeight', 'bold', 'FontSize', 22);
+        if i  ~= 1
+            set(ax, 'Yticklabel', []);
+        end
+        legend({'', 'Reference', 'Prediction'}, 'Location', 'southoutside', 'FontSize', 22);
+        tt = title(titles{i}, 'FontSize', 22, 'FontWeight', 'bold', 'Interpreter', 'none');
+        tt.Position(2) = tt.Position(2) - 0.6;
+        colormap(ax, prob_color_map);
+        grid;
+        hold('off');
     end
 
     if exist('exportFileName', 'var')
@@ -122,7 +120,7 @@ function plotResults(net, targets, inputs, outputs, useFacies, depth, facies, le
 
     means = net.means;
     covs = pageinv(net.invCovs);
-    gm = gmdistribution(net.means, pageinv(net.invCovs), net.priors);
+    gm = gmdistribution(net.means, covs, net.priors);
     logs = random(gm, 3000);
     if useFacies
         logs = logs(:, 2:end); 

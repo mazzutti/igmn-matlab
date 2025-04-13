@@ -21,22 +21,22 @@ function f = generate_histograms(logs, names, coloraxis, variableRanges, means, 
             end 
            
             view([0 90]);
-            if nargin == 7
-                if i ~= j
-                    xlimit = variableRanges(:, j);
-                    ylimit = variableRanges(:, i);
-                    dx = (xlimit(2) - xlimit(1))/499;
-                    dy = (ylimit(2) - ylimit(1))/499;
-                    colors = [166/255, 68/255, 146/255; 242/255, 187/255, 68/255; 65/255, 144/255, 160/255];
-                    [X1Grid, X2Grid] = meshgrid(xlimit(1):dx:xlimit(2), ylimit(1):dy:ylimit(2));
-                    hold on
-                    for k = 1:size(means, 1)
-                        gm = gmdistribution(means(k, [j, i]), covs([j, i], [j, i],  k), priors(k));
-                        data = pdf(gm, [X1Grid(:) X2Grid(:)]);
-                        contour3(ax, X1Grid, X2Grid, reshape(data, size(X1Grid, 1), size(X1Grid,2)), 4, 'EdgeColor', colors(k, :));
-                    end
-                end
-            end
+            % if nargin == 7
+            %     if i ~= j
+            %         xlimit = variableRanges(:, j);
+            %         ylimit = variableRanges(:, i);
+            %         dx = (xlimit(2) - xlimit(1))/499;
+            %         dy = (ylimit(2) - ylimit(1))/499;
+            %         % colors = [166/255, 68/255, 146/255; 242/255, 187/255, 68/255; 65/255, 144/255, 160/255];
+            %         % [X1Grid, X2Grid] = meshgrid(xlimit(1):dx:xlimit(2), ylimit(1):dy:ylimit(2));
+            %         % hold on
+            %         % for k = 1:size(means, 1)
+            %         %     gm = gmdistribution(means(k, [j, i]), covs([j, i], [j, i],  k), priors(k));
+            %         %     data = pdf(gm, [X1Grid(:) X2Grid(:)]);
+            %         %     contour3(ax, X1Grid, X2Grid, reshape(data, size(X1Grid, 1), size(X1Grid,2)), 4, 'EdgeColor', colors(k, :));
+            %         % end
+            %     end
+            % end
             if i == j
                 xlim(variableRanges(:, j));
             else

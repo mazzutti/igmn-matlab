@@ -1,3 +1,50 @@
+%{
+
+This script demonstrates the use of Incremental Gaussian Mixture Networks (IGMN) 
+for regression tasks using sinusoidal data. The script includes data preparation, 
+parameter tuning, model training, and prediction. It also visualizes the results 
+and exports the Gaussian components of the trained network.
+
+Main Steps:
+1. Clear workspace, close figures, and set random seed for reproducibility.
+2. Add the IGMN library to the MATLAB path.
+3. Generate input and output data for the regression task.
+4. Define the maximum number of Gaussian components (`maxNc`).
+5. Create a `Problem` object to configure the regression task, including:
+    - Input and output data.
+    - Execution mode (e.g., 'mex' or 'native').
+    - Parameter tuning options.
+    - Compilation options for optimization.
+6. Configure optimization options for hyperparameter tuning, such as:
+    - Algorithm type.
+    - Self and social adjustment factors.
+    - Population size and parallel execution.
+    - Tolerance and stopping criteria.
+7. Compile the problem if the execution mode is 'mex' or 'native'.
+8. Perform parameter tuning if enabled.
+9. Train the IGMN model using the training data.
+10. Predict the output for test data and evaluate the results.
+11. Visualize the regression results and Gaussian components of the trained network.
+12. Export the visualization as a PDF file.
+
+Key Parameters:
+- `maxNc`: Maximum number of Gaussian components.
+- `ExecutionMode`: Determines whether to use 'mex' or 'native' execution.
+- `OptimizeOptions`: Contains settings for hyperparameter optimization.
+- `DefaultIgmnOptions`: Default options for the IGMN model.
+
+Visualization:
+- Regression results are plotted using `plotregression`.
+- Gaussian components are visualized using `plotNet`.
+
+Dependencies:
+- The script requires the IGMN library and its associated functions 
+  (e.g., `optimize_mex`, `igmnBuilder_mex`, `train_mex`, `predict_mex`).
+
+Output:
+- Regression performance visualization.
+- Exported PDF file showing the Gaussian components of the trained network.
+%}
 clear all; %#ok<CLALL> 
 close all;
 clc;

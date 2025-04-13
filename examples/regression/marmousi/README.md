@@ -13,7 +13,7 @@ The Marmousi example demonstrates how IGMN can be used to predict subsurface pro
   - **Inputs**: Dataset structure (`allData`), block size, trace size, and number of samples per block.
   - **Outputs**: Stratified training data, testing data, and validation data.
   - **Features**:
-    - Uses parallel processing (`parfor`) for faster GMM fitting.
+    - Uses parallel processing (`parfor`) for faster IGMN fitting.
     - Saves GMMs and validation data to `data/stratifiedData.mat` for reuse.
     - Handles convergence issues by reducing the number of GMM components if necessary.
 

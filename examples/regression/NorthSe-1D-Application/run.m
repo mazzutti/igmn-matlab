@@ -1,3 +1,41 @@
+%{
+NorthSe-1D-Application - Script for running a synthetic well data regression example using 
+    Incremental Gaussian Mixture Network (IGMN).
+
+This script performs the following tasks:
+1. Configures simulation parameters and paths.
+2. Generates synthetic well data for training and testing.
+3. Sets up the problem configuration for IGMN optimization.
+4. Compiles necessary functions for execution in 'mex' or 'native' mode.
+5. Optimizes IGMN hyperparameters (if enabled).
+6. Trains the IGMN model using the training data.
+7. Predicts outputs using the trained IGMN model and evaluates performance.
+8. Plots results and computes RMSE for the predicted variables.
+
+Dependencies:
+- IGMN library (addpath('../../../igmn/'))
+- Examples library (addpath('../../../examples/'))
+- GeoStatRockPhysics/SeReM library (addpath(genpath('../../../GeoStatRockPhysics/SeReM/')))
+
+Key Parameters:
+- nSim: Number of simulations for synthetic well data.
+- discretizationSize: Size of discretization for output variables.
+- useFacies: Boolean flag to include facies in the data.
+- showPlots: Boolean flag to display plots.
+- exportPlots: Boolean flag to save plots to disk.
+- numberOfOutputVars: Number of output variables for regression.
+- ExecutionMode: Execution mode ('mex' or 'native').
+
+Outputs:
+- RMSE: Root Mean Square Error for the predicted variables.
+- Plots: Visualization of predictions, confidence intervals, and probabilities.
+
+Note:
+- Ensure the required libraries are available in the specified paths.
+- Modify hyperparameter bounds and optimization settings as needed.
+- Results are saved in the 'figs' directory.
+
+%}
 clear all; %#ok<CLALL> 
 close all;
 clc;
@@ -6,6 +44,7 @@ rng(42);
 
 
 addpath('../../../igmn/');
+addpath('../../');
 addpath(genpath('../../../GeoStatRockPhysics/SeReM/'))
 
 %% Do some configurations
@@ -16,6 +55,10 @@ showPlots = true;
 exportPlots = true;
 
 %% Create synthetic well data
+
+if ~exist('figs', 'dir')
+    makedirs('figs')
+end
 
 [modelData, wellData] = genPseudoWell(nSim, showPlots, useFacies, exportPlots);
 
@@ -46,7 +89,7 @@ problem = Problem( ...
     'ExecutionMode', 'mex', ...
     'DoParametersTuning', false, ...
     'CompileOptions', compileoptions(...
-        'EnableRecompile', true, ...
+        'EnableRecompile', false, ...
         'EnableProfile', false, ...
         'NumberOfVariables', nvars, ...
         'NumberOfOutputVars', numberOfOutputVars, ...
@@ -54,7 +97,7 @@ problem = Problem( ...
     );
 
 problem.OptimizeOptions.Algorithm = 'imode';
-problem.OptimizeOptions.UseDefaultsFor = {'UseRankOne', 'MaxNc', 'SPMin', 'VMin', 'Tau', 'Delta'};
+problem.OptimizeOptions.UseDefaultsFor = {'UseRankOne'};
 problem.OptimizeOptions.MaxFunEval = 300000;
 problem.OptimizeOptions.MaxIter = 300000;
 problem.OptimizeOptions.PopulationSize = 300;
@@ -66,20 +109,20 @@ problem.OptimizeOptions.TolFunValue = 1e-18;
 % problem.OptimizeOptions.hyperparameters{1}.lb = 1.0e-15;
 % problem.OptimizeOptions.hyperparameters{2}.ub = 0.99;
 % problem.OptimizeOptions.hyperparameters{2}.lb = 1.0e-15;
-% problem.OptimizeOptions.hyperparameters{6}.ub = 50;
-% problem.OptimizeOptions.hyperparameters{6}.lb = 8;
-% problem.OptimizeOptions.hyperparameters{5}.ub = 12;
-% problem.OptimizeOptions.hyperparameters{5}.lb = 5;
+problem.OptimizeOptions.hyperparameters{6}.ub = 100;
+problem.OptimizeOptions.hyperparameters{6}.lb = 35;
+problem.OptimizeOptions.hyperparameters{5}.ub = 32;
+problem.OptimizeOptions.hyperparameters{5}.lb = 5;
 problem.OptimizeOptions.hyperparameters{7}.ub = 1.0e-3;
 
 problem.DefaultIgmnOptions.UseRankOne = 1;
-problem.DefaultIgmnOptions.MaxNc = 30;
-problem.DefaultIgmnOptions.SPMin = 5;
+% problem.DefaultIgmnOptions.MaxNc = 30;
+% problem.DefaultIgmnOptions.SPMin = 5;
 % problem.DefaultIgmnOptions.RegValue = 0;
 
-problem.DefaultIgmnOptions.VMin = 12;
-problem.DefaultIgmnOptions.Tau = 0.099468344904515;
-problem.DefaultIgmnOptions.Delta = 0.336502809203064;
+% problem.DefaultIgmnOptions.VMin = 12;
+% problem.DefaultIgmnOptions.Tau = 0.099;
+% problem.DefaultIgmnOptions.Delta = 0.33;
 % problem.DefaultIgmnOptions.Gamma = 0.5;
 % problem.DefaultIgmnOptions.Phi = 0.01;
 

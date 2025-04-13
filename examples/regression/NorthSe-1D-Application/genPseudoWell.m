@@ -75,6 +75,9 @@ function [modelData, wellData] = genPseudoWell(nSim, showPlots, useFacies, expor
         end
 
         if exportPlots
+            if ~exist('./figs', 'dir')
+                mkdir('./figs')
+            end
             exportgraphics(f, 'figs/testdata.pdf', 'BackgroundColor', 'none', 'Resolution', 1000);
         end
         % set(gca,'FontName','Helvica')

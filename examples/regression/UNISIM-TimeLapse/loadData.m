@@ -1,7 +1,50 @@
+%{
+loadData - Load and process data for UNISIM Time-Lapse analysis.
+
+This function loads reference data, generates plots for visualization, and
+prepares training data for regression models. It also simulates observed
+elastic properties with noise and organizes the data into training and
+well datasets.
+
+Inputs:
+    nSim        - Number of simulations for prior sampling.
+    showPlots   - Boolean flag to indicate whether to display plots.
+    exportPlots - Boolean flag to indicate whether to export plots as files.
+
+Outputs:
+    modelData   - Combined training data matrix containing elastic properties
+                  and petrophysical properties.
+    wellData    - Well data matrix containing reference elastic and
+                  petrophysical properties.
+    WELLS       - Structure containing well information (coordinates and names).
+    I           - Number of rows in the reference property grid.
+    J           - Number of columns in the reference property grid.
+    refFig      - Figure handle for the reference petrophysical properties plot.
+
+Notes:
+    - The function reads data from 'data/data_CAGEO.mat'.
+    - If 'showPlots' is true, it generates and optionally exports plots for
+      reference models, elastic properties, and training data histograms.
+    - The function uses a rock physics model (RPM_unisim) to simulate elastic
+      properties based on porosity and water saturation.
+    - Training data includes both porous and non-porous samples, as well as
+      shale samples.
+    - Noise is added to the simulated elastic properties to mimic observed data.
+
+Dependencies:
+    - Requires the 'data/data_CAGEO.mat' file for input data.
+    - Uses external functions such as 'RPM_unisim', 'plot_wells', and
+      'generate_histograms'.
+
+Example:
+    [modelData, wellData, WELLS, I, J, refFig] = loadData(1000, true, false);
+%}
 function [modelData, wellData, WELLS, I, J, refFig] = loadData(nSim, showPlots, exportPlots) %#ok<*STOUT>
    
     %% read UNISIM
-    load('data/data_CAGEO.mat'); %#ok<LOAD>
+    dataPath = 'data/UNISIM-TimeLapse/data_CAGEO.mat';
+    assertFileAvailable(dataPath)
+    load(dataPath); %#ok<LOAD>
 
     if showPlots
         % figure;
@@ -111,6 +154,9 @@ function [modelData, wellData, WELLS, I, J, refFig] = loadData(nSim, showPlots, 
         colorbar('XTick', 1.35:0.05:1.7);
         colormap([1, 1, 1; parula]);
         if exportPlots
+            if ~exist('./figs', 'dir')
+                mkdir('./figs')
+            end
             exportgraphics(f, 'figs/elastic_properties.pdf', 'BackgroundColor', 'none', 'Resolution', 1000);
         else
             sgtitle('Elastic properties', 'FontWeight', 'bold');

@@ -1,3 +1,48 @@
+%{
+% generate_histograms - Generates a grid of histograms and 2D histogram plots for a given dataset.
+%
+% Syntax:
+%   f = generate_histograms(logs, names, coloraxis, variableRanges, means, covs, priors, minMaxProportion)
+%
+% Inputs:
+%   logs               - A matrix where each column represents a variable and each row represents an observation.
+%   names              - A cell array of strings containing the names of the variables (optional).
+%   coloraxis          - A vector specifying the color axis limits for 2D histograms (optional).
+%   variableRanges     - A matrix specifying the range of each variable for the plots. Each column corresponds to a variable.
+%   means              - A matrix where each row represents the mean of a Gaussian component in the GMM.
+%   covs               - A 3D array where each slice represents the covariance matrix of a Gaussian component in the GMM.
+%   priors             - A vector containing the prior probabilities of each Gaussian component in the GMM.
+%   minMaxProportion   - A vector specifying the normalization range for denormalizing data (optional).
+%
+% Outputs:
+%   f                  - A figure handle for the generated plot.
+%
+% Description:
+%   This function creates a grid of histograms and 2D histogram plots for the input data. 
+%   - Diagonal plots (i == j) display 1D histograms for each variable.
+%   - Off-diagonal plots (i ~= j) display 2D histograms for variable pairs.
+%   If Gaussian Mixture Model (GMM) parameters are provided, the function overlays GMM contours on the 2D histograms.
+%
+%   The function also adjusts axis labels, tick values, and exponents for better visualization.
+%
+% Notes:
+%   - The function uses the `tight_subplot` utility for subplot arrangement.
+%   - If the number of input arguments is less than 8, certain features (e.g., GMM contours) are disabled.
+%
+% Example:
+%   logs = rand(1000, 3); % Example data
+%   names = {'Variable 1', 'Variable 2', 'Variable 3'};
+%   coloraxis = [0, 10];
+%   variableRanges = [0, 1; 0, 1; 0, 1]';
+%   means = [0.5, 0.5; 0.3, 0.7];
+%   covs = cat(3, [0.01, 0; 0, 0.01], [0.02, 0; 0, 0.02]);
+%   priors = [0.6, 0.4];
+%   minMaxProportion = [0, 1];
+%   f = generate_histograms(logs, names, coloraxis, variableRanges, means, covs, priors, minMaxProportion);
+%
+% See also:
+%   tight_subplot, histogram, histogram2, gmdistribution, contour
+%}
 function f = generate_histograms(logs, names, coloraxis, variableRanges, means, covs, priors, minMaxProportion)
     plot_size_x = size(logs, 2);
     set(0, 'DefaultAxesFontSize', 22, 'defaultTextInterpreter', 'latex');

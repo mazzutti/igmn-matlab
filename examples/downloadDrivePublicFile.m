@@ -39,25 +39,32 @@ function downloadDrivePublicFile(fileId, destination)
 
     % Initial request
     response = webread(baseUrl, options);
+    if isa(response,'uint8')
+        response = char(response');
+    end
 
     % Search for the confirmation token and final download URL
     tokenExpr = 'name="confirm"\s+value="([a-zA-Z0-9_-]+)"';
     tokenMatch = regexp(response, tokenExpr, 'tokens');
 
-    if isempty(tokenMatch)
-        error('❌ Could not extract confirmation token from HTML.');
+    if ~isempty(tokenMatch)
+        confirmToken = tokenMatch{1}{1};
+        fprintf('🔐 Found confirmation token: %s\n', confirmToken);
+        % Construct the final download URL
+        finalUrl = sprintf(['https://drive.usercontent.google.com/download?' ...
+            'export=download&confirm=%s&id=%s'], confirmToken, fileId);
+    else 
+        finalUrl = sprintf(['https://drive.usercontent.google.com/download?' ...
+            'export=download&id=%s'],fileId);
     end
-
-    confirmToken = tokenMatch{1}{1};
-    fprintf('🔐 Found confirmation token: %s\n', confirmToken);
-
-    % Construct the final download URL
-    finalUrl = sprintf(['https://drive.usercontent.google.com/download?' ...
-        'export=download&confirm=%s&id=%s'], confirmToken, fileId);
 
     fprintf('⬇️  Downloading from:\n%s\n', finalUrl);
 
     % Download the actual file
+    destinationDir = fileparts(destination);
+    if ~exist(destinationDir, 'dir')
+        mkdir(destinationDir);
+    end
     websave(destination, finalUrl, options);
     fprintf('✅ File downloaded to: %s\n', destination);
 end

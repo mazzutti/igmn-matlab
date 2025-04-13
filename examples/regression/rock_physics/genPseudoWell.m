@@ -1,8 +1,46 @@
+% genPseudoWell - Generates synthetic pseudo-well data for rock physics analysis.
+%
+% Syntax:
+%   [modelData, wellData] = genPseudoWell(nSim, useFacies, showPlots, exportPlots)
+%
+% Inputs:
+%   nSim        - Number of simulations to generate for each facies.
+%   useFacies   - Logical flag indicating whether to include facies information in the output.
+%   showPlots   - Logical flag indicating whether to display plots of the generated data.
+%   exportPlots - Logical flag indicating whether to export the generated plots as PDF files.
+%
+% Outputs:
+%   modelData - Matrix containing the generated model data, including simulated inputs and outputs.
+%               Columns include facies (if useFacies is true), Vp, Vs, Rho, Phi, v_clay, and sw.
+%   wellData  - Matrix containing the original well data, including depth, facies, Vp, Vs, Rho, Phi, v_clay, and sw.
+%
+% Description:
+%   This function generates synthetic pseudo-well data based on a given LAS file containing well log data.
+%   It applies random perturbations to porosity (Phi), clay volume (v_clay), and water saturation (sw)
+%   using a correlation function and FFT-based moving average. The function also computes Vp, Vs, and Rho
+%   using a rock physics model (RPM). Optionally, it visualizes the generated data and exports the plots.
+%
+% Example:
+%   [modelData, wellData] = genPseudoWell(100, true, true, false);
+%
+% Dependencies:
+%   - read_las_file: Reads LAS file data.
+%   - construct_correlation_function_beta: Constructs a correlation function for perturbations.
+%   - FFT_MA_3D: Applies FFT-based moving average for random field generation.
+%   - RPM: Computes Vp, Vs, and Rho using a rock physics model.
+%   - clusterdata: Performs clustering on water saturation data.
+%   - plot_histogram: Plots histograms for given data.
+%
+% Notes:
+%   - The function assumes the LAS file is located at 'data/rock-physics/pseudowell_2856667402688.las'.
+%   - The function applies constraints to Phi, v_clay, and sw to ensure realistic values.
+%   - The generated plots include scatter plots and histograms for visualizing the data.
 function [modelData, wellData] = genPseudoWell(nSim, useFacies, showPlots, exportPlots)
 
 
     % Synthetic data configs
-    dataPath = 'data/pseudowell_2856667402688.las';
+    dataPath = 'data/rock-physics/pseudowell_2856667402688.las';
+    assertFileAvailable(dataPath)
     inputsStdMultiplyier = 5;
     stdVp = 100 * inputsStdMultiplyier;
     stdVs = 50 * inputsStdMultiplyier;

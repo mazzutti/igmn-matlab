@@ -1,3 +1,42 @@
+% RUN_NATIVE Executes a regression example using the IGMN algorithm.
+%
+% This function demonstrates the use of the Incremental Gaussian Mixture
+% Network (IGMN) for regression on a sine wave dataset. It includes
+% parameter tuning using a custom Particle Swarm Optimization (PSO)
+% implementation located in `igmn/private/pso.m` and plots the regression
+% results.
+%
+% The function performs the following steps:
+% 1. Generates input and output data for a sine wave.
+% 2. Configures the optimization problem for tuning IGMN parameters.
+% 3. Optimizes the IGMN hyperparameters using the custom PSO implementation
+%    if parameter tuning is enabled.
+% 4. Trains the IGMN model on the training data.
+% 5. Predicts the output for test data using the trained IGMN model.
+% 6. Plots the regression results using a regression plot.
+%
+% INPUTS:
+%   None.
+%
+% OUTPUTS:
+%   None. The function generates a regression plot as output.
+%
+% DEPENDENCIES:
+%   - Problem: A class or function to define the optimization problem.
+%   - compileoptions: A function to configure compilation options.
+%   - optimizeoptions: A function to configure optimization options.
+%   - optimize: A function to perform parameter optimization using the
+%     custom PSO implementation in `igmn/private/pso.m`.
+%   - igmnBuilder: A function to create an IGMN model.
+%   - train: A function to train the IGMN model.
+%   - predict: A function to make predictions using the trained IGMN model.
+%   - plotregression: A function to plot regression results.
+%
+% NOTES:
+%   - The function uses a custom PSO implementation for hyperparameter tuning.
+%   - The IGMN model is trained and tested on shuffled sine wave data.
+%   - The function includes options for parallel computation and fine-tuning
+%     of optimization parameters.
 function run_native()
     inputData = 0:0.01:(2 * pi);
     inputData = inputData(randperm(size(inputData, 2)));

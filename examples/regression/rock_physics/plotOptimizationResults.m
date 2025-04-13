@@ -1,3 +1,43 @@
+%{
+% plotOptimizationResults - Plots optimization results for regression analysis.
+
+% Syntax:
+%   plotOptimizationResults(trainData, inputVars, outputVars, ...
+%       igmnOptions, useMex, legends, xlabels, minMaxProportion, ranges, exportFileName)
+
+% Inputs:
+%   trainData          - Matrix containing the training data.
+%   inputVars          - Indices of the input variables in the training data.
+%   outputVars         - Indices of the output variables in the training data.
+%   igmnOptions        - Structure containing options for the IGMN model.
+%   useMex             - Boolean flag to use MEX functions for IGMN operations.
+%   legends            - Cell array of legends for the plots.
+%   xlabels            - Cell array of x-axis labels for the plots.
+%   minMaxProportion   - Normalization parameters for denormalizing the outputs (optional).
+%   ranges             - Matrix specifying the x-axis limits for each output variable.
+%   exportFileName     - String specifying the base name for exporting plots (optional).
+
+% Outputs:
+%   None. This function generates and displays plots, and optionally exports them as files.
+
+% Description:
+%   This function trains an IGMN (Incremental Gaussian Mixture Network) model using the provided
+%   training data and plots the optimization results. It compares the predicted outputs with the
+%   reference targets for each output variable. The function also generates regression plots to
+%   evaluate the prediction performance. Optionally, the plots can be exported as PDF files.
+
+% Example:
+%   plotOptimizationResults(trainData, [1, 2], [3], igmnOptions, false, ...
+%       {'Input 1', 'Input 2'}, {'Output'}, [], [-1, 1; -1, 1], 'results')
+
+% Notes:
+%   - The function supports both MATLAB and MEX implementations of the IGMN model.
+%   - The depth axis is reversed in the plots to represent typical geological data visualization.
+%   - Ensure that the 'ranges' input matches the number of output variables.
+
+% See also:
+%   igmn, train, predict, denormalizeData, plotregression
+%}
 function plotOptimizationResults(trainData, inputVars, outputVars, ...
     igmnOptions, useMex, legends, xlabels, minMaxProportion, ranges, exportFileName)
 
