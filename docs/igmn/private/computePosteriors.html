@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computePosteriors</title>
+  <meta name="keywords" content="computePosteriors">
+  <meta name="description" content="COMPUTEPOSTERIORS Compute the posterior probabilities for each IGMN component.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; computePosteriors.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>computePosteriors
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>COMPUTEPOSTERIORS Compute the posterior probabilities for each IGMN component.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = computePosteriors(net) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> COMPUTEPOSTERIORS Compute the posterior probabilities for each IGMN component.
+
+   net = computePosteriors(net)
+
+   This function calculates the posterior probabilities for each component
+   in the Incremental Gaussian Mixture Network (IGMN). The computation
+   method depends on whether the `useRankOne` flag in the `net` structure
+   is set to true or false.
+
+   Input:
+       net - A structure containing the IGMN parameters, including:
+             - logLikes: Log-likelihood values for each component.
+             - priors: Prior probabilities for each component.
+             - useRankOne: A flag indicating the computation method.
+
+   Output:
+       net - The updated structure with the computed posterior probabilities
+             stored in the `posteriors` field.
+
+   Details:
+       - If `useRankOne` is true:
+           The posterior probabilities are computed as the element-wise
+           product of `logLikes` and `priors`, normalized by their sum.
+           Missing values are replaced with zeros.
+
+       - If `useRankOne` is false:
+           The posterior probabilities are computed using a log-density
+           approach to avoid numerical underflow. The log-likelihoods are
+           adjusted by subtracting the maximum log-likelihood value, then
+           exponentiated and normalized.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% COMPUTEPOSTERIORS Compute the posterior probabilities for each IGMN component.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   net = computePosteriors(net)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   This function calculates the posterior probabilities for each component</span>
+0006 <span class="comment">%   in the Incremental Gaussian Mixture Network (IGMN). The computation</span>
+0007 <span class="comment">%   method depends on whether the `useRankOne` flag in the `net` structure</span>
+0008 <span class="comment">%   is set to true or false.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   Input:</span>
+0011 <span class="comment">%       net - A structure containing the IGMN parameters, including:</span>
+0012 <span class="comment">%             - logLikes: Log-likelihood values for each component.</span>
+0013 <span class="comment">%             - priors: Prior probabilities for each component.</span>
+0014 <span class="comment">%             - useRankOne: A flag indicating the computation method.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   Output:</span>
+0017 <span class="comment">%       net - The updated structure with the computed posterior probabilities</span>
+0018 <span class="comment">%             stored in the `posteriors` field.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%   Details:</span>
+0021 <span class="comment">%       - If `useRankOne` is true:</span>
+0022 <span class="comment">%           The posterior probabilities are computed as the element-wise</span>
+0023 <span class="comment">%           product of `logLikes` and `priors`, normalized by their sum.</span>
+0024 <span class="comment">%           Missing values are replaced with zeros.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%       - If `useRankOne` is false:</span>
+0027 <span class="comment">%           The posterior probabilities are computed using a log-density</span>
+0028 <span class="comment">%           approach to avoid numerical underflow. The log-likelihoods are</span>
+0029 <span class="comment">%           adjusted by subtracting the maximum log-likelihood value, then</span>
+0030 <span class="comment">%           exponentiated and normalized.</span>
+0031 <a name="_sub0" href="#_subfunctions" class="code">function net = computePosteriors(net) </a><span class="comment">%#codegen</span>
+0032     <span class="keyword">if</span> net.useRankOne
+0033         net.posteriors = net.logLikes .* net.priors;
+0034         net.posteriors = net.posteriors / sum(net.posteriors);
+0035         net.posteriors = fillmissing(net.posteriors, <span class="string">'constant'</span>, 0);
+0036     <span class="keyword">else</span>
+0037         logDensity = bsxfun(@plus, net.logLikes, log(net.priors));
+0038         <span class="comment">% minus maxll to avoid underflow</span>
+0039         logDensity = exp(bsxfun(@minus, logDensity, max(logDensity, [], 2)));
+0040         <span class="comment">% normalize</span>
+0041         net.posteriors = bsxfun(@rdivide, logDensity, sum(logDensity, 2));
+0042     <span class="keyword">end</span>
+0043 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

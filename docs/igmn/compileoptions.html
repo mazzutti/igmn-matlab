@@ -1,0 +1,241 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of compileoptions</title>
+  <meta name="keywords" content="compileoptions">
+  <meta name="description" content="COMPILEOPTIONS Class">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; compileoptions.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>compileoptions
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>COMPILEOPTIONS Class</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> COMPILEOPTIONS Class
+ 
+ The `compileoptions` class is used to configure various options for code
+ generation and compilation processes. It provides properties to specify
+ dataset sizes, enable profiling and reporting, and define problem-specific
+ parameters such as the number of variables and output variables.
+
+ Properties:
+   trainSize (double): 
+       The size of the training dataset. Default is `inf`.
+   testSize (double): 
+       The size of the testing dataset. Default is `inf`.
+   allDataSize (double): 
+       The total size of the dataset, calculated as `trainSize + testSize`.
+   EnableProfile (logical): 
+       Indicates whether profiling instrumentation is included in the 
+       generated code. Default is `false`.
+   EnableReport (logical): 
+       Indicates whether a code generation report is produced. Default is `false`.
+   EnableRecompile (logical): 
+       Forces the generation/compilation process to be redone if set to `true`.
+       Default is `false`.
+   IsClassification (logical): 
+       Specifies if the problem is a classification problem. Default is `false`.
+   IsOptimization (logical): 
+       Specifies if the problem is an optimization problem. Default is `false`.
+   NumberOfVariables (double): 
+       The number of problem variables to consider during code generation.
+       Must be a positive integer. Default is `2`.
+   NumberOfOutputVars (double): 
+       The number of problem output variables to consider during code generation.
+       Must be a positive integer. Default is `1`.
+
+ Methods:
+   compileoptions(trainSize, testSize, allDataSize, options):
+       Constructor method to initialize the `compileoptions` object.
+
+       Arguments:
+           trainSize (double): 
+               The size of the training dataset. Default is `inf`.
+           testSize (double): 
+               The size of the testing dataset. Default is `inf`.
+           allDataSize (double): 
+               The total size of the dataset, calculated as `trainSize + testSize`.
+               Default is `trainSize + testSize`.
+           options (struct): 
+               A structure containing the following optional fields:
+               - NumberOfVariables (double): 
+                   Number of problem variables. Default is `2`.
+               - NumberOfOutputVars (double): 
+                   Number of output variables. Default is `1`.
+               - MaxNc (double): 
+                   Maximum number of clusters. Default is `trainSize + 1`.
+               - EnableProfile (logical): 
+                   Enable profiling instrumentation. Default is `false`.
+               - EnableReport (logical): 
+                   Enable code generation report. Default is `false`.
+               - IsClassification (logical): 
+                   Specify if it is a classification problem. Default is `false`.
+               - IsOptimization (logical): 
+                   Specify if it is an optimization problem. Default is `false`.
+               - EnableRecompile (logical): 
+                   Force recompilation. Default is `false`.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="compileoptions.html" class="code" title="">compileoptions</a>	COMPILEOPTIONS Class</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="Problem.html" class="code" title="">Problem</a>	Problem Class</li><li><a href="compileoptions.html" class="code" title="">compileoptions</a>	COMPILEOPTIONS Class</li><li><a href="transpile.html" class="code" title="function transpile(options)">transpile</a>	TRANSPILE Transpile MATLAB code to MEX functions using MATLAB Coder.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = compileoptions(trainSize, testSize, allDataSize, options)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% COMPILEOPTIONS Class</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% The `compileoptions` class is used to configure various options for code</span>
+0004 <span class="comment">% generation and compilation processes. It provides properties to specify</span>
+0005 <span class="comment">% dataset sizes, enable profiling and reporting, and define problem-specific</span>
+0006 <span class="comment">% parameters such as the number of variables and output variables.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Properties:</span>
+0009 <span class="comment">%   trainSize (double):</span>
+0010 <span class="comment">%       The size of the training dataset. Default is `inf`.</span>
+0011 <span class="comment">%   testSize (double):</span>
+0012 <span class="comment">%       The size of the testing dataset. Default is `inf`.</span>
+0013 <span class="comment">%   allDataSize (double):</span>
+0014 <span class="comment">%       The total size of the dataset, calculated as `trainSize + testSize`.</span>
+0015 <span class="comment">%   EnableProfile (logical):</span>
+0016 <span class="comment">%       Indicates whether profiling instrumentation is included in the</span>
+0017 <span class="comment">%       generated code. Default is `false`.</span>
+0018 <span class="comment">%   EnableReport (logical):</span>
+0019 <span class="comment">%       Indicates whether a code generation report is produced. Default is `false`.</span>
+0020 <span class="comment">%   EnableRecompile (logical):</span>
+0021 <span class="comment">%       Forces the generation/compilation process to be redone if set to `true`.</span>
+0022 <span class="comment">%       Default is `false`.</span>
+0023 <span class="comment">%   IsClassification (logical):</span>
+0024 <span class="comment">%       Specifies if the problem is a classification problem. Default is `false`.</span>
+0025 <span class="comment">%   IsOptimization (logical):</span>
+0026 <span class="comment">%       Specifies if the problem is an optimization problem. Default is `false`.</span>
+0027 <span class="comment">%   NumberOfVariables (double):</span>
+0028 <span class="comment">%       The number of problem variables to consider during code generation.</span>
+0029 <span class="comment">%       Must be a positive integer. Default is `2`.</span>
+0030 <span class="comment">%   NumberOfOutputVars (double):</span>
+0031 <span class="comment">%       The number of problem output variables to consider during code generation.</span>
+0032 <span class="comment">%       Must be a positive integer. Default is `1`.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% Methods:</span>
+0035 <span class="comment">%   compileoptions(trainSize, testSize, allDataSize, options):</span>
+0036 <span class="comment">%       Constructor method to initialize the `compileoptions` object.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%       Arguments:</span>
+0039 <span class="comment">%           trainSize (double):</span>
+0040 <span class="comment">%               The size of the training dataset. Default is `inf`.</span>
+0041 <span class="comment">%           testSize (double):</span>
+0042 <span class="comment">%               The size of the testing dataset. Default is `inf`.</span>
+0043 <span class="comment">%           allDataSize (double):</span>
+0044 <span class="comment">%               The total size of the dataset, calculated as `trainSize + testSize`.</span>
+0045 <span class="comment">%               Default is `trainSize + testSize`.</span>
+0046 <span class="comment">%           options (struct):</span>
+0047 <span class="comment">%               A structure containing the following optional fields:</span>
+0048 <span class="comment">%               - NumberOfVariables (double):</span>
+0049 <span class="comment">%                   Number of problem variables. Default is `2`.</span>
+0050 <span class="comment">%               - NumberOfOutputVars (double):</span>
+0051 <span class="comment">%                   Number of output variables. Default is `1`.</span>
+0052 <span class="comment">%               - MaxNc (double):</span>
+0053 <span class="comment">%                   Maximum number of clusters. Default is `trainSize + 1`.</span>
+0054 <span class="comment">%               - EnableProfile (logical):</span>
+0055 <span class="comment">%                   Enable profiling instrumentation. Default is `false`.</span>
+0056 <span class="comment">%               - EnableReport (logical):</span>
+0057 <span class="comment">%                   Enable code generation report. Default is `false`.</span>
+0058 <span class="comment">%               - IsClassification (logical):</span>
+0059 <span class="comment">%                   Specify if it is a classification problem. Default is `false`.</span>
+0060 <span class="comment">%               - IsOptimization (logical):</span>
+0061 <span class="comment">%                   Specify if it is an optimization problem. Default is `false`.</span>
+0062 <span class="comment">%               - EnableRecompile (logical):</span>
+0063 <span class="comment">%                   Force recompilation. Default is `false`.</span>
+0064 classdef <a href="compileoptions.html" class="code" title="">compileoptions</a>
+0065     
+0066     properties
+0067         trainSize
+0068         testSize
+0069         allDataSize
+0070         EnableProfile
+0071         EnableReport
+0072         EnableRecompile
+0073         IsClassification
+0074         IsOptimization
+0075         NumberOfVariables
+0076         NumberOfOutputVars
+0077     <span class="keyword">end</span>
+0078     
+0079     methods
+0080         <a name="_sub0" href="#_subfunctions" class="code">function self = compileoptions(trainSize, testSize, allDataSize, options)</a>
+0081             <span class="comment">%   options.EnableProfile:      Informes code generator to include the instrumentation for</span>
+0082             <span class="comment">%                               profiling in the generated code. The default value is false.</span>
+0083             <span class="comment">%   options.EnableReport:       Informes the code generator produces a code generation report.</span>
+0084             <span class="comment">%                               The default value is false.</span>
+0085             <span class="comment">%   options.EnableRecompile:    If true, forces the generation/compilation process to be</span>
+0086             <span class="comment">%                               redone. The default value is false.</span>
+0087             <span class="comment">%   options.IsClassification:   Is it a classification problem? The default value is false.</span>
+0088             <span class="comment">%   options.IsOptimization:     Is it an optiomization problem? The default value is false.</span>
+0089             <span class="comment">%   options.NumberOfFeatures:   Informes the code generator the number of problem variables to</span>
+0090             <span class="comment">%                               be considered during the coding generation/compilation. The</span>
+0091             <span class="comment">%                               default value is 2.</span>
+0092             <span class="comment">%   options.NumberOfOutputVars: Informes the code generator the number of problem output</span>
+0093             <span class="comment">%                               variables to be considered during the coding generation/compilation.</span>
+0094             <span class="comment">%                               The default value is 1.</span>
+0095             arguments
+0096                 trainSize (1, 1) double = inf,
+0097                 testSize (1, 1) double = inf,
+0098                 allDataSize (1, 1) double = trainSize + testSize,
+0099                 options.NumberOfVariables (1,1) double { <span class="keyword">...</span>
+0100                     mustBeInteger, <span class="keyword">...</span>
+0101                     mustBeNonNan, <span class="keyword">...</span>
+0102                     mustBePositive, <span class="keyword">...</span>
+0103                     mustBeFinite <span class="keyword">...</span>
+0104                 } = 2,
+0105                 options.NumberOfOutputVars (1,1) double { <span class="keyword">...</span>
+0106                     mustBeInteger, <span class="keyword">...</span>
+0107                     mustBeNonNan, <span class="keyword">...</span>
+0108                     mustBePositive, <span class="keyword">...</span>
+0109                     mustBeFinite <span class="keyword">...</span>
+0110                 } = 1,
+0111                 options.MaxNc (1, 1) double = trainSize + 1,
+0112                 options.EnableProfile (1,1) logical = false,
+0113                 options.EnableReport (1,1) logical = false,
+0114                 options.IsClassification (1,1) logical = false,
+0115                 options.IsOptimization (1,1) logical = false,
+0116                 options.EnableRecompile (1,1) logical = false,
+0117             <span class="keyword">end</span>
+0118             self.trainSize = trainSize;
+0119             self.testSize = testSize;
+0120             self.allDataSize = allDataSize;
+0121             self.EnableReport = options.EnableReport;
+0122             self.EnableRecompile = options.EnableRecompile;
+0123             self.EnableProfile = options.EnableProfile;
+0124             self.IsClassification = options.IsClassification;
+0125             self.IsOptimization = options.IsOptimization;
+0126             self.NumberOfVariables = options.NumberOfVariables;
+0127             self.NumberOfOutputVars = options.NumberOfOutputVars;
+0128         <span class="keyword">end</span>
+0129     <span class="keyword">end</span>
+0130 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

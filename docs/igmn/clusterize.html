@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of clusterize</title>
+  <meta name="keywords" content="clusterize">
+  <meta name="description" content="CLUSTERIZE Computes the index of the component with the largest likelihood">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; clusterize.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>clusterize
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>CLUSTERIZE Computes the index of the component with the largest likelihood</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function idx = clusterize(net, X) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> CLUSTERIZE Computes the index of the component with the largest likelihood
+
+ This function calculates the cluster assignments for the data points in
+ the input array `X` based on the given `igmn` network. For each data point,
+ the function computes the likelihood and posterior probabilities for the
+ components in the network and assigns the data point to the cluster with
+ the highest posterior probability.
+
+ Inputs:
+   net : An instance of the `igmn` class representing the Incremental
+         Gaussian Mixture Network.
+   X   : An NxD numeric array where N is the number of data points and D
+         is the number of attributes. The array must be non-empty and
+         conform to the dimensionality requirements of the `igmn` network.
+
+ Outputs:
+   idx : An Nx1 array of cluster indexes, where each element corresponds
+         to the index of the cluster assigned to the respective data point
+         in `X`.
+
+ Notes:
+   - The function uses the `computeLikelihood` and `computePosterior`
+     methods of the `igmn` class to calculate the likelihoods and posterior
+     probabilities for each data point.
+   - The cluster index is determined by finding the component with the
+     maximum posterior probability.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% CLUSTERIZE Computes the index of the component with the largest likelihood</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% This function calculates the cluster assignments for the data points in</span>
+0004 <span class="comment">% the input array `X` based on the given `igmn` network. For each data point,</span>
+0005 <span class="comment">% the function computes the likelihood and posterior probabilities for the</span>
+0006 <span class="comment">% components in the network and assigns the data point to the cluster with</span>
+0007 <span class="comment">% the highest posterior probability.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Inputs:</span>
+0010 <span class="comment">%   net : An instance of the `igmn` class representing the Incremental</span>
+0011 <span class="comment">%         Gaussian Mixture Network.</span>
+0012 <span class="comment">%   X   : An NxD numeric array where N is the number of data points and D</span>
+0013 <span class="comment">%         is the number of attributes. The array must be non-empty and</span>
+0014 <span class="comment">%         conform to the dimensionality requirements of the `igmn` network.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% Outputs:</span>
+0017 <span class="comment">%   idx : An Nx1 array of cluster indexes, where each element corresponds</span>
+0018 <span class="comment">%         to the index of the cluster assigned to the respective data point</span>
+0019 <span class="comment">%         in `X`.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Notes:</span>
+0022 <span class="comment">%   - The function uses the `computeLikelihood` and `computePosterior`</span>
+0023 <span class="comment">%     methods of the `igmn` class to calculate the likelihoods and posterior</span>
+0024 <span class="comment">%     probabilities for each data point.</span>
+0025 <span class="comment">%   - The cluster index is determined by finding the component with the</span>
+0026 <span class="comment">%     maximum posterior probability.</span>
+0027 <a name="_sub0" href="#_subfunctions" class="code">function idx = clusterize(net, X) </a><span class="comment">%#codegen</span>
+0028     arguments
+0029         net (1, 1) <a href="igmn.html" class="code" title="">igmn</a>;
+0030         X (:, :) { <span class="keyword">...</span>
+0031             mustBeNumeric, <span class="keyword">...</span>
+0032             mustBeNonempty, <span class="keyword">...</span>
+0033             mustBeNDimensional(net, X) <span class="keyword">...</span>
+0034         };
+0035     <span class="keyword">end</span>
+0036     N = size(X,1);
+0037     idx = zeros(N,1);
+0038     <span class="keyword">for</span> i=1:N
+0039         x = X(i,:);
+0040         net = computeLikelihood(net, x);
+0041         net = computePosterior(net);
+0042         [~, idx(i)] = max(net.posteriors);
+0043     <span class="keyword">end</span>
+0044 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

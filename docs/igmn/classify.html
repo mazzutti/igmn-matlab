@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of classify</title>
+  <meta name="keywords" content="classify">
+  <meta name="description" content="CLASSIFY Classifies a given input using the IGMN model.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; classify.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>classify
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>CLASSIFY Classifies a given input using the IGMN model.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function Y = classify(net, X, features) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> CLASSIFY Classifies a given input using the IGMN model.
+ 
+   This function takes an input array and classifies it using the 
+   Incremental Gaussian Mixture Network (IGMN). It returns a label-binarized 
+   vector where the predicted class is represented with a value of 1, and 
+   all other classes are represented with a value of 0.
+
+ Inputs:
+   net      - An instance of the IGMN model (of type `igmn`).
+   X        - An NxM numeric array representing the input attributes, 
+              where N is the number of samples and M is the number of features.
+              This input must be non-empty.
+   features - (Optional) A numeric vector specifying the indices of the 
+              features to be used for classification. By default, this is 
+              set to the range [(size(X, 2) + 1):net.dimension]. The vector 
+              must be non-empty, consist of integers, and satisfy the 
+              dimensionality constraints of the `net` and `X`.
+
+ Outputs:
+   Y - A binary matrix where each row corresponds to a sample in `X`, and 
+       each column corresponds to a class. The predicted class for each 
+       sample is marked with a 1, while all other entries are 0.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>	PREDICT Classifies a given input and computes posterior probabilities.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	COMPILE - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li><li><a href="evaluate.html" class="code" title="">evaluate</a>	{</li><li><a href="transpile.html" class="code" title="function transpile(options)">transpile</a>	TRANSPILE Transpile MATLAB code to MEX functions using MATLAB Coder.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% CLASSIFY Classifies a given input using the IGMN model.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   This function takes an input array and classifies it using the</span>
+0004 <span class="comment">%   Incremental Gaussian Mixture Network (IGMN). It returns a label-binarized</span>
+0005 <span class="comment">%   vector where the predicted class is represented with a value of 1, and</span>
+0006 <span class="comment">%   all other classes are represented with a value of 0.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Inputs:</span>
+0009 <span class="comment">%   net      - An instance of the IGMN model (of type `igmn`).</span>
+0010 <span class="comment">%   X        - An NxM numeric array representing the input attributes,</span>
+0011 <span class="comment">%              where N is the number of samples and M is the number of features.</span>
+0012 <span class="comment">%              This input must be non-empty.</span>
+0013 <span class="comment">%   features - (Optional) A numeric vector specifying the indices of the</span>
+0014 <span class="comment">%              features to be used for classification. By default, this is</span>
+0015 <span class="comment">%              set to the range [(size(X, 2) + 1):net.dimension]. The vector</span>
+0016 <span class="comment">%              must be non-empty, consist of integers, and satisfy the</span>
+0017 <span class="comment">%              dimensionality constraints of the `net` and `X`.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Outputs:</span>
+0020 <span class="comment">%   Y - A binary matrix where each row corresponds to a sample in `X`, and</span>
+0021 <span class="comment">%       each column corresponds to a class. The predicted class for each</span>
+0022 <span class="comment">%       sample is marked with a 1, while all other entries are 0.</span>
+0023 <a name="_sub0" href="#_subfunctions" class="code">function Y = classify(net, X, features)</a>
+0024     arguments
+0025         net (1, 1) <a href="igmn.html" class="code" title="">igmn</a>;
+0026         X (:, :) { <span class="keyword">...</span>
+0027             mustBeNumeric, <span class="keyword">...</span>
+0028             mustBeNonempty <span class="keyword">...</span>
+0029         };
+0030         features (1, :) { <span class="keyword">...</span>
+0031             mustBeNumeric, <span class="keyword">...</span>
+0032             mustBeNonempty, <span class="keyword">...</span>
+0033             mustBeInteger, <span class="keyword">...</span>
+0034             mustBeNDimensional(net, X, features) <span class="keyword">...</span>
+0035         } = [(size(X, 2) + 1):net.dimension];
+0036     <span class="keyword">end</span>
+0037     Y = <a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>(net, X, features, 0);
+0038     Y = Y == max(Y, [], 2);
+0039 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of pruneComponents</title>
+  <meta name="keywords" content="pruneComponents">
+  <meta name="description" content="PRUNECOMPONENTS Remove spurious components from the network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; pruneComponents.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>pruneComponents
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>PRUNECOMPONENTS Remove spurious components from the network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = pruneComponents(net) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> PRUNECOMPONENTS Remove spurious components from the network.
+
+   net = pruneComponents(net) removes components from the network `net`
+   that are considered spurious based on specific criteria. The function
+   updates the network structure by pruning components with low variance
+   and insufficient support, and adjusts the network parameters accordingly.
+
+   Input:
+       net - A structure representing the network, containing fields such as:
+           - vs: Variance of the components.
+           - vMin: Minimum variance threshold.
+           - sp: Support of the components.
+           - spMin: Minimum support threshold.
+           - nc: Number of components.
+           - priors: Prior probabilities of the components.
+           - means: Mean values of the components.
+           - invCovs: Inverse covariance matrices (if useRankOne is true).
+           - logDets: Log determinants of covariance matrices (if useRankOne is true).
+           - covs: Covariance matrices (if useRankOne is false).
+           - spu: Support upper bound of the components.
+           - posteriors: Posterior probabilities of the components.
+           - distances: Distances of the components.
+           - logLikes: Log-likelihoods of the components.
+           - useRankOne: Boolean indicating whether rank-one updates are used.
+           - gamma: A scaling factor for support adjustment.
+
+   Output:
+       net - The updated network structure with spurious components removed
+             and parameters adjusted.
+
+   Notes:
+       - Components are considered spurious if their variance (`vs`) is
+         below `vMin` or their support (`sp`) is below `spMin`.
+       - If the number of components exceeds a threshold determined by
+         `exp(net.nc/(1 + net.nc)) &gt; exp(1) * net.gamma`, additional
+         adjustments are made to the support (`sp`) and priors.
+       - The function handles both cases where rank-one updates are used
+         (`useRankOne` is true) and where full covariance matrices are used
+         (`useRankOne` is false).</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% PRUNECOMPONENTS Remove spurious components from the network.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   net = pruneComponents(net) removes components from the network `net`</span>
+0004 <span class="comment">%   that are considered spurious based on specific criteria. The function</span>
+0005 <span class="comment">%   updates the network structure by pruning components with low variance</span>
+0006 <span class="comment">%   and insufficient support, and adjusts the network parameters accordingly.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   Input:</span>
+0009 <span class="comment">%       net - A structure representing the network, containing fields such as:</span>
+0010 <span class="comment">%           - vs: Variance of the components.</span>
+0011 <span class="comment">%           - vMin: Minimum variance threshold.</span>
+0012 <span class="comment">%           - sp: Support of the components.</span>
+0013 <span class="comment">%           - spMin: Minimum support threshold.</span>
+0014 <span class="comment">%           - nc: Number of components.</span>
+0015 <span class="comment">%           - priors: Prior probabilities of the components.</span>
+0016 <span class="comment">%           - means: Mean values of the components.</span>
+0017 <span class="comment">%           - invCovs: Inverse covariance matrices (if useRankOne is true).</span>
+0018 <span class="comment">%           - logDets: Log determinants of covariance matrices (if useRankOne is true).</span>
+0019 <span class="comment">%           - covs: Covariance matrices (if useRankOne is false).</span>
+0020 <span class="comment">%           - spu: Support upper bound of the components.</span>
+0021 <span class="comment">%           - posteriors: Posterior probabilities of the components.</span>
+0022 <span class="comment">%           - distances: Distances of the components.</span>
+0023 <span class="comment">%           - logLikes: Log-likelihoods of the components.</span>
+0024 <span class="comment">%           - useRankOne: Boolean indicating whether rank-one updates are used.</span>
+0025 <span class="comment">%           - gamma: A scaling factor for support adjustment.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%   Output:</span>
+0028 <span class="comment">%       net - The updated network structure with spurious components removed</span>
+0029 <span class="comment">%             and parameters adjusted.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%   Notes:</span>
+0032 <span class="comment">%       - Components are considered spurious if their variance (`vs`) is</span>
+0033 <span class="comment">%         below `vMin` or their support (`sp`) is below `spMin`.</span>
+0034 <span class="comment">%       - If the number of components exceeds a threshold determined by</span>
+0035 <span class="comment">%         `exp(net.nc/(1 + net.nc)) &gt; exp(1) * net.gamma`, additional</span>
+0036 <span class="comment">%         adjustments are made to the support (`sp`) and priors.</span>
+0037 <span class="comment">%       - The function handles both cases where rank-one updates are used</span>
+0038 <span class="comment">%         (`useRankOne` is true) and where full covariance matrices are used</span>
+0039 <span class="comment">%         (`useRankOne` is false).</span>
+0040 <a name="_sub0" href="#_subfunctions" class="code">function net = pruneComponents(net) </a><span class="comment">%#codegen</span>
+0041     indexes = net.vs &gt; net.vMin &amp; net.sp &lt; net.spMin;
+0042     net.nc = net.nc - sum(indexes, <span class="string">'all'</span>);
+0043     net.priors(indexes) = [];
+0044     net.means(indexes, :) = [];
+0045     <span class="keyword">if</span> net.useRankOne
+0046         net.invCovs(:, :, indexes) = [];
+0047         net.logDets(indexes) = [];
+0048     <span class="keyword">else</span>
+0049         net.covs(:, :, indexes) = [];
+0050     <span class="keyword">end</span>
+0051     net.vs(indexes) = [];
+0052     net.sp(indexes) = [];
+0053     net.spu(indexes) = [];
+0054     net.posteriors(indexes) = [];
+0055     net.distances(indexes) = [];
+0056     net.logLikes(indexes) = [];
+0057 
+0058     <span class="keyword">if</span> exp(net.nc/(1 + net.nc)) &gt; exp(1) * net.gamma
+0059         indexes = (net.vs &gt; net.vMin) &amp; (net.sp &gt;= net.spMin);
+0060         spuindexes = indexes &amp; (net.spu &gt;= net.spMin);
+0061         <span class="keyword">if</span> any(spuindexes, <span class="string">'all'</span>)
+0062             net.sp(spuindexes) = <span class="keyword">...</span>
+0063                 max(net.gamma .* net.sp(spuindexes), igmn.minimum);
+0064             net.priors = net.sp ./ sum(net.sp, 2);
+0065         <span class="keyword">end</span>
+0066         net.vs(indexes) = 0; net.spu(indexes) = 0;
+0067     <span class="keyword">end</span>
+0068 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

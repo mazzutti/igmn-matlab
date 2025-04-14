@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of addComponent</title>
+  <meta name="keywords" content="addComponent">
+  <meta name="description" content="ADDCOMPONENT Adds a new component to the network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; addComponent.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>addComponent
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>ADDCOMPONENT Adds a new component to the network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = addComponent(net, x) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> ADDCOMPONENT Adds a new component to the network.
+
+   net = addComponent(net, x) adds a new component to the given network
+   structure `net` using the input data point `x`. This function updates
+   the network's parameters, including the means, priors, and covariance
+   matrices, to account for the new component.
+
+   Inputs:
+       net - A structure representing the network. It contains fields
+             such as means, priors, covariances, and other parameters
+             required for the network's operation.
+       x   - A vector representing the data point to be added as a new
+             component in the network.
+
+   Outputs:
+       net - The updated network structure with the new component added.
+
+   Notes:
+       - The function initializes the covariance matrix for the new
+         component using the `nonOverlappingInitialCov` function.
+       - If the `useRankOne` flag is set in the network, the function
+         updates the inverse covariance matrices and log determinants.
+       - Otherwise, it updates the full covariance matrices.
+       - The function also recalculates the probability density for the
+         new component using the `computeProbDensity` function.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="computeProbDensity.html" class="code" title="function net = computeProbDensity(net, x, i) %#codegen">computeProbDensity</a>	COMPUTEPROBDENSITY Compute the probability density of a multivariate normal distribution.</li><li><a href="nonOverlappingInitialCov.html" class="code" title="function initialCov = nonOverlappingInitialCov(net, x) %# codegen">nonOverlappingInitialCov</a>	nonOverlappingInitialCov - Computes the initial covariance matrix for a new component</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% ADDCOMPONENT Adds a new component to the network.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   net = addComponent(net, x) adds a new component to the given network</span>
+0004 <span class="comment">%   structure `net` using the input data point `x`. This function updates</span>
+0005 <span class="comment">%   the network's parameters, including the means, priors, and covariance</span>
+0006 <span class="comment">%   matrices, to account for the new component.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   Inputs:</span>
+0009 <span class="comment">%       net - A structure representing the network. It contains fields</span>
+0010 <span class="comment">%             such as means, priors, covariances, and other parameters</span>
+0011 <span class="comment">%             required for the network's operation.</span>
+0012 <span class="comment">%       x   - A vector representing the data point to be added as a new</span>
+0013 <span class="comment">%             component in the network.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%   Outputs:</span>
+0016 <span class="comment">%       net - The updated network structure with the new component added.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%   Notes:</span>
+0019 <span class="comment">%       - The function initializes the covariance matrix for the new</span>
+0020 <span class="comment">%         component using the `nonOverlappingInitialCov` function.</span>
+0021 <span class="comment">%       - If the `useRankOne` flag is set in the network, the function</span>
+0022 <span class="comment">%         updates the inverse covariance matrices and log determinants.</span>
+0023 <span class="comment">%       - Otherwise, it updates the full covariance matrices.</span>
+0024 <span class="comment">%       - The function also recalculates the probability density for the</span>
+0025 <span class="comment">%         new component using the `computeProbDensity` function.</span>
+0026 <a name="_sub0" href="#_subfunctions" class="code">function net = addComponent(net, x) </a><span class="comment">%#codegen</span>
+0027     initialCov = <a href="nonOverlappingInitialCov.html" class="code" title="function initialCov = nonOverlappingInitialCov(net, x) %# codegen">nonOverlappingInitialCov</a>(net, x);
+0028     net.nc = net.nc + 1;
+0029     net.means =  [net.means; x];
+0030     net.sp = [net.sp, 1];
+0031     net.spu = [net.spu, 0];
+0032     net.vs = [net.vs, 0];
+0033     net.distances = [net.distances, 0];
+0034     net.logLikes = [net.logLikes, 0];
+0035     net.priors = net.sp ./ sum(net.sp, 2);
+0036     <span class="keyword">if</span> net.useRankOne
+0037         <span class="keyword">if</span> isempty(net.invCovs)
+0038             net.invCovs = initialCov;
+0039             net.logDets = net.initialLogDet;
+0040         <span class="keyword">else</span>
+0041             net.invCovs = cat(3, net.invCovs, initialCov);
+0042             net.logDets = [net.logDets, net.initialLogDet];
+0043         <span class="keyword">end</span>
+0044     <span class="keyword">else</span>
+0045         <span class="keyword">if</span> isempty(net.covs)
+0046             net.covs = initialCov;
+0047         <span class="keyword">else</span>
+0048             net.covs = cat(3, net.covs, initialCov);
+0049         <span class="keyword">end</span>
+0050     <span class="keyword">end</span>
+0051     net = <a href="computeProbDensity.html" class="code" title="function net = computeProbDensity(net, x, i) %#codegen">computeProbDensity</a>(net, x, net.nc);
+0052 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

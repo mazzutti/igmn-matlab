@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of denormalizeData</title>
+  <meta name="keywords" content="denormalizeData">
+  <meta name="description" content="denormalizeData - Denormalizes data using specified min-max proportions.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; denormalizeData.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>denormalizeData
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>denormalizeData - Denormalizes data using specified min-max proportions.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function data = denormalizeData(data, minMaxProportion, vars) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> denormalizeData - Denormalizes data using specified min-max proportions.
+
+ Syntax:
+   data = denormalizeData(data, minMaxProportion, vars)
+
+ Inputs:
+   data - A 3D matrix of normalized data to be denormalized. The dimensions
+          are [R x C x S], where R is the number of rows, C is the number
+          of columns, and S is the number of slices.
+   minMaxProportion - A structure containing the min and max values used
+                      for normalization. It should include the field
+                      'xrange', which specifies the range of the data.
+   vars - A vector specifying the indices of the variables (columns) to
+          be denormalized.
+
+ Outputs:
+   data - A 3D matrix of denormalized data with the same dimensions as the
+          input data.
+
+ Description:
+   This function denormalizes the input data using the provided min-max
+   proportions. It processes each slice of the 3D data matrix individually,
+   applying the reverse mapping of the 'mapminmax' function to the specified
+   variables (columns). The denormalized data is then updated in the input
+   matrix.
+
+ Example:
+   % Assuming 'normalizedData' is a 3D matrix, 'minMaxProportion' is a
+   % structure with normalization parameters, and 'vars' specifies the
+   % columns to denormalize:
+   denormalizedData = denormalizeData(normalizedData, minMaxProportion, vars);
+
+ See also:
+   mapminmax</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% denormalizeData - Denormalizes data using specified min-max proportions.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Syntax:</span>
+0004 <span class="comment">%   data = denormalizeData(data, minMaxProportion, vars)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Inputs:</span>
+0007 <span class="comment">%   data - A 3D matrix of normalized data to be denormalized. The dimensions</span>
+0008 <span class="comment">%          are [R x C x S], where R is the number of rows, C is the number</span>
+0009 <span class="comment">%          of columns, and S is the number of slices.</span>
+0010 <span class="comment">%   minMaxProportion - A structure containing the min and max values used</span>
+0011 <span class="comment">%                      for normalization. It should include the field</span>
+0012 <span class="comment">%                      'xrange', which specifies the range of the data.</span>
+0013 <span class="comment">%   vars - A vector specifying the indices of the variables (columns) to</span>
+0014 <span class="comment">%          be denormalized.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% Outputs:</span>
+0017 <span class="comment">%   data - A 3D matrix of denormalized data with the same dimensions as the</span>
+0018 <span class="comment">%          input data.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Description:</span>
+0021 <span class="comment">%   This function denormalizes the input data using the provided min-max</span>
+0022 <span class="comment">%   proportions. It processes each slice of the 3D data matrix individually,</span>
+0023 <span class="comment">%   applying the reverse mapping of the 'mapminmax' function to the specified</span>
+0024 <span class="comment">%   variables (columns). The denormalized data is then updated in the input</span>
+0025 <span class="comment">%   matrix.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Example:</span>
+0028 <span class="comment">%   % Assuming 'normalizedData' is a 3D matrix, 'minMaxProportion' is a</span>
+0029 <span class="comment">%   % structure with normalization parameters, and 'vars' specifies the</span>
+0030 <span class="comment">%   % columns to denormalize:</span>
+0031 <span class="comment">%   denormalizedData = denormalizeData(normalizedData, minMaxProportion, vars);</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% See also:</span>
+0034 <span class="comment">%   mapminmax</span>
+0035 <a name="_sub0" href="#_subfunctions" class="code">function data = denormalizeData(data, minMaxProportion, vars)</a>
+0036     [R, ~, S] = size(data);
+0037     <span class="keyword">for</span> i = 1:S
+0038         denormalizedData = zeros(R, length(minMaxProportion.xrange));
+0039         denormalizedData(:, vars) = data(:, :, i);
+0040         denormalizedData = mapminmax(<span class="string">'reverse'</span>, denormalizedData', minMaxProportion)';
+0041         data(:, :, i) = denormalizedData(:, vars);
+0042     <span class="keyword">end</span>
+0043 <span class="keyword">end</span>
+0044</pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

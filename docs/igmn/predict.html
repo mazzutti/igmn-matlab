@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of predict</title>
+  <meta name="keywords" content="predict">
+  <meta name="description" content="PREDICT Classifies a given input and computes posterior probabilities.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; predict.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>predict
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>PREDICT Classifies a given input and computes posterior probabilities.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> PREDICT Classifies a given input and computes posterior probabilities.
+ 
+   [Y, probabilities] = PREDICT(net, X, features, discretizationSize, featureRanges)
+   classifies the input data and returns the predicted labels along with
+   the computed posterior probabilities.
+
+ Inputs:
+   net                 : An instance of the igmn class representing the trained model.
+   X                   : An NxM numeric array of input attributes, where N is the number
+                         of samples and M is the number of features.
+   features            : (Optional) An array of integers or feature names specifying the
+                         features to be used for prediction. Defaults to the remaining
+                         dimensions of the model not covered by X.
+   discretizationSize  : (Optional) A scalar integer specifying the size of the grid
+                         used for discretizing feature ranges. Defaults to 0 (no discretization).
+   featureRanges       : (Optional) A numeric array specifying the range intervals for
+                         each feature to create the grid for computing probabilities.
+                         Defaults to the ranges defined in the model for the specified features.
+
+ Outputs:
+   Y                   : An NxF numeric array containing the predicted data, where F is
+                         the number of features specified in the `features` input.
+   probabilities       : An Nx(discretizationSize^F) numeric array containing the computed
+                         posterior probabilities for each input sample.
+
+ Notes:
+   - The function uses a step size to process the input data in chunks, ensuring
+     efficient computation for large datasets.
+   - If `discretizationSize` is specified, the function creates a grid of feature
+     values based on the provided or default feature ranges.
+   - The `recall` function is used internally to compute predictions and probabilities
+     for each chunk of data.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="recall.html" class="code" title="function [Y, probabilities] = recall(net, X, features, featureGrid) %#codegen">recall</a>	RECALL Performs the Gaussian Mixture Regression for a given input.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="classify.html" class="code" title="function Y = classify(net, X, features)">classify</a>	CLASSIFY Classifies a given input using the IGMN model.</li><li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	COMPILE - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li><li><a href="evaluate.html" class="code" title="">evaluate</a>	{</li><li><a href="transpile.html" class="code" title="function transpile(options)">transpile</a>	TRANSPILE Transpile MATLAB code to MEX functions using MATLAB Coder.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% PREDICT Classifies a given input and computes posterior probabilities.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   [Y, probabilities] = PREDICT(net, X, features, discretizationSize, featureRanges)</span>
+0004 <span class="comment">%   classifies the input data and returns the predicted labels along with</span>
+0005 <span class="comment">%   the computed posterior probabilities.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Inputs:</span>
+0008 <span class="comment">%   net                 : An instance of the igmn class representing the trained model.</span>
+0009 <span class="comment">%   X                   : An NxM numeric array of input attributes, where N is the number</span>
+0010 <span class="comment">%                         of samples and M is the number of features.</span>
+0011 <span class="comment">%   features            : (Optional) An array of integers or feature names specifying the</span>
+0012 <span class="comment">%                         features to be used for prediction. Defaults to the remaining</span>
+0013 <span class="comment">%                         dimensions of the model not covered by X.</span>
+0014 <span class="comment">%   discretizationSize  : (Optional) A scalar integer specifying the size of the grid</span>
+0015 <span class="comment">%                         used for discretizing feature ranges. Defaults to 0 (no discretization).</span>
+0016 <span class="comment">%   featureRanges       : (Optional) A numeric array specifying the range intervals for</span>
+0017 <span class="comment">%                         each feature to create the grid for computing probabilities.</span>
+0018 <span class="comment">%                         Defaults to the ranges defined in the model for the specified features.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Outputs:</span>
+0021 <span class="comment">%   Y                   : An NxF numeric array containing the predicted data, where F is</span>
+0022 <span class="comment">%                         the number of features specified in the `features` input.</span>
+0023 <span class="comment">%   probabilities       : An Nx(discretizationSize^F) numeric array containing the computed</span>
+0024 <span class="comment">%                         posterior probabilities for each input sample.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Notes:</span>
+0027 <span class="comment">%   - The function uses a step size to process the input data in chunks, ensuring</span>
+0028 <span class="comment">%     efficient computation for large datasets.</span>
+0029 <span class="comment">%   - If `discretizationSize` is specified, the function creates a grid of feature</span>
+0030 <span class="comment">%     values based on the provided or default feature ranges.</span>
+0031 <span class="comment">%   - The `recall` function is used internally to compute predictions and probabilities</span>
+0032 <span class="comment">%     for each chunk of data.</span>
+0033 <a name="_sub0" href="#_subfunctions" class="code">function [Y, probabilities] = predict(net, X, </a><span class="keyword">...</span>
+0034         features, discretizationSize, featureRanges) <span class="comment">%#codegen</span>
+0035     arguments
+0036         net (1, 1) <a href="igmn.html" class="code" title="">igmn</a>;
+0037         X (:, :) { <span class="keyword">...</span>
+0038             mustBeNumeric, <span class="keyword">...</span>
+0039             mustBeNonempty <span class="keyword">...</span>
+0040         };
+0041         features { <span class="keyword">...</span>
+0042             mustBeNumeric, <span class="keyword">...</span>
+0043             mustBeNonempty, <span class="keyword">...</span>
+0044             mustBeInteger, <span class="keyword">...</span>
+0045             mustBeNDimensional(net, X, features) <span class="keyword">...</span>
+0046         } = [(size(X, 2) + 1):net.dimension],<span class="keyword">...</span>
+0047         discretizationSize (1, 1) { <span class="keyword">...</span>
+0048             mustBeNumeric, <span class="keyword">...</span>
+0049             mustBeInteger <span class="keyword">...</span>
+0050         } = 0,
+0051         featureRanges { <span class="keyword">...</span>
+0052             mustBeNumeric, <span class="keyword">...</span>
+0053             mustBeNonempty, <span class="keyword">...</span>
+0054             mustBeNDimensional(net, X, featureRanges) <span class="keyword">...</span>
+0055         } = net.range(:, features);
+0056     <span class="keyword">end</span>
+0057     F = length(features);
+0058     N = int64(size(X, 1));
+0059     step = int64(intmax(&quot;int32&quot;)/(net.nc  ^ 2));
+0060     Y = zeros(N, F);
+0061     probabilities = zeros(N, discretizationSize ^ F);
+0062     featureGrid = zeros(discretizationSize ^ F, F);
+0063     <span class="keyword">if</span> discretizationSize
+0064         domain = discretizeFeaturesRange(featureRanges, discretizationSize);
+0065         cellGrid = cell(1, F);
+0066         [cellGrid{:}] = ndgrid(domain{:});
+0067         featureGrid = zeros(discretizationSize ^ F, F);
+0068         <span class="keyword">for</span> i = 1:F; featureGrid(:, i) = cellGrid{i}(:); <span class="keyword">end</span>
+0069     <span class="keyword">end</span>
+0070     <span class="keyword">for</span> i = 1:step:N
+0071         slice = i:min(i+step-1, N);
+0072         [Y(slice, :), probabilities(slice, :)] = <a href="recall.html" class="code" title="function [Y, probabilities] = recall(net, X, features, featureGrid) %#codegen">recall</a>(net, X(slice, :), features, featureGrid);
+0073     <span class="keyword">end</span>
+0074 <span class="keyword">end</span>
+0075</pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

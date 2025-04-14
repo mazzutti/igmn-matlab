@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mchol</title>
+  <meta name="keywords" content="mchol">
+  <meta name="description" content="MCHOL Perform modified Cholesky decomposition on a symmetric matrix.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; mchol.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mchol
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>MCHOL Perform modified Cholesky decomposition on a symmetric matrix.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [L, G] = mchol(G) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> MCHOL Perform modified Cholesky decomposition on a symmetric matrix.
+
+   [L, G] = MCHOL(G) computes a lower triangular matrix L and a modified
+   symmetric matrix G such that G + E is positive definite, where E is a
+   matrix of small norm. The decomposition satisfies:
+
+       G + E = L * D * L'
+
+   where D is a diagonal matrix.
+
+   Input:
+       G - A symmetric matrix (NxN) to be decomposed.
+
+   Output:
+       L - A lower triangular matrix (NxN) with unit diagonal elements.
+       G - The modified symmetric matrix (NxN) after adding the matrix E.
+
+   Notes:
+       - The function ensures that the modified matrix G + E is positive
+         definite by adjusting the diagonal elements of G.
+       - The algorithm uses a threshold beta to control the adjustment
+         and ensure numerical stability.
+
+   Example:
+       G = [4, 2; 2, 3];
+       [L, G_mod] = mchol(G);
+
+   See also: CHOL</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="computeChol.html" class="code" title="function [L, diagL, cov] = computeChol(cov) %#codegen">computeChol</a>	computeChol - Computes the Cholesky decomposition of a covariance matrix.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% MCHOL Perform modified Cholesky decomposition on a symmetric matrix.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   [L, G] = MCHOL(G) computes a lower triangular matrix L and a modified</span>
+0004 <span class="comment">%   symmetric matrix G such that G + E is positive definite, where E is a</span>
+0005 <span class="comment">%   matrix of small norm. The decomposition satisfies:</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%       G + E = L * D * L'</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   where D is a diagonal matrix.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   Input:</span>
+0012 <span class="comment">%       G - A symmetric matrix (NxN) to be decomposed.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%   Output:</span>
+0015 <span class="comment">%       L - A lower triangular matrix (NxN) with unit diagonal elements.</span>
+0016 <span class="comment">%       G - The modified symmetric matrix (NxN) after adding the matrix E.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%   Notes:</span>
+0019 <span class="comment">%       - The function ensures that the modified matrix G + E is positive</span>
+0020 <span class="comment">%         definite by adjusting the diagonal elements of G.</span>
+0021 <span class="comment">%       - The algorithm uses a threshold beta to control the adjustment</span>
+0022 <span class="comment">%         and ensure numerical stability.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%   Example:</span>
+0025 <span class="comment">%       G = [4, 2; 2, 3];</span>
+0026 <span class="comment">%       [L, G_mod] = mchol(G);</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%   See also: CHOL</span>
+0029 <a name="_sub0" href="#_subfunctions" class="code">function [L, G] = mchol(G) </a><span class="comment">%#codegen</span>
+0030     N = size(G, 1);
+0031     beta = max([ <span class="keyword">...</span>
+0032         max(diag(G)), <span class="keyword">...</span>
+0033         max(max(G - diag(diag(G)))) / max([1, sqrt(N ^ 2 - 1)]), <span class="keyword">...</span>
+0034         1.0E-15 <span class="keyword">...</span>
+0035     ]);
+0036     C = diag(diag(G));
+0037     L = zeros(N);
+0038     D = zeros(N);
+0039     E = zeros(N);
+0040     <span class="keyword">for</span> i = 1:N
+0041         cols = int32(1:i-1);
+0042         rows = i+1:N; 
+0043         <span class="keyword">if</span> i &gt; 1; L(i, cols) = C(i, cols) ./ diag(D(cols, cols))'; <span class="keyword">end</span>
+0044         <span class="keyword">if</span> i &gt;= 2
+0045             <span class="keyword">if</span> i &lt; N
+0046                 C(rows, i) = G(rows, i) - (L(i, cols) * C(rows, cols)')';
+0047             <span class="keyword">end</span>
+0048         <span class="keyword">else</span>
+0049             C(rows, i) = G(rows, i);
+0050         <span class="keyword">end</span>
+0051         <span class="keyword">if</span> i == N; theta = 0; <span class="keyword">else</span>; theta = max(abs(C(rows, i))); <span class="keyword">end</span>
+0052         D(i, i) = max([eps, abs(C(i, i)), theta ^ 2 / beta]);
+0053         E(i, i) = D(i, i) - C(i, i);
+0054         indexes = ((i*(N + 1) + 1):(N + 1):(N * N))';
+0055         C(indexes) = C(indexes) - (1 / D(i, i)) * C(rows, i) .^ 2;
+0056     <span class="keyword">end</span>
+0057     L = bsxfun(@times, L, sqrt(D));
+0058     L(logical(eye(size(L)))) = 1;
+0059     G = bsxfun(@plus, G, E);
+0060 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

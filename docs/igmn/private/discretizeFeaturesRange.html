@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of discretizeFeaturesRange</title>
+  <meta name="keywords" content="discretizeFeaturesRange">
+  <meta name="description" content="discretizeFeaturesRange Discretizes feature ranges into specified intervals">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; discretizeFeaturesRange.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>discretizeFeaturesRange
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>discretizeFeaturesRange Discretizes feature ranges into specified intervals</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function domain = discretizeFeaturesRange(intervals, numPoints) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> discretizeFeaturesRange Discretizes feature ranges into specified intervals
+
+   domain = discretizeFeaturesRange(intervals, numPoints) takes a matrix of 
+   intervals and the number of points per interval (numPoints) and returns a 
+   cell array where each cell contains a linearly spaced vector 
+   representing the discretized range for the corresponding feature.
+
+   Inputs:
+       intervals  - A 2-by-N matrix where each column represents the 
+                    [min; max] range of a feature.
+       numPoints  - An integer specifying the number of points to 
+                    discretize each interval into.
+
+   Outputs:
+       domain     - A 1-by-N cell array where each cell contains a 
+                    linearly spaced vector representing the discretized 
+                    range for the corresponding feature.
+
+   Example:
+       intervals = [0 10; 5 20];
+       numPoints = 5;
+       domain = discretizeFeaturesRange(intervals, numPoints);
+       % domain = {[0, 2.5, 5, 7.5, 10], [5, 8.75, 12.5, 16.25, 20]}</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% discretizeFeaturesRange Discretizes feature ranges into specified intervals</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   domain = discretizeFeaturesRange(intervals, numPoints) takes a matrix of</span>
+0004 <span class="comment">%   intervals and the number of points per interval (numPoints) and returns a</span>
+0005 <span class="comment">%   cell array where each cell contains a linearly spaced vector</span>
+0006 <span class="comment">%   representing the discretized range for the corresponding feature.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   Inputs:</span>
+0009 <span class="comment">%       intervals  - A 2-by-N matrix where each column represents the</span>
+0010 <span class="comment">%                    [min; max] range of a feature.</span>
+0011 <span class="comment">%       numPoints  - An integer specifying the number of points to</span>
+0012 <span class="comment">%                    discretize each interval into.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%   Outputs:</span>
+0015 <span class="comment">%       domain     - A 1-by-N cell array where each cell contains a</span>
+0016 <span class="comment">%                    linearly spaced vector representing the discretized</span>
+0017 <span class="comment">%                    range for the corresponding feature.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%   Example:</span>
+0020 <span class="comment">%       intervals = [0 10; 5 20];</span>
+0021 <span class="comment">%       numPoints = 5;</span>
+0022 <span class="comment">%       domain = discretizeFeaturesRange(intervals, numPoints);</span>
+0023 <span class="comment">%       % domain = {[0, 2.5, 5, 7.5, 10], [5, 8.75, 12.5, 16.25, 20]}</span>
+0024 <a name="_sub0" href="#_subfunctions" class="code">function domain = discretizeFeaturesRange(intervals, numPoints)</a>
+0025     howMany = size(intervals, 2);
+0026     domain = cell(1, howMany);
+0027     <span class="keyword">for</span> i = 1:howMany
+0028         interval = intervals(:, i);
+0029         domain{i} = linspace(interval(1), interval(2), numPoints);
+0030     <span class="keyword">end</span>
+0031 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

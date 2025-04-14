@@ -1,0 +1,450 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of compile</title>
+  <meta name="keywords" content="compile">
+  <meta name="description" content="COMPILE - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; compile.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>compile
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>COMPILE - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function compile(problem) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> COMPILE - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.
+
+ Syntax:
+   compile(problem)
+
+ Description:
+   This function compiles MATLAB functions into MEX or library files using MATLAB Coder. 
+   The compilation process is determined by the execution mode and compile options specified 
+   in the input 'problem' object. It supports different configurations for classification, 
+   prediction, training, and optimization tasks.
+
+ Input Arguments:
+   problem - An object of class 'Problem' containing the following properties:
+       ExecutionMode          - A string specifying the execution mode ('script', 'mex', or 'lib').
+       CompileOptions         - A structure containing compile options such as:
+           EnableProfile       - Enable profiling for MEX files.
+           EnableReport        - Enable generation of code generation reports.
+           EnableRecompile     - Force recompilation of MEX or library files.
+           IsClassification    - Boolean indicating if the task is classification.
+           IsOptimization      - Boolean indicating if the task is optimization.
+           NumberOfVariables   - Number of input variables.
+           NumberOfOutputVars  - Number of output variables.
+           trainSize           - Size of the training dataset.
+           testSize            - Size of the testing dataset.
+       Other properties specific to the problem configuration.
+
+ Functionality:
+   - Configures MATLAB Coder for MEX or library generation based on the execution mode.
+   - Defines argument types for entry-point functions such as 'predict', 'classify', 'train', 
+     'igmnBuilder', and 'optimize'.
+   - Invokes MATLAB Coder to generate MEX or library files for the specified functions.
+   - Supports additional configurations for optimization tasks, including hyperparameter tuning.
+
+ Notes:
+   - The function checks for the existence of previously compiled files and recompiles them 
+     only if 'EnableRecompile' is set to true.
+   - The generated code can be configured for different toolchains, target languages, and 
+     optimization settings.
+
+ Example:
+   problem = Problem();
+   problem.ExecutionMode = 'mex';
+   problem.CompileOptions.EnableProfile = true;
+   problem.CompileOptions.EnableReport = true;
+   compile(problem);
+
+ See also:
+   coder.config, codegen</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="Problem.html" class="code" title="">Problem</a>	Problem Class</li><li><a href="classify.html" class="code" title="function Y = classify(net, X, features)">classify</a>	CLASSIFY Classifies a given input using the IGMN model.</li><li><a href="igmnBuilder.html" class="code" title="function self = igmnBuilder(options) %#codegen">igmnBuilder</a>	IGMNBUILDER Incremental Gaussian Mixture Network Builder.</li><li><a href="optimize.html" class="code" title="">optimize</a>	{</li><li><a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>	PREDICT Classifies a given input and computes posterior probabilities.</li><li><a href="train.html" class="code" title="function  net = train(net, X) %#codegen">train</a>	TRAIN Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% COMPILE - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Syntax:</span>
+0004 <span class="comment">%   compile(problem)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Description:</span>
+0007 <span class="comment">%   This function compiles MATLAB functions into MEX or library files using MATLAB Coder.</span>
+0008 <span class="comment">%   The compilation process is determined by the execution mode and compile options specified</span>
+0009 <span class="comment">%   in the input 'problem' object. It supports different configurations for classification,</span>
+0010 <span class="comment">%   prediction, training, and optimization tasks.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Input Arguments:</span>
+0013 <span class="comment">%   problem - An object of class 'Problem' containing the following properties:</span>
+0014 <span class="comment">%       ExecutionMode          - A string specifying the execution mode ('script', 'mex', or 'lib').</span>
+0015 <span class="comment">%       CompileOptions         - A structure containing compile options such as:</span>
+0016 <span class="comment">%           EnableProfile       - Enable profiling for MEX files.</span>
+0017 <span class="comment">%           EnableReport        - Enable generation of code generation reports.</span>
+0018 <span class="comment">%           EnableRecompile     - Force recompilation of MEX or library files.</span>
+0019 <span class="comment">%           IsClassification    - Boolean indicating if the task is classification.</span>
+0020 <span class="comment">%           IsOptimization      - Boolean indicating if the task is optimization.</span>
+0021 <span class="comment">%           NumberOfVariables   - Number of input variables.</span>
+0022 <span class="comment">%           NumberOfOutputVars  - Number of output variables.</span>
+0023 <span class="comment">%           trainSize           - Size of the training dataset.</span>
+0024 <span class="comment">%           testSize            - Size of the testing dataset.</span>
+0025 <span class="comment">%       Other properties specific to the problem configuration.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Functionality:</span>
+0028 <span class="comment">%   - Configures MATLAB Coder for MEX or library generation based on the execution mode.</span>
+0029 <span class="comment">%   - Defines argument types for entry-point functions such as 'predict', 'classify', 'train',</span>
+0030 <span class="comment">%     'igmnBuilder', and 'optimize'.</span>
+0031 <span class="comment">%   - Invokes MATLAB Coder to generate MEX or library files for the specified functions.</span>
+0032 <span class="comment">%   - Supports additional configurations for optimization tasks, including hyperparameter tuning.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% Notes:</span>
+0035 <span class="comment">%   - The function checks for the existence of previously compiled files and recompiles them</span>
+0036 <span class="comment">%     only if 'EnableRecompile' is set to true.</span>
+0037 <span class="comment">%   - The generated code can be configured for different toolchains, target languages, and</span>
+0038 <span class="comment">%     optimization settings.</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">% Example:</span>
+0041 <span class="comment">%   problem = Problem();</span>
+0042 <span class="comment">%   problem.ExecutionMode = 'mex';</span>
+0043 <span class="comment">%   problem.CompileOptions.EnableProfile = true;</span>
+0044 <span class="comment">%   problem.CompileOptions.EnableReport = true;</span>
+0045 <span class="comment">%   compile(problem);</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">% See also:</span>
+0048 <span class="comment">%   coder.config, codegen</span>
+0049 <a name="_sub0" href="#_subfunctions" class="code">function compile(problem)</a>
+0050     arguments
+0051         problem (1, 1) <a href="Problem.html" class="code" title="">Problem</a>;
+0052     <span class="keyword">end</span>
+0053 
+0054     <span class="keyword">if</span> ~strcmp(problem.ExecutionMode,  <span class="string">'script'</span>) 
+0055 
+0056         options = problem.CompileOptions;
+0057         cfg = [];
+0058     
+0059         <span class="keyword">if</span> strcmp(problem.ExecutionMode,  <span class="string">'mex'</span>) 
+0060             <span class="comment">%% Create configuration object of class 'coder.MexCodeConfig'.</span>
+0061             cfg = coder.config(<span class="string">'mex'</span>);
+0062             cfg.GenerateReport = true;
+0063             cfg.EnableMexProfiling = options.EnableProfile;
+0064             cfg.EnableVariableSizing = true;
+0065             cfg.SIMDAcceleration = <span class="string">'Full'</span>;
+0066             cfg.IntegrityChecks = false;
+0067             cfg.ExtrinsicCalls = false;
+0068             cfg.ResponsivenessChecks = false;
+0069             cfg.GlobalDataSyncMethod = <span class="string">'NoSync'</span>;
+0070         <span class="keyword">else</span>
+0071             <span class="comment">%% Create configuration object of class 'coder.CodeConfig'.</span>
+0072             cfg = coder.config(<span class="string">'lib'</span>, <span class="string">'ecoder'</span>, true);
+0073             cfg.RuntimeChecks = false;
+0074             cfg.BuildConfiguration = <span class="string">'Debug'</span>;
+0075             cfg.GenerateExampleMain = <span class="string">'GenerateCodeOnly'</span>;
+0076             cfg.SILPILDebugging = true;
+0077             cfg.Toolchain = <span class="string">'Microsoft Visual Studio Project 2019 | CMake (64-bit Windows)'</span>;
+0078             cfg.GenerateMakefile = false;
+0079             cfg.TargetLang = <span class="string">'C++'</span>;
+0080             cfg.TargetLangStandard = <span class="string">'C++11 (ISO)'</span>;
+0081             cfg.CppInterfaceClassName = <span class="string">'IgmnPlugin'</span>;
+0082             cfg.CppInterfaceStyle = <span class="string">'Methods'</span>;
+0083             cfg.CppNamespace = <span class="string">'igmnplugin'</span>;
+0084             cfg.CppNamespaceForMathworksCode = <span class="string">'igmnplugin'</span>;
+0085             cfg.InstructionSetExtensions = <span class="string">'SSE2'</span>;
+0086             cfg.DynamicMemoryAllocationInterface = <span class="string">'C++'</span>;
+0087             cfg.PreserveUnusedStructFields = true;
+0088             cfg.ReportPotentialDifferences = false;
+0089             cfg.PreserveVariableNames = <span class="string">'All'</span>;
+0090             cfg.MATLABFcnDesc = false;
+0091             <span class="comment">% cfg.InlineBetweenMathWorksFunctions = 'Readability';</span>
+0092             <span class="comment">% cfg.InlineBetweenUserAndMathWorksFunctions = 'Readability';</span>
+0093             <span class="comment">% cfg.InlineBetweenUserFunctions = 'Readability';</span>
+0094         <span class="keyword">end</span>
+0095 
+0096 
+0097         cfg.NumberOfCpuThreads = 6;
+0098         cfg.EnableAutoParallelization = true;
+0099         cfg.OptimizeReductions = true;
+0100         cfg.GenerateReport = options.EnableReport;
+0101         cfg.ReportPotentialDifferences = false;
+0102         cfg.EnableVariableSizing = true;
+0103     
+0104         numberOfVars = options.NumberOfVariables;
+0105         numberOfOutputVars = options.NumberOfOutputVars;
+0106         enableRecompile = options.EnableRecompile;
+0107         isClassification = options.IsClassification;
+0108         isOptimization = options.IsOptimization;
+0109         trainSize = options.trainSize;
+0110         testSize = options.testSize;
+0111     
+0112         <span class="comment">%% Define argument types for entry-point 'predict' or 'classify'.</span>
+0113         ARGS = cell(1,1);
+0114         <span class="keyword">if</span> isClassification; ARGS{1} = cell(3, 1); <span class="keyword">else</span>; ARGS{1} = cell(4, 1); <span class="keyword">end</span>
+0115         ARGS{1}{1} = coder.newtype(<span class="string">'igmn'</span>);
+0116         ARGS{1}{1}.Properties.name = coder.typeof(<span class="string">'X'</span>, [1, 4]);
+0117         ARGS{1}{1}.Properties.dimension = coder.typeof(0);
+0118         ARGS{1}{1}.Properties.maxDistance = coder.typeof(0);
+0119         ARGS{1}{1}.Properties.initialCov = coder.typeof(0, [numberOfVars, numberOfVars], [0, 0]);
+0120         ARGS{1}{1}.Properties.initialInvCov = coder.typeof(0, [numberOfVars, numberOfVars], [0, 0]);
+0121         ARGS{1}{1}.Properties.initialLogDet = coder.typeof(0);
+0122         ARGS{1}{1}.Properties.minCov = coder.typeof(0, [numberOfVars, numberOfVars], [0, 0]);
+0123         ARGS{1}{1}.Properties.useRankOne = coder.typeof(false);
+0124         ARGS{1}{1}.Properties.converged = coder.typeof(false);
+0125         ARGS{1}{1}.Properties.range = coder.typeof(0, [2, numberOfVars], [0, 0]);
+0126         ARGS{1}{1}.Properties.nc = coder.typeof(0);
+0127         ARGS{1}{1}.Properties.numSamples = coder.typeof(0);
+0128         ARGS{1}{1}.Properties.delta = coder.typeof(0);
+0129         ARGS{1}{1}.Properties.gamma = coder.typeof(0);
+0130         ARGS{1}{1}.Properties.phi = coder.typeof(0);
+0131         ARGS{1}{1}.Properties.tau = coder.typeof(0);
+0132         ARGS{1}{1}.Properties.spMin = coder.typeof(0);
+0133         ARGS{1}{1}.Properties.vMin = coder.typeof(0);
+0134         ARGS{1}{1}.Properties.maxNc = coder.typeof(0);
+0135         ARGS{1}{1}.Properties.priors = coder.typeof(0, [1, inf], [0, 1]);
+0136         ARGS{1}{1}.Properties.means = coder.typeof(0, [inf, numberOfVars], [1, 0]);
+0137         ARGS{1}{1}.Properties.covs = coder.typeof(0, [numberOfVars, numberOfVars, inf], [0, 0, 1]);
+0138         ARGS{1}{1}.Properties.invCovs = coder.typeof(0, [numberOfVars, numberOfVars, inf], [0, 0, 1]);
+0139         ARGS{1}{1}.Properties.logDets = coder.typeof(0, [1, inf], [0, 1]);
+0140         ARGS{1}{1}.Properties.sp = coder.typeof(0, [1, inf], [0, 1]);
+0141         ARGS{1}{1}.Properties.spu = coder.typeof(0, [1, inf], [0, 1]);
+0142         ARGS{1}{1}.Properties.vs = coder.typeof(0, [1, inf], [0, 1]);
+0143         ARGS{1}{1}.Properties.distances = coder.typeof(0, [1, inf], [0, 1]);
+0144         ARGS{1}{1}.Properties.logLikes = coder.typeof(0, [1, inf], [0, 1]);
+0145         ARGS{1}{1}.Properties.posteriors = coder.typeof(0, [1, inf], [0, 1]);
+0146         ARGS{1}{2} = coder.typeof(0, [testSize, numberOfVars - numberOfOutputVars], [~isfinite(testSize), 1]);
+0147         ARGS{1}{3} = coder.typeof(0, [1, numberOfOutputVars], [0, 0]);
+0148         <span class="keyword">if</span> isClassification
+0149             <span class="keyword">if</span> ~exist(<span class="string">'classify_mex'</span>, <span class="string">'file'</span>) || enableRecompile
+0150                 codegen -config cfg <a href="classify.html" class="code" title="function Y = classify(net, X, features)">classify</a> -args ARGS{1}
+0151             <span class="keyword">end</span>
+0152         <span class="keyword">else</span>
+0153             <span class="keyword">if</span> ~exist(<span class="string">'predict_mex'</span>, <span class="string">'file'</span>) || enableRecompile
+0154                 ARGS{1}{4} = coder.typeof(0);
+0155                 ARGS{1}{5} = coder.typeof(0, [2, numberOfOutputVars], [0, 0]);
+0156                 codegen -config cfg <a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a> -args ARGS{1}
+0157             <span class="keyword">end</span>
+0158         <span class="keyword">end</span>
+0159        
+0160     
+0161         <span class="comment">%% Define argument types for entry-point 'train'.</span>
+0162         ARGS{1} = cell(1, 1);
+0163         ARGS{1}{1} = coder.newtype(<span class="string">'igmn'</span>);
+0164         ARGS{1}{1}.Properties.name = coder.typeof(<span class="string">'X'</span>, [1, 4]);
+0165         ARGS{1}{1}.Properties.dimension = coder.typeof(0);
+0166         ARGS{1}{1}.Properties.maxDistance = coder.typeof(0);
+0167         ARGS{1}{1}.Properties.initialCov = coder.typeof(0, [numberOfVars, numberOfVars], [0, 0]);
+0168         ARGS{1}{1}.Properties.minCov = coder.typeof(0, [numberOfVars, numberOfVars], [0, 0]);
+0169         ARGS{1}{1}.Properties.initialInvCov = coder.typeof(0, [numberOfVars, numberOfVars], [0, 0]);
+0170         ARGS{1}{1}.Properties.initialLogDet = coder.typeof(0);
+0171         ARGS{1}{1}.Properties.useRankOne = coder.typeof(false);
+0172         ARGS{1}{1}.Properties.converged = coder.typeof(false);
+0173         ARGS{1}{1}.Properties.range = coder.typeof(0, [2, numberOfVars], [0, 0]);
+0174         ARGS{1}{1}.Properties.nc = coder.typeof(0);
+0175         ARGS{1}{1}.Properties.numSamples = coder.typeof(0);
+0176         ARGS{1}{1}.Properties.delta = coder.typeof(0);
+0177         ARGS{1}{1}.Properties.gamma = coder.typeof(0);
+0178         ARGS{1}{1}.Properties.phi = coder.typeof(0);
+0179         ARGS{1}{1}.Properties.tau = coder.typeof(0);
+0180         ARGS{1}{1}.Properties.spMin = coder.typeof(0);
+0181         ARGS{1}{1}.Properties.vMin = coder.typeof(0);
+0182         ARGS{1}{1}.Properties.maxNc = coder.typeof(0);
+0183         ARGS{1}{1}.Properties.priors = coder.typeof(0, [1, inf], [0, 1]);
+0184         ARGS{1}{1}.Properties.means = coder.typeof(0, [inf, numberOfVars], [1, 1]);
+0185         ARGS{1}{1}.Properties.covs = coder.typeof(0, [numberOfVars, numberOfVars, inf], [0, 0, 1]);
+0186         ARGS{1}{1}.Properties.invCovs = coder.typeof(0, [numberOfVars, numberOfVars, inf], [0, 0, 1]);
+0187         ARGS{1}{1}.Properties.logDets = coder.typeof(0, [1, inf], [0, 1]);
+0188         ARGS{1}{1}.Properties.sp = coder.typeof(0, [1, inf], [0, 1]);
+0189         ARGS{1}{1}.Properties.spu = coder.typeof(0, [1, inf], [0, 1]);
+0190         ARGS{1}{1}.Properties.vs = coder.typeof(0, [1, inf], [0, 1]);
+0191         ARGS{1}{1}.Properties.distances = coder.typeof(0, [1, inf], [0, 1]);
+0192         ARGS{1}{1}.Properties.logLikes = coder.typeof(0, [1, inf], [0, 1]);
+0193         ARGS{1}{1}.Properties.posteriors = coder.typeof(0, [1, inf], [0, 1]);
+0194         ARGS{1}{2} = coder.typeof(0, [trainSize, numberOfVars], [~isfinite(trainSize), 0]); <span class="comment">%#ok&lt;*NASGU&gt;</span>
+0195         
+0196         <span class="comment">%% Invoke MATLAB Coder.</span>
+0197         <span class="keyword">if</span> ~exist(<span class="string">'train_mex'</span>, <span class="string">'file'</span>) || enableRecompile
+0198             codegen -config cfg <a href="train.html" class="code" title="function  net = train(net, X) %#codegen">train</a> -args ARGS{1}
+0199         <span class="keyword">end</span>
+0200     
+0201         <span class="comment">%% Define argument types for entry-point 'igmnBuilder'.</span>
+0202         ARGS = cell(1, 1);
+0203         ARGS{1} = cell(1, 1);
+0204         ARGS{1}{1} = coder.newtype(<span class="string">'igmnoptions'</span>);
+0205         ARGS{1}{1}.Properties.range = coder.typeof(0, [2, numberOfVars], [0, 0]);
+0206         ARGS{1}{1}.Properties.Tau = coder.typeof(0);
+0207         ARGS{1}{1}.Properties.Delta = coder.typeof(0);
+0208         ARGS{1}{1}.Properties.Gamma = coder.typeof(0);
+0209         ARGS{1}{1}.Properties.Phi = coder.typeof(0);
+0210         ARGS{1}{1}.Properties.SPMin = coder.typeof(0);
+0211         ARGS{1}{1}.Properties.MaxNc = coder.typeof(0);
+0212         ARGS{1}{1}.Properties.VMin = coder.typeof(0);
+0213         ARGS{1}{1}.Properties.RegValue = coder.typeof(0);
+0214         ARGS{1}{1}.Properties.UseRankOne = coder.typeof(0);
+0215         
+0216         <span class="comment">%% Invoke MATLAB Coder.</span>
+0217         <span class="keyword">if</span> ~exist(<span class="string">'igmnBuilder_mex'</span>, <span class="string">'file'</span>) || enableRecompile
+0218             codegen -config cfg <a href="igmnBuilder.html" class="code" title="function self = igmnBuilder(options) %#codegen">igmnBuilder</a> -args ARGS{1}
+0219         <span class="keyword">end</span>
+0220         
+0221         <span class="keyword">if</span> isOptimization
+0222             <span class="comment">%% Define argument types for entry-point 'optimize'.</span>
+0223             ARGS = cell(1, 1);
+0224             ARGS{1} = cell(1, 1);
+0225             ARGS{1}{1} = coder.newtype(<span class="string">'Problem'</span>);
+0226             ARGS{1}{1}.Properties.trainData = coder.typeof(0, [trainSize, numberOfVars], [~isfinite(trainSize), 0]);
+0227             ARGS{1}{1}.Properties.testData = coder.typeof(0, [testSize, numberOfVars], [~isfinite(testSize), 0]);
+0228             ARGS{1}{1}.Properties.ExecutionMode = coder.typeof(<span class="string">'X'</span>, [1, inf], [0, 1]);
+0229             ARGS{1}{1}.Properties.DoParametersTuning = coder.typeof(false);
+0230             ARGS{1}{1}.Properties.AllData = coder.typeof(0, <span class="keyword">...</span>
+0231                 [options.allDataSize, numberOfVars], [~isfinite(trainSize) | ~isfinite(testSize), 0]);
+0232             ARGS{1}{1}.Properties.InputVarIndexes = coder.typeof(0, [1, numberOfVars - numberOfOutputVars], [0, 0]);
+0233             ARGS{1}{1}.Properties.OutputVarIndexes = coder.typeof(0, [1, numberOfOutputVars], [0, 0]);
+0234             ARGS{1}{1}.Properties.DefaultIgmnOptions = coder.newtype(<span class="string">'igmnoptions'</span>);
+0235             ARGS{1}{1}.Properties.DefaultIgmnOptions.Properties.range = coder.typeof(0, [2, numberOfVars], [0, 0]);
+0236             ARGS{1}{1}.Properties.DefaultIgmnOptions.Properties.Tau = coder.typeof(0);
+0237             ARGS{1}{1}.Properties.DefaultIgmnOptions.Properties.Delta = coder.typeof(0);
+0238             ARGS{1}{1}.Properties.DefaultIgmnOptions.Properties.Gamma = coder.typeof(0);
+0239             ARGS{1}{1}.Properties.DefaultIgmnOptions.Properties.Phi = coder.typeof(0);
+0240             ARGS{1}{1}.Properties.DefaultIgmnOptions.Properties.SPMin = coder.typeof(0);
+0241             ARGS{1}{1}.Properties.DefaultIgmnOptions.Properties.VMin = coder.typeof(0);
+0242             ARGS{1}{1}.Properties.DefaultIgmnOptions.Properties.MaxNc = coder.typeof(0);
+0243             ARGS{1}{1}.Properties.DefaultIgmnOptions.Properties.RegValue = coder.typeof(0);
+0244             ARGS{1}{1}.Properties.DefaultIgmnOptions.Properties.UseRankOne = coder.typeof(0);
+0245             ARGS{1}{1}.Properties.CompileOptions = coder.newtype(<span class="string">'compileoptions'</span>);
+0246             ARGS{1}{1}.Properties.CompileOptions.Properties.trainSize = coder.typeof(0);
+0247             ARGS{1}{1}.Properties.CompileOptions.Properties.testSize = coder.typeof(0);
+0248             ARGS{1}{1}.Properties.CompileOptions.Properties.allDataSize = coder.typeof(0);
+0249             ARGS{1}{1}.Properties.CompileOptions.Properties.EnableProfile = coder.typeof(false);
+0250             ARGS{1}{1}.Properties.CompileOptions.Properties.EnableReport = coder.typeof(false);
+0251             ARGS{1}{1}.Properties.CompileOptions.Properties.EnableRecompile = coder.typeof(false);
+0252             ARGS{1}{1}.Properties.CompileOptions.Properties.IsClassification = coder.typeof(false);
+0253             ARGS{1}{1}.Properties.CompileOptions.Properties.IsOptimization = coder.typeof(false);
+0254             ARGS{1}{1}.Properties.CompileOptions.Properties.NumberOfVariables = coder.typeof(0);
+0255             ARGS{1}{1}.Properties.CompileOptions.Properties.NumberOfOutputVars = coder.typeof(0);
+0256             ARGS{1}{1}.Properties.OptimizeOptions = coder.newtype(<span class="string">'optimizeoptions'</span>);
+0257             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameter = cell([1, 9]);
+0258             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{1} = coder.newtype(<span class="string">'Hyperparameter'</span>);
+0259             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{1}.Properties.value = coder.typeof(0);
+0260             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{1}.Properties.name = coder.typeof(<span class="string">'X'</span>, [1, inf], [0, 1]);
+0261             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{1}.Properties.lb = coder.typeof(0);
+0262             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{1}.Properties.ub = coder.typeof(0);
+0263             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{1}.Properties.isDiscrete = coder.typeof(false);
+0264             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{2} = coder.newtype(<span class="string">'Hyperparameter'</span>);
+0265             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{2}.Properties.value = coder.typeof(0);
+0266             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{2}.Properties.name = coder.typeof(<span class="string">'X'</span>, [1, inf], [0, 1]);
+0267             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{2}.Properties.lb = coder.typeof(0);
+0268             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{2}.Properties.ub = coder.typeof(0);
+0269             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{2}.Properties.isDiscrete = coder.typeof(false);
+0270             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{3} = coder.newtype(<span class="string">'Hyperparameter'</span>);
+0271             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{3}.Properties.value = coder.typeof(0);
+0272             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{3}.Properties.name = coder.typeof(<span class="string">'X'</span>, [1, inf], [0, 1]);
+0273             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{3}.Properties.lb = coder.typeof(0);
+0274             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{3}.Properties.ub = coder.typeof(0);
+0275             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{3}.Properties.isDiscrete = coder.typeof(false);
+0276             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{4} = coder.newtype(<span class="string">'Hyperparameter'</span>);
+0277             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{4}.Properties.value = coder.typeof(0);
+0278             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{4}.Properties.name = coder.typeof(<span class="string">'X'</span>, [1, inf], [0, 1]);
+0279             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{4}.Properties.lb = coder.typeof(0);
+0280             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{4}.Properties.ub = coder.typeof(0);
+0281             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{4}.Properties.isDiscrete = coder.typeof(false);
+0282             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{5} = coder.newtype(<span class="string">'Hyperparameter'</span>);
+0283             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{5}.Properties.value = coder.typeof(0);
+0284             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{5}.Properties.name = coder.typeof(<span class="string">'X'</span>, [1, inf], [0, 1]);
+0285             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{5}.Properties.lb = coder.typeof(0);
+0286             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{5}.Properties.ub = coder.typeof(0);
+0287             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{5}.Properties.isDiscrete = coder.typeof(false);
+0288             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{6} = coder.newtype(<span class="string">'Hyperparameter'</span>);
+0289             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{6}.Properties.value = coder.typeof(0);
+0290             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{6}.Properties.name = coder.typeof(<span class="string">'X'</span>, [1, inf], [0, 1]);
+0291             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{6}.Properties.lb = coder.typeof(0);
+0292             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{6}.Properties.ub = coder.typeof(0);
+0293             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{6}.Properties.isDiscrete = coder.typeof(false);
+0294             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{7} = coder.newtype(<span class="string">'Hyperparameter'</span>);
+0295             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{7}.Properties.value = coder.typeof(0);
+0296             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{7}.Properties.name = coder.typeof(<span class="string">'X'</span>, [1, inf], [0, 1]);
+0297             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{7}.Properties.lb = coder.typeof(0);
+0298             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{7}.Properties.ub = coder.typeof(0);
+0299             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{7}.Properties.isDiscrete = coder.typeof(false);
+0300             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{8} = coder.newtype(<span class="string">'Hyperparameter'</span>);
+0301             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{8}.Properties.value = coder.typeof(0);
+0302             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{8}.Properties.name = coder.typeof(<span class="string">'X'</span>, [1, inf], [0, 1]);
+0303             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{8}.Properties.lb = coder.typeof(0);
+0304             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{8}.Properties.ub = coder.typeof(0);
+0305             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{8}.Properties.isDiscrete = coder.typeof(false);
+0306             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{9} = coder.newtype(<span class="string">'Hyperparameter'</span>);
+0307             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{9}.Properties.value = coder.typeof(0);
+0308             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{9}.Properties.name = coder.typeof(<span class="string">'X'</span>, [1, inf], [0, 1]);
+0309             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{9}.Properties.lb = coder.typeof(0);
+0310             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{9}.Properties.ub = coder.typeof(0);
+0311             ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters{9}.Properties.isDiscrete = coder.typeof(false);
+0312             ARGS{1}{1}.Properties.OptimizeOptions.Properties.hyperparameters = coder.typeof(ARGS_1_1_Properties_OptimizeOptions_Properties_hyperparameters, [1, 9]);
+0313             ARGS{1}{1}.Properties.OptimizeOptions.Properties.hyperparameters = ARGS{1}{1}.Properties.OptimizeOptions.Properties.hyperparameters.makeHeterogeneous();
+0314             ARG_1 = coder.typeof(<span class="string">'X'</span>, [1, inf], [0, 1]);
+0315             ARGS{1}{1}.Properties.OptimizeOptions.Properties.Algorithm = coder.typeof(<span class="string">'X'</span>, [1, inf], [0, 1]);
+0316             ARGS{1}{1}.Properties.OptimizeOptions.Properties.UseDefaultsFor = coder.typeof({ARG_1}, [1, 9], [0, 1]);
+0317             ARGS{1}{1}.Properties.OptimizeOptions.Properties.InitialPopulation = coder.typeof(0, [inf, 9], [1, 1]);
+0318             ARGS{1}{1}.Properties.OptimizeOptions.Properties.InitialPopulationSpan = coder.typeof(0, [1, 9], [0, 1]);
+0319             ARGS{1}{1}.Properties.OptimizeOptions.Properties.PlotFcns = coder.typeof({ARG_1}, [1, 3], [0, 1]);
+0320             ARGS{1}{1}.Properties.OptimizeOptions.Properties.DisplayInterval = coder.typeof(0);
+0321             ARGS{1}{1}.Properties.OptimizeOptions.Properties.Display = coder.typeof(<span class="string">'X'</span>, [1, inf], [0, 1]);
+0322             ARGS{1}{1}.Properties.OptimizeOptions.Properties.PopulationSize = coder.typeof(0);
+0323             ARGS{1}{1}.Properties.OptimizeOptions.Properties.UseParallel = coder.typeof(false);
+0324             ARGS{1}{1}.Properties.OptimizeOptions.Properties.StallIterLimit = coder.typeof(0);
+0325             ARGS{1}{1}.Properties.OptimizeOptions.Properties.StallTimeLimit = coder.typeof(0);
+0326             ARGS{1}{1}.Properties.OptimizeOptions.Properties.TolFunValue = coder.typeof(0);
+0327             ARGS{1}{1}.Properties.OptimizeOptions.Properties.InertiaRange = coder.typeof(0, [1, 2]);
+0328             ARGS{1}{1}.Properties.OptimizeOptions.Properties.MaxIter = coder.typeof(0);
+0329             ARGS{1}{1}.Properties.OptimizeOptions.Properties.MaxTime = coder.typeof(0);
+0330             ARGS{1}{1}.Properties.OptimizeOptions.Properties.MaxFunEval = coder.typeof(0);
+0331             ARGS{1}{1}.Properties.OptimizeOptions.Properties.MinFractionNeighbors = coder.typeof(0);
+0332             ARGS{1}{1}.Properties.OptimizeOptions.Properties.ObjectiveLimit = coder.typeof(0);
+0333             ARGS{1}{1}.Properties.OptimizeOptions.Properties.SelfAdjustment = coder.typeof(0);
+0334             ARGS{1}{1}.Properties.OptimizeOptions.Properties.SocialAdjustment = coder.typeof(0);
+0335             ARGS{1}{1}.Properties.OptimizeOptions.Properties.MinPopulationSize = coder.typeof(0);
+0336             ARGS{1}{1}.Properties.OptimizeOptions.Properties.PopulationArquiveRate = coder.typeof(0);
+0337             ARGS{1}{1}.Properties.OptimizeOptions.Properties.GravitationalConstant = coder.typeof(0);
+0338             ARGS{1}{1}.Properties.OptimizeOptions.Properties.Verbosity = coder.typeof(0);
+0339 
+0340             extraEvalArgs = coder.newtype(<span class="string">'cell'</span>, {coder.typeof(0, [inf inf], [1 1])}, [inf, inf], [1 1]);
+0341             extraEvalArgs = extraEvalArgs.makeHomogeneous();
+0342 
+0343             extraEvalCellArgs = coder.newtype(<span class="string">'cell'</span>, {extraEvalArgs}, [inf, inf], [1 1]);
+0344             extraEvalCellArgs = extraEvalCellArgs.makeHomogeneous();
+0345 
+0346             ARGS{1}{1}.Properties.OptimizeOptions.Properties.ExtraEvalArgs = extraEvalArgs;
+0347             ARGS{1}{1}.Properties.OptimizeOptions.Properties.ExtraEvalCellArgs = extraEvalCellArgs;
+0348               
+0349             <span class="comment">%% Invoke MATLAB Coder.</span>
+0350             <span class="keyword">if</span> ~exist(<span class="string">'optimize_mex'</span>, <span class="string">'file'</span>) || enableRecompile
+0351                  codegen -config cfg <a href="optimize.html" class="code" title="">optimize</a> -args ARGS{1}
+0352             <span class="keyword">end</span>
+0353         <span class="keyword">end</span>
+0354     <span class="keyword">end</span>
+0355 <span class="keyword">end</span>
+0356</pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

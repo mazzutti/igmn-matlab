@@ -1,0 +1,241 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plotpopulation</title>
+  <meta name="keywords" content="plotpopulation">
+  <meta name="description" content="PLOTPPOPULATION Plots the positions of individuals in a population.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; plotpopulation.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>plotpopulation
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>PLOTPPOPULATION Plots the positions of individuals in a population.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function plotpopulation(optimValues, flag, ijk) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> PLOTPPOPULATION Plots the positions of individuals in a population.
+
+   plotpopulation(optimValues, flag, ijk) visualizes the positions of 
+   individuals in a population during an optimization process. The function 
+   supports one-dimensional, two-dimensional, and three-dimensional plots.
+
+   INPUTS:
+       optimValues - A structure containing the following fields:
+           population       - A matrix where each row represents an individual 
+                              in the population, and each column represents 
+                              a dimension.
+           hpNames          - A cell array of strings containing the names 
+                              of the dimensions (used for axis labels).
+           populationRange  - A 2xN matrix specifying the range of each 
+                              dimension in the population. The first row 
+                              contains the minimum values, and the second 
+                              row contains the maximum values.
+       flag         - A string indicating the current state of the 
+                      optimization process. Possible values:
+                          'init' - Initialization phase.
+                          'iter' - Iteration phase.
+       ijk          - (Optional) A 1x3 vector specifying the dimensions to 
+                      be plotted. If not provided, the function defaults to 
+                      plotting the first three dimensions (or fewer if the 
+                      problem has fewer dimensions).
+
+   FUNCTIONALITY:
+       - During the 'init' phase, the function initializes the plot, 
+         displaying the initial positions of the population.
+       - During the 'iter' phase, the function updates the plot to show 
+         the current positions of the population.
+       - The function automatically adjusts axis limits based on the 
+         population range.
+       - For one-dimensional problems, the function plots points along 
+         the x-axis. For two-dimensional problems, it creates a 2D scatter 
+         plot. For three-dimensional problems, it creates a 3D scatter plot.
+
+   NOTES:
+       - If more than three dimensions are specified in ijk, only the first 
+         three dimensions are plotted, and a warning is issued.
+       - The function uses different colors and markers to distinguish 
+         between initial and current positions of the population.
+
+   EXAMPLE USAGE:
+       plotpopulation(optimValues, 'init', [1, 2, 3]);
+       plotpopulation(optimValues, 'iter');</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% PLOTPPOPULATION Plots the positions of individuals in a population.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   plotpopulation(optimValues, flag, ijk) visualizes the positions of</span>
+0004 <span class="comment">%   individuals in a population during an optimization process. The function</span>
+0005 <span class="comment">%   supports one-dimensional, two-dimensional, and three-dimensional plots.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   INPUTS:</span>
+0008 <span class="comment">%       optimValues - A structure containing the following fields:</span>
+0009 <span class="comment">%           population       - A matrix where each row represents an individual</span>
+0010 <span class="comment">%                              in the population, and each column represents</span>
+0011 <span class="comment">%                              a dimension.</span>
+0012 <span class="comment">%           hpNames          - A cell array of strings containing the names</span>
+0013 <span class="comment">%                              of the dimensions (used for axis labels).</span>
+0014 <span class="comment">%           populationRange  - A 2xN matrix specifying the range of each</span>
+0015 <span class="comment">%                              dimension in the population. The first row</span>
+0016 <span class="comment">%                              contains the minimum values, and the second</span>
+0017 <span class="comment">%                              row contains the maximum values.</span>
+0018 <span class="comment">%       flag         - A string indicating the current state of the</span>
+0019 <span class="comment">%                      optimization process. Possible values:</span>
+0020 <span class="comment">%                          'init' - Initialization phase.</span>
+0021 <span class="comment">%                          'iter' - Iteration phase.</span>
+0022 <span class="comment">%       ijk          - (Optional) A 1x3 vector specifying the dimensions to</span>
+0023 <span class="comment">%                      be plotted. If not provided, the function defaults to</span>
+0024 <span class="comment">%                      plotting the first three dimensions (or fewer if the</span>
+0025 <span class="comment">%                      problem has fewer dimensions).</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%   FUNCTIONALITY:</span>
+0028 <span class="comment">%       - During the 'init' phase, the function initializes the plot,</span>
+0029 <span class="comment">%         displaying the initial positions of the population.</span>
+0030 <span class="comment">%       - During the 'iter' phase, the function updates the plot to show</span>
+0031 <span class="comment">%         the current positions of the population.</span>
+0032 <span class="comment">%       - The function automatically adjusts axis limits based on the</span>
+0033 <span class="comment">%         population range.</span>
+0034 <span class="comment">%       - For one-dimensional problems, the function plots points along</span>
+0035 <span class="comment">%         the x-axis. For two-dimensional problems, it creates a 2D scatter</span>
+0036 <span class="comment">%         plot. For three-dimensional problems, it creates a 3D scatter plot.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%   NOTES:</span>
+0039 <span class="comment">%       - If more than three dimensions are specified in ijk, only the first</span>
+0040 <span class="comment">%         three dimensions are plotted, and a warning is issued.</span>
+0041 <span class="comment">%       - The function uses different colors and markers to distinguish</span>
+0042 <span class="comment">%         between initial and current positions of the population.</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">%   EXAMPLE USAGE:</span>
+0045 <span class="comment">%       plotpopulation(optimValues, 'init', [1, 2, 3]);</span>
+0046 <span class="comment">%       plotpopulation(optimValues, 'iter');</span>
+0047 <a name="_sub0" href="#_subfunctions" class="code">function plotpopulation(optimValues, flag, ijk)</a>
+0048     labels = optimValues.hpNames;
+0049 
+0050     <span class="keyword">if</span> nargin &lt; 3
+0051         ijk = 1:min(3, length(labels));
+0052     <span class="keyword">else</span> <span class="comment">% Robust input check</span>
+0053         ijk = reshape(ijk, 1, []);
+0054     <span class="keyword">end</span>
+0055     
+0056     <span class="comment">% Input checking</span>
+0057     <span class="keyword">if</span> size(ijk, 2) &gt; 3
+0058         warning(<span class="string">'Unable to plot %g dimensions. Plotting first 3 only'</span>, length(ijk))
+0059     <span class="keyword">end</span> <span class="comment">% if length</span>
+0060     
+0061     <span class="keyword">if</span> strcmpi(flag(1:4), <span class="string">'init'</span>) <span class="comment">% Initialize</span>
+0062         delete(findobj(gca, <span class="string">'-regexp'</span>, <span class="string">'Tag'</span>, <span class="string">'*Locations'</span>))
+0063         <span class="keyword">if</span> size(ijk, 2) == 1 <span class="comment">% One dimensional</span>
+0064             initLoc = plot(optimValues.population(:, ijk(1)),<span class="keyword">...</span>
+0065                 zeros(size(optimValues.population, 1), 1),<span class="keyword">...</span>
+0066                 <span class="string">'Color'</span>, 0.75 * ones(1, 3),<span class="keyword">...</span>
+0067                 <span class="string">'Marker'</span>, <span class="string">'.'</span>,<span class="keyword">...</span>
+0068                 <span class="string">'LineStyle'</span>, <span class="string">'none'</span>,<span class="keyword">...</span>
+0069                 <span class="string">'Tag'</span>, <span class="string">'Initial Locations'</span>);
+0070             xlabel(labels{ijk(1)});
+0071         <span class="keyword">elseif</span> size(ijk, 2) == 2 <span class="comment">% Two dimensional</span>
+0072             initLoc = plot(optimValues.population(:, ijk(1)),<span class="keyword">...</span>
+0073                 optimValues.population(:, ijk(2)),<span class="keyword">...</span>
+0074                 <span class="string">'Color'</span>, 0.75 * ones(1, 3),<span class="keyword">...</span>
+0075                 <span class="string">'Marker'</span>, <span class="string">'.'</span>,<span class="keyword">...</span>
+0076                 <span class="string">'LineStyle'</span>, <span class="string">'none'</span>,<span class="keyword">...</span>
+0077                 <span class="string">'Tag'</span>, <span class="string">'Initial Locations'</span>);
+0078             xlabel(labels{ijk(1)});
+0079             ylabel(labels{ijk(2)});
+0080         <span class="keyword">elseif</span> size(ijk, 2) == 3 <span class="comment">% Three dimensional</span>
+0081             initLoc = plot3(optimValues.population(:, ijk(1)),<span class="keyword">...</span>
+0082                 optimValues.population(:, ijk(2)),<span class="keyword">...</span>
+0083                 optimValues.population(:, ijk(3)),<span class="keyword">...</span>
+0084                 <span class="string">'Color'</span>, 0.75 * ones(1, 3),<span class="keyword">...</span>
+0085                 <span class="string">'Marker'</span>, <span class="string">'.'</span>,<span class="keyword">...</span>
+0086                 <span class="string">'LineStyle'</span>, <span class="string">'none'</span>,<span class="keyword">...</span>
+0087                 <span class="string">'Tag'</span>, <span class="string">'Initial Locations'</span>);
+0088             xlabel(labels{ijk(1)});
+0089             ylabel(labels{ijk(2)});
+0090             zlabel(labels{ijk(3)});
+0091         <span class="keyword">end</span>
+0092     
+0093         <span class="comment">% Set reasonable axes limits</span>
+0094         <span class="comment">% ---------------------------------------------------------------------</span>
+0095         xlim([optimValues.populationRange(1, ijk(1)) - eps, <span class="keyword">...</span>
+0096             optimValues.populationRange(2, ijk(1)) + eps])
+0097         <span class="keyword">if</span> size(ijk, 2) &gt; 1
+0098             ylim([optimValues.populationRange(1, ijk(2)) - eps, <span class="keyword">...</span>
+0099                 optimValues.populationRange(2, ijk(2))]  + eps)
+0100             <span class="keyword">if</span> size(ijk, 2) &gt; 2
+0101                 zlim([optimValues.populationRange(1, ijk(3)) - eps, <span class="keyword">...</span>
+0102                     optimValues.populationRange(2, ijk(3))   + eps])
+0103             <span class="keyword">end</span> <span class="comment">% if size</span>
+0104         <span class="keyword">end</span> <span class="comment">% if size</span>
+0105         <span class="comment">% ---------------------------------------------------------------------</span>
+0106     
+0107         title(<span class="string">'Population positions'</span>)
+0108         set(gca, <span class="string">'Tag'</span>, <span class="string">'Population Plot'</span>, <span class="string">'NextPlot'</span>, <span class="string">'add'</span>)
+0109     
+0110         <span class="comment">% Initialize plots</span>
+0111         <span class="comment">% ---------------------------------------------------------------------</span>
+0112         <span class="keyword">if</span> size(ijk, 2) == 1 <span class="comment">%  One dimensional</span>
+0113             currentLoc = plot(optimValues.population(:, ijk(1)),<span class="keyword">...</span>
+0114                 zeros(size(optimValues.population, 1), 1));
+0115         <span class="keyword">elseif</span> size(ijk, 2) == 2 <span class="comment">% Two dimensional</span>
+0116             currentLoc = plot(optimValues.population(:, ijk(1)),<span class="keyword">...</span>
+0117                 optimValues.population(:, ijk(2)));
+0118         <span class="keyword">elseif</span> size(ijk, 2) == 3 <span class="comment">% Three dimensional</span>
+0119             currentLoc = plot3(optimValues.population(:, ijk(1)),<span class="keyword">...</span>
+0120                 optimValues.population(:, ijk(2)),<span class="keyword">...</span>
+0121                 optimValues.population(:, ijk(3)));
+0122             hold on;
+0123         <span class="keyword">end</span> <span class="comment">% if size</span>
+0124         set(currentLoc,<span class="keyword">...</span>
+0125                 <span class="string">'LineStyle'</span>, <span class="string">'none'</span>,<span class="keyword">...</span>
+0126                 <span class="string">'Marker'</span>, <span class="string">'.'</span>,<span class="keyword">...</span>
+0127                 <span class="string">'Color'</span>, <span class="string">'blue'</span>,<span class="keyword">...</span>
+0128                 <span class="string">'Tag'</span>, <span class="string">'Population Locations'</span>);
+0129         <span class="comment">% ---------------------------------------------------------------------</span>
+0130     <span class="keyword">elseif</span> strcmpi(flag(1:4), <span class="string">'iter'</span>) <span class="comment">% Iterate</span>
+0131         currentLoc = findobj(gca, <span class="string">'Tag'</span>, <span class="string">'Population Locations'</span>, <span class="string">'Type'</span>, <span class="string">'line'</span>);
+0132         <span class="keyword">if</span> size(ijk, 2) == 1 <span class="comment">%  One dimensional</span>
+0133             set(currentLoc, <span class="string">'XData'</span>, optimValues.population(:, ijk(1)))
+0134         <span class="keyword">elseif</span> size(ijk, 2) == 2 <span class="comment">% Two dimensional</span>
+0135             set(currentLoc,<span class="keyword">...</span>
+0136                 <span class="string">'XData'</span>, optimValues.population(:, ijk(1)),<span class="keyword">...</span>
+0137                 <span class="string">'YData'</span>, optimValues.population(:, ijk(2)))
+0138         <span class="keyword">elseif</span> size(ijk, 2) == 3 <span class="comment">% Three dimensional</span>
+0139             set(currentLoc,<span class="keyword">...</span>
+0140                 <span class="string">'XData'</span>, optimValues.population(:, ijk(1)),<span class="keyword">...</span>
+0141                 <span class="string">'YData'</span>, optimValues.population(:, ijk(2)),<span class="keyword">...</span>
+0142                 <span class="string">'ZData'</span>, optimValues.population(:, ijk(3)))
+0143         <span class="keyword">end</span>
+0144     <span class="keyword">end</span>
+0145     
+0146     <span class="keyword">if</span> strcmpi(flag(1:4), <span class="string">'init'</span>)
+0147         legend([initLoc, currentLoc], {<span class="string">'Initial Positions'</span>, <span class="string">'Current Positions'</span>}, <span class="string">'Location'</span>, <span class="string">'northeast'</span>)
+0148     <span class="keyword">end</span>
+0149 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

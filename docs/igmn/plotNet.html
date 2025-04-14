@@ -1,0 +1,291 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plotNet</title>
+  <meta name="keywords" content="plotNet">
+  <meta name="description" content="PLOTNET Plots 2D and 3D Gaussian distributions from a network">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; plotNet.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>plotNet
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>PLOTNET Plots 2D and 3D Gaussian distributions from a network</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [h] = plotNet(net, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> PLOTNET Plots 2D and 3D Gaussian distributions from a network
+
+   H = PLOTNET(NET) plots the Gaussian distributions specified by 
+   NET.means and NET.covs. The distributions are visualized as ellipses 
+   (in 2D) or ellipsoids (in 3D). By default, the distributions are 
+   plotted in the current axes. H is the graphics handle to the plotted 
+   ellipse or ellipsoid.
+
+   H = PLOTNET(NET, 'sd', SD) uses SD as the standard deviation along 
+   the major and minor axes (larger SD =&gt; larger ellipse). By default, 
+   SD = 1. Note: 
+     * For 2D distributions, SD=1.0 and SD=2.0 cover ~39% and ~86% of 
+       the total probability mass, respectively. 
+     * For 3D distributions, SD=1.0 and SD=2.0 cover ~19% and ~73% of 
+       the total probability mass, respectively.
+
+   H = PLOTNET(NET, 'sd', SD, 'npts', NPTS) plots the ellipse or 
+   ellipsoid with a resolution of NPTS. Ellipsoids are generated on an 
+   NPTS x NPTS mesh (see SPHERE for more details). By default, 
+   NPTS = 50 for ellipses, and 20 for ellipsoids.
+
+   H = PLOTNET(NET, 'sd', SD, 'npts', NPTS, 'ax', AX) adds the plot to 
+   the axes specified by the axis handle AX. If AX is not provided, a 
+   new figure and axes are created.
+
+   INPUTS:
+       NET   - A structure containing the Gaussian network parameters:
+               * NET.means: Mean vectors of the Gaussian components.
+               * NET.covs: Covariance matrices of the Gaussian components.
+               * NET.invCovs: Inverse covariance matrices (if applicable).
+               * NET.nc: Number of Gaussian components.
+               * NET.useRankOne: Boolean indicating whether to use rank-one 
+                 covariance approximation.
+       SD    - (Optional) Standard deviation for scaling the ellipses or 
+               ellipsoids. Default is 1.
+       NPTS  - (Optional) Number of points for plotting resolution. Default 
+               is 50 for 2D and 20 for 3D.
+       AX    - (Optional) Axes handle for plotting. If not provided, a new 
+               figure and axes are created.
+
+   OUTPUTS:
+       H     - Graphics handle to the plotted ellipse or ellipsoid. If no 
+               output is specified, the handle is not returned.
+
+   EXAMPLES:
+       % Example 1: Plot a 2D Gaussian distribution
+       net.means = [0, 0];
+       net.covs = eye(2);
+       net.nc = 1;
+       net.useRankOne = false;
+       plotNet(net);
+
+       % Example 2: Plot a 3D Gaussian distribution with custom SD and NPTS
+       net.means = [0, 0, 0];
+       net.covs = eye(3);
+       net.nc = 1;
+       net.useRankOne = false;
+       plotNet(net, 'sd', 2, 'npts', 30);
+
+   See also SPHERE.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function h = show2d(mean, cov, sd, npts, ax)</a></li><li><a href="#_sub2" class="code">function h = show3d(mean, cov, sd, npts, ax)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% PLOTNET Plots 2D and 3D Gaussian distributions from a network</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   H = PLOTNET(NET) plots the Gaussian distributions specified by</span>
+0004 <span class="comment">%   NET.means and NET.covs. The distributions are visualized as ellipses</span>
+0005 <span class="comment">%   (in 2D) or ellipsoids (in 3D). By default, the distributions are</span>
+0006 <span class="comment">%   plotted in the current axes. H is the graphics handle to the plotted</span>
+0007 <span class="comment">%   ellipse or ellipsoid.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   H = PLOTNET(NET, 'sd', SD) uses SD as the standard deviation along</span>
+0010 <span class="comment">%   the major and minor axes (larger SD =&gt; larger ellipse). By default,</span>
+0011 <span class="comment">%   SD = 1. Note:</span>
+0012 <span class="comment">%     * For 2D distributions, SD=1.0 and SD=2.0 cover ~39% and ~86% of</span>
+0013 <span class="comment">%       the total probability mass, respectively.</span>
+0014 <span class="comment">%     * For 3D distributions, SD=1.0 and SD=2.0 cover ~19% and ~73% of</span>
+0015 <span class="comment">%       the total probability mass, respectively.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%   H = PLOTNET(NET, 'sd', SD, 'npts', NPTS) plots the ellipse or</span>
+0018 <span class="comment">%   ellipsoid with a resolution of NPTS. Ellipsoids are generated on an</span>
+0019 <span class="comment">%   NPTS x NPTS mesh (see SPHERE for more details). By default,</span>
+0020 <span class="comment">%   NPTS = 50 for ellipses, and 20 for ellipsoids.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%   H = PLOTNET(NET, 'sd', SD, 'npts', NPTS, 'ax', AX) adds the plot to</span>
+0023 <span class="comment">%   the axes specified by the axis handle AX. If AX is not provided, a</span>
+0024 <span class="comment">%   new figure and axes are created.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%   INPUTS:</span>
+0027 <span class="comment">%       NET   - A structure containing the Gaussian network parameters:</span>
+0028 <span class="comment">%               * NET.means: Mean vectors of the Gaussian components.</span>
+0029 <span class="comment">%               * NET.covs: Covariance matrices of the Gaussian components.</span>
+0030 <span class="comment">%               * NET.invCovs: Inverse covariance matrices (if applicable).</span>
+0031 <span class="comment">%               * NET.nc: Number of Gaussian components.</span>
+0032 <span class="comment">%               * NET.useRankOne: Boolean indicating whether to use rank-one</span>
+0033 <span class="comment">%                 covariance approximation.</span>
+0034 <span class="comment">%       SD    - (Optional) Standard deviation for scaling the ellipses or</span>
+0035 <span class="comment">%               ellipsoids. Default is 1.</span>
+0036 <span class="comment">%       NPTS  - (Optional) Number of points for plotting resolution. Default</span>
+0037 <span class="comment">%               is 50 for 2D and 20 for 3D.</span>
+0038 <span class="comment">%       AX    - (Optional) Axes handle for plotting. If not provided, a new</span>
+0039 <span class="comment">%               figure and axes are created.</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%   OUTPUTS:</span>
+0042 <span class="comment">%       H     - Graphics handle to the plotted ellipse or ellipsoid. If no</span>
+0043 <span class="comment">%               output is specified, the handle is not returned.</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%   EXAMPLES:</span>
+0046 <span class="comment">%       % Example 1: Plot a 2D Gaussian distribution</span>
+0047 <span class="comment">%       net.means = [0, 0];</span>
+0048 <span class="comment">%       net.covs = eye(2);</span>
+0049 <span class="comment">%       net.nc = 1;</span>
+0050 <span class="comment">%       net.useRankOne = false;</span>
+0051 <span class="comment">%       plotNet(net);</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">%       % Example 2: Plot a 3D Gaussian distribution with custom SD and NPTS</span>
+0054 <span class="comment">%       net.means = [0, 0, 0];</span>
+0055 <span class="comment">%       net.covs = eye(3);</span>
+0056 <span class="comment">%       net.nc = 1;</span>
+0057 <span class="comment">%       net.useRankOne = false;</span>
+0058 <span class="comment">%       plotNet(net, 'sd', 2, 'npts', 30);</span>
+0059 <span class="comment">%</span>
+0060 <span class="comment">%   See also SPHERE.</span>
+0061 <a name="_sub0" href="#_subfunctions" class="code">function [h] = plotNet(net, varargin)</a>
+0062     parser = inputParser;
+0063     
+0064     addOptional(parser, <span class="string">'sd'</span>, 1);
+0065     addOptional(parser, <span class="string">'npts'</span>, []);
+0066     addOptional(parser, <span class="string">'ax'</span>, []);
+0067     
+0068     parse(parser, varargin{:});
+0069     
+0070     sd = parser.Results.sd;
+0071     npts = parser.Results.npts;
+0072     ax = parser.Results.ax;
+0073 
+0074     <span class="keyword">if</span> isempty(ax)
+0075        figure; ax = gca;
+0076     <span class="keyword">end</span>
+0077     
+0078     set(ax, <span class="string">'nextplot'</span>, <span class="string">'add'</span>);
+0079     
+0080     <span class="keyword">for</span> i = 1:net.nc
+0081         mean = net.means(i, :);
+0082         <span class="keyword">if</span> net.useRankOne
+0083             cov = inv(net.invCovs(:, :, i))'; 
+0084         <span class="keyword">else</span> 
+0085             cov = net.covs(:, :, i)'; 
+0086         <span class="keyword">end</span>
+0087         <span class="keyword">switch</span> numel(mean)
+0088             <span class="keyword">case</span> 2, h = <a href="#_sub1" class="code" title="subfunction h = show2d(mean, cov, sd, npts, ax)">show2d</a>(mean, cov, sd, npts, ax);
+0089             <span class="keyword">case</span> 3, h = <a href="#_sub2" class="code" title="subfunction h = show3d(mean, cov, sd, npts, ax)">show3d</a>(mean, cov, sd, npts, ax);
+0090             <span class="keyword">otherwise</span> 
+0091                 error(<span class="string">'Unsupported dimensionality'</span>);
+0092         <span class="keyword">end</span>
+0093     <span class="keyword">end</span>
+0094     <span class="keyword">if</span> nargout == 0, clear h; <span class="keyword">end</span>
+0095 <span class="keyword">end</span>
+0096 
+0097 <span class="comment">% SHOW2D Plots a 2D Gaussian distribution as an ellipse.</span>
+0098 <span class="comment">%</span>
+0099 <span class="comment">%   h = SHOW2D(mean, cov, sd, npts, ax) plots a 2D Gaussian distribution</span>
+0100 <span class="comment">%   represented by its mean and covariance matrix as an ellipse. The</span>
+0101 <span class="comment">%   ellipse is scaled by the standard deviation (sd) and plotted with a</span>
+0102 <span class="comment">%   specified number of points (npts) on the given axes (ax).</span>
+0103 <span class="comment">%</span>
+0104 <span class="comment">%   Inputs:</span>
+0105 <span class="comment">%       mean  - A 2-element vector specifying the mean of the Gaussian</span>
+0106 <span class="comment">%               distribution [mean_x, mean_y].</span>
+0107 <span class="comment">%       cov   - A 2x2 covariance matrix of the Gaussian distribution.</span>
+0108 <span class="comment">%       sd    - A scalar specifying the scaling factor for the standard</span>
+0109 <span class="comment">%               deviation.</span>
+0110 <span class="comment">%       npts  - (Optional) Number of points used to draw the ellipse.</span>
+0111 <span class="comment">%               Default is 50.</span>
+0112 <span class="comment">%       ax    - (Optional) Handle to the axes where the ellipse will be</span>
+0113 <span class="comment">%               plotted. If not provided, the current axes will be used.</span>
+0114 <span class="comment">%</span>
+0115 <span class="comment">%   Output:</span>
+0116 <span class="comment">%       h     - Handle to the plotted line object representing the ellipse.</span>
+0117 <span class="comment">%</span>
+0118 <span class="comment">%   Example:</span>
+0119 <span class="comment">%       mean = [0, 0];</span>
+0120 <span class="comment">%       cov = [1, 0.5; 0.5, 1];</span>
+0121 <span class="comment">%       sd = 2;</span>
+0122 <span class="comment">%       figure;</span>
+0123 <span class="comment">%       ax = gca;</span>
+0124 <span class="comment">%       show2d(mean, cov, sd, 100, ax);</span>
+0125 <span class="comment">%</span>
+0126 <span class="comment">%   Notes:</span>
+0127 <span class="comment">%       - The function uses eigenvalue decomposition to compute the</span>
+0128 <span class="comment">%         orientation and scaling of the ellipse based on the covariance</span>
+0129 <span class="comment">%         matrix.</span>
+0130 <span class="comment">%       - The ellipse is centered at the specified mean and scaled by</span>
+0131 <span class="comment">%         the given standard deviation.</span>
+0132 <a name="_sub1" href="#_subfunctions" class="code">function h = show2d(mean, cov, sd, npts, ax)</a>
+0133     <span class="keyword">if</span> isempty(npts), npts = 50; <span class="keyword">end</span>
+0134     <span class="comment">% plot the gaussian fits</span>
+0135     tt = linspace(0, 2 * pi, npts)';
+0136     x = cos(tt); 
+0137     y = sin(tt);
+0138     ap = [x(:) y(:)]';
+0139     [v, d] = eig(cov); 
+0140     d = (sd * sqrt(d)) / 2; <span class="comment">% convert variance to sd*sd</span>
+0141     bp = (v * d * ap) + repmat(mean', 1, size(ap, 2)); 
+0142     h = plot(bp(1, :), bp(2, :), <span class="string">'-'</span>, <span class="string">'parent'</span>, ax, <span class="string">'LineWidth'</span>, 2);
+0143 <span class="keyword">end</span>
+0144 
+0145 <span class="comment">% SHOW3D Plots a 3D ellipsoid representing a Gaussian distribution.</span>
+0146 <span class="comment">%</span>
+0147 <span class="comment">%   h = SHOW3D(mean, cov, sd, npts, ax) creates a 3D ellipsoid centered at</span>
+0148 <span class="comment">%   the specified mean, with the shape determined by the covariance matrix</span>
+0149 <span class="comment">%   (cov), and scaled by the standard deviation (sd). The ellipsoid is</span>
+0150 <span class="comment">%   plotted on the specified axes (ax) using a sphere with npts points.</span>
+0151 <span class="comment">%</span>
+0152 <span class="comment">%   Inputs:</span>
+0153 <span class="comment">%       mean - A 3-element vector specifying the center of the ellipsoid.</span>
+0154 <span class="comment">%       cov  - A 3x3 covariance matrix defining the shape of the ellipsoid.</span>
+0155 <span class="comment">%       sd   - A scalar specifying the scaling factor for the ellipsoid.</span>
+0156 <span class="comment">%       npts - (Optional) Number of points used to generate the sphere.</span>
+0157 <span class="comment">%              Default is 20.</span>
+0158 <span class="comment">%       ax   - Handle to the axes where the ellipsoid will be plotted.</span>
+0159 <span class="comment">%</span>
+0160 <span class="comment">%   Output:</span>
+0161 <span class="comment">%       h - Handle to the surface object representing the ellipsoid.</span>
+0162 <span class="comment">%</span>
+0163 <span class="comment">%   Notes:</span>
+0164 <span class="comment">%       - If the covariance matrix has negative eigenvalues, a warning is</span>
+0165 <span class="comment">%         displayed, and the negative eigenvalues are clamped to zero.</span>
+0166 <span class="comment">%       - The function uses the eigendecomposition of the covariance matrix</span>
+0167 <span class="comment">%         to determine the orientation and scaling of the ellipsoid.</span>
+0168 <a name="_sub2" href="#_subfunctions" class="code">function h = show3d(mean, cov, sd, npts, ax)</a>
+0169     <span class="keyword">if</span> isempty(npts), npts = 20; <span class="keyword">end</span>
+0170     [x,y,z] = sphere(npts);
+0171     ap = [x(:) y(:) z(:)]';
+0172     [v, d] = eig(cov); 
+0173     <span class="keyword">if</span> any(d(:) &lt; 0)
+0174         fprintf(<span class="string">'warning: negative eigenvalues\n'</span>);
+0175         d = max(d, 0);
+0176     <span class="keyword">end</span>
+0177     d = sd * sqrt(d); <span class="comment">% convert variance to sd*sd</span>
+0178     bp = (v * d * ap) + repmat(mean', 1, size(ap, 2)); 
+0179     xp = reshape(bp(1, :), size(x));
+0180     yp = reshape(bp(2, :), size(y));
+0181     zp = reshape(bp(3, :), size(z));
+0182     h = surf(ax, xp, yp, zp);    
+0183 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

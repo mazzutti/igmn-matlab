@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of validateOptimizationOptions</title>
+  <meta name="keywords" content="validateOptimizationOptions">
+  <meta name="description" content="{">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; validateOptimizationOptions.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>validateOptimizationOptions
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>{</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">{</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="validateOptimizationOptions.html" class="code" title="">validateOptimizationOptions</a>	{</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="imode.html" class="code" title="">imode</a>	{</li><li><a href="pso.html" class="code" title="function [x, fval, exitFlag] = pso(problem) %#codegen">pso</a>	PSO - Particle Swarm Optimization Algorithm</li><li><a href="psogsa.html" class="code" title="">psogsa</a>	{</li><li><a href="validateOptimizationOptions.html" class="code" title="">validateOptimizationOptions</a>	{</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function options = validateOptimizationOptions(options, nhps, varIndexes)</a></li><li><a href="#_sub2" class="code">function options = rangeCorrection(options, nhps, varIndexes)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%{</span>
+0002 <a href="validateOptimizationOptions.html" class="code" title="">validateOptimizationOptions</a> - Validates and adjusts optimization options <span class="keyword">for</span> a given problem.
+0003 
+0004 Syntax:
+0005     options = <a href="validateOptimizationOptions.html" class="code" title="">validateOptimizationOptions</a>(options, nhps, varIndexes)
+0006 
+0007 Description:
+0008     This <span class="keyword">function</span> ensures that the provided optimization options are consistent
+0009     with the number of hyperparameters (nhps) and performs necessary corrections
+0010     to the range of initial population spans. It validates the size and content
+0011     of the initial population and adjusts the range of the initial population
+0012     span to match the expected dimensions.
+0013 
+0014 Inputs:
+0015     options - A structure containing optimization options, including:
+0016               - InitialPopulation: Initial population matrix.
+0017               - InitialPopulationSpan: Range of initial population values.
+0018     nhps - Number of hyperparameters (scalar).
+0019     varIndexes - Indices of variables to consider <span class="keyword">for</span> range correction (vector).
+0020 
+0021 Outputs:
+0022     options - The validated and corrected options structure.
+0023 
+0024 Subfunctions:
+0025     <a href="#_sub2" class="code" title="subfunction options = rangeCorrection(options, nhps, varIndexes) ">rangeCorrection</a> - Adjusts and validates the range of the initial population span.
+0026 
+0027 Errors:
+0028     - Throws an error <span class="keyword">if</span> the size of the initial population is inconsistent with nhps.
+0029     - Throws an error <span class="keyword">if</span> the range of the initial population span is invalid, contains
+0030       non-finite values, or does not match the expected dimensions.
+0031 
+0032 Example:
+0033     <span class="comment">% Example usage of validateOptimizationOptions</span>
+0034     options.InitialPopulation = rand(10, 5);
+0035     options.InitialPopulationSpan = [0.1, 0.2, 0.3, 0.4, 0.5];
+0036     nhps = 5;
+0037     varIndexes = [1, 2, 3, 4, 5];
+0038     options = <a href="validateOptimizationOptions.html" class="code" title="">validateOptimizationOptions</a>(options, nhps, varIndexes);
+0039 
+0040 <span class="comment">%}</span>
+0041 <a name="_sub0" href="#_subfunctions" class="code">function options = validateOptimizationOptions(options, nhps, varIndexes) </a><span class="comment">%#codegen</span>
+0042     
+0043     <span class="comment">% Make sure that initial individuals are consistent with nhps</span>
+0044     <span class="keyword">if</span> ~isempty(options.InitialPopulation) &amp;&amp; size(options.InitialPopulation, 2) ~= nhps
+0045         error(<span class="string">'Wrong size initial population'</span>);
+0046     <span class="keyword">end</span>
+0047     
+0048     <span class="comment">% InitialPopulationSpan</span>
+0049     options = <a href="#_sub2" class="code" title="subfunction options = rangeCorrection(options, nhps, varIndexes) ">rangeCorrection</a>(options, nhps, varIndexes);
+0050    
+0051 <span class="keyword">end</span> <span class="comment">% validateOptimizationOptions</span>
+0052 
+0053 
+0054 <a name="_sub1" href="#_subfunctions" class="code">function options = rangeCorrection(options, nhps, varIndexes) </a><span class="comment">%#codegen</span>
+0055    
+0056     range = options.InitialPopulationSpan;
+0057     
+0058     <span class="keyword">if</span> ~isempty(varIndexes); range = range(varIndexes); <span class="keyword">end</span>
+0059 
+0060     <span class="comment">%rangeCorrection Check the size of a range variable</span>
+0061     range = reshape(range, 1, []); <span class="comment">% Want row vector</span>
+0062     
+0063     <span class="comment">% Perform scalar expansion, if required</span>
+0064     <span class="keyword">if</span> isscalar(range)
+0065         range = repmat(range, 1, nhps);
+0066     <span class="keyword">end</span>
+0067     
+0068     <span class="comment">% Check vector size</span>
+0069     <span class="keyword">if</span> ~isvector(range) || numel(range) ~= nhps
+0070         error(<span class="string">'Invalid initial swarm span'</span>);
+0071     <span class="keyword">end</span>
+0072     
+0073     <span class="comment">% Check for inf/nan range</span>
+0074     <span class="keyword">if</span> ~all(isfinite(range))
+0075         error(<span class="string">'Non finite initial swarm span'</span>);
+0076     <span class="keyword">end</span>
+0077 
+0078     options.InitialPopulationSpan = range;
+0079 <span class="keyword">end</span> <span class="comment">% range correction</span>
+0080</pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

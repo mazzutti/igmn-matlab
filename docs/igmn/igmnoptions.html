@@ -1,0 +1,290 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of igmnoptions</title>
+  <meta name="keywords" content="igmnoptions">
+  <meta name="description" content="IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; igmnoptions.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>igmnoptions
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.
+
+ This class defines the configuration options for the IGMN algorithm, which
+ is used for incremental learning and clustering. The options include various
+ thresholds, regularization parameters, and other settings that control the
+ behavior of the algorithm.
+
+ Properties:
+   range       - A two-row matrix representing the data range. Each column
+                 must be sorted in ascending order. This is a mandatory parameter.
+   Tau         - Threshold for creating new components. A component absorbs
+                 an input if its likelihood is greater than Tau. Must be in
+                 the range (0, 1).
+   Delta       - Fraction of the data range used to create initial covariance
+                 matrices. Must be in the range (0, 1).
+   Gamma       - Fractional part of the accumulators to maintain after a restart.
+                 Must be in the range (0, 1].
+   Phi         - Fractional parameter for controlling distribution updates.
+                 Must be in the range (0, 1].
+   SPMin       - Minimum activation threshold for removing noisy components.
+                 Must be greater than or equal to 2.
+   VMin        - Minimum age threshold for removing noisy components. Must be
+                 an integer greater than or equal to 2.
+   RegValue    - Regularization value for numerical stability. Must be greater
+                 than or equal to 0.
+   MaxNc       - Maximum number of Gaussian components allowed. Must be in the
+                 range [3, 10000].
+   UseRankOne  - Experimental flag to enable Rank-One updates in IGMN. Must be
+                 either 0 (disabled) or 1 (enabled).
+
+ Methods:
+   igmnoptions(range, options) - Constructor to initialize the IGMN options.
+                                 The `range` parameter is mandatory, while
+                                 other parameters are optional and have default
+                                 values.
+   from(options, names, values) - Static method to create a copy of an
+                                  igmnoptions object with updated properties
+                                  based on the provided names and values.
+
+ Static Private Methods:
+   extractValue(propName, options, names, values) - Helper method to extract
+                                                    property values from the
+                                                    provided names and values.
+
+ Validation Functions:
+   mustBeSortedInAscendingOrder(range) - Ensures that the `range` matrix is
+                                         sorted in ascending order for each
+                                         column.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="igmnoptions.html" class="code" title="">igmnoptions</a>	IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="Problem.html" class="code" title="">Problem</a>	Problem Class</li><li><a href="igmnBuilder.html" class="code" title="function self = igmnBuilder(options) %#codegen">igmnBuilder</a>	IGMNBUILDER Incremental Gaussian Mixture Network Builder.</li><li><a href="igmnoptions.html" class="code" title="">igmnoptions</a>	IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function value = extractValue(propName, options, names, values)</a></li><li><a href="#_sub2" class="code">function copy = from(options, names, values)</a></li><li><a href="#_sub3" class="code">function self = igmnoptions(range, options)</a></li><li><a href="#_sub4" class="code">function mustBeSortedInAscendingOrder(range)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% This class defines the configuration options for the IGMN algorithm, which</span>
+0004 <span class="comment">% is used for incremental learning and clustering. The options include various</span>
+0005 <span class="comment">% thresholds, regularization parameters, and other settings that control the</span>
+0006 <span class="comment">% behavior of the algorithm.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Properties:</span>
+0009 <span class="comment">%   range       - A two-row matrix representing the data range. Each column</span>
+0010 <span class="comment">%                 must be sorted in ascending order. This is a mandatory parameter.</span>
+0011 <span class="comment">%   Tau         - Threshold for creating new components. A component absorbs</span>
+0012 <span class="comment">%                 an input if its likelihood is greater than Tau. Must be in</span>
+0013 <span class="comment">%                 the range (0, 1).</span>
+0014 <span class="comment">%   Delta       - Fraction of the data range used to create initial covariance</span>
+0015 <span class="comment">%                 matrices. Must be in the range (0, 1).</span>
+0016 <span class="comment">%   Gamma       - Fractional part of the accumulators to maintain after a restart.</span>
+0017 <span class="comment">%                 Must be in the range (0, 1].</span>
+0018 <span class="comment">%   Phi         - Fractional parameter for controlling distribution updates.</span>
+0019 <span class="comment">%                 Must be in the range (0, 1].</span>
+0020 <span class="comment">%   SPMin       - Minimum activation threshold for removing noisy components.</span>
+0021 <span class="comment">%                 Must be greater than or equal to 2.</span>
+0022 <span class="comment">%   VMin        - Minimum age threshold for removing noisy components. Must be</span>
+0023 <span class="comment">%                 an integer greater than or equal to 2.</span>
+0024 <span class="comment">%   RegValue    - Regularization value for numerical stability. Must be greater</span>
+0025 <span class="comment">%                 than or equal to 0.</span>
+0026 <span class="comment">%   MaxNc       - Maximum number of Gaussian components allowed. Must be in the</span>
+0027 <span class="comment">%                 range [3, 10000].</span>
+0028 <span class="comment">%   UseRankOne  - Experimental flag to enable Rank-One updates in IGMN. Must be</span>
+0029 <span class="comment">%                 either 0 (disabled) or 1 (enabled).</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% Methods:</span>
+0032 <span class="comment">%   igmnoptions(range, options) - Constructor to initialize the IGMN options.</span>
+0033 <span class="comment">%                                 The `range` parameter is mandatory, while</span>
+0034 <span class="comment">%                                 other parameters are optional and have default</span>
+0035 <span class="comment">%                                 values.</span>
+0036 <span class="comment">%   from(options, names, values) - Static method to create a copy of an</span>
+0037 <span class="comment">%                                  igmnoptions object with updated properties</span>
+0038 <span class="comment">%                                  based on the provided names and values.</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">% Static Private Methods:</span>
+0041 <span class="comment">%   extractValue(propName, options, names, values) - Helper method to extract</span>
+0042 <span class="comment">%                                                    property values from the</span>
+0043 <span class="comment">%                                                    provided names and values.</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">% Validation Functions:</span>
+0046 <span class="comment">%   mustBeSortedInAscendingOrder(range) - Ensures that the `range` matrix is</span>
+0047 <span class="comment">%                                         sorted in ascending order for each</span>
+0048 <span class="comment">%                                         column.</span>
+0049 classdef <a href="igmnoptions.html" class="code" title="">igmnoptions</a>
+0050     
+0051     properties
+0052         range
+0053         Tau
+0054         Delta
+0055         Gamma
+0056         Phi
+0057         SPMin
+0058         VMin
+0059         RegValue
+0060         MaxNc
+0061         UseRankOne
+0062     <span class="keyword">end</span>
+0063 
+0064     methods(Static, Access=private)
+0065         <a name="_sub0" href="#_subfunctions" class="code">function value = extractValue(propName, options, names, values)</a>
+0066             indexes = strcmp(names, propName);
+0067             <span class="keyword">if</span> any(indexes)
+0068                 value = values{indexes};
+0069             <span class="keyword">else</span>
+0070                 value = options.(propName);
+0071             <span class="keyword">end</span>
+0072         <span class="keyword">end</span>
+0073     <span class="keyword">end</span>
+0074 
+0075     methods(Static)
+0076         <a name="_sub1" href="#_subfunctions" class="code">function copy = from(options, names, values)</a>
+0077             arguments
+0078                 options (1, 1) <a href="igmnoptions.html" class="code" title="">igmnoptions</a>,
+0079                 names (1, :) { mustBeACellArrayOf(names, <span class="string">'char'</span>) } = {},
+0080                 values (1, :) {  mustBeACellArrayOf(values, <span class="string">'double'</span>) } = {}
+0081             <span class="keyword">end</span>
+0082             assert(size(names, 2) == size(values, 2));
+0083             copy = <a href="igmnoptions.html" class="code" title="">igmnoptions</a>(options.range, <span class="keyword">...</span>
+0084                 <span class="string">'Tau'</span>, igmnoptions.extractValue(<span class="string">'Tau'</span>, options, names, values), <span class="keyword">...</span>
+0085                 <span class="string">'Delta'</span>, igmnoptions.extractValue(<span class="string">'Delta'</span>, options, names, values), <span class="keyword">...</span>
+0086                 <span class="string">'Gamma'</span>, igmnoptions.extractValue(<span class="string">'Gamma'</span>, options, names, values), <span class="keyword">...</span>
+0087                 <span class="string">'Phi'</span>, igmnoptions.extractValue(<span class="string">'Phi'</span>, options, names, values), <span class="keyword">...</span>
+0088                 <span class="string">'SPMin'</span>, igmnoptions.extractValue(<span class="string">'SPMin'</span>, options, names, values), <span class="keyword">...</span>
+0089                 <span class="string">'VMin'</span>, igmnoptions.extractValue(<span class="string">'VMin'</span>, options, names, values), <span class="keyword">...</span>
+0090                 <span class="string">'RegValue'</span>, igmnoptions.extractValue(<span class="string">'RegValue'</span>, options, names, values), <span class="keyword">...</span>
+0091                 <span class="string">'MaxNc'</span>, igmnoptions.extractValue(<span class="string">'MaxNc'</span>, options, names, values), <span class="keyword">...</span>
+0092                 <span class="string">'UseRankOne'</span>, igmnoptions.extractValue(<span class="string">'UseRankOne'</span>, options, names, values));
+0093         <span class="keyword">end</span>
+0094     <span class="keyword">end</span>
+0095     
+0096     methods
+0097         <a name="_sub2" href="#_subfunctions" class="code">function self = igmnoptions(range, options)</a>
+0098             <span class="comment">%   range:                       This is the only mandatory parameter in this</span>
+0099             <span class="comment">%                                method.This parameter represents the data</span>
+0100             <span class="comment">%   options.Tau:                 The tau is a are threshold which inform</span>
+0101             <span class="comment">%                                IGMN when to create new components. When a</span>
+0102             <span class="comment">%                                new input pattern is presented to this model,</span>
+0103             <span class="comment">%                                the likelihood  relative to the input and all</span>
+0104             <span class="comment">%                                components is computed. A given component can</span>
+0105             <span class="comment">%                                &quot;absorbs&quot; the input if it represents well</span>
+0106             <span class="comment">%                                enough the pattern,  i.e., if its likelihood</span>
+0107             <span class="comment">%                                is greater than tau.</span>
+0108             <span class="comment">%   options.Delta:               The delta parameter is a fraction of the data</span>
+0109             <span class="comment">%                                range which will be used to create the initial</span>
+0110             <span class="comment">%                                covariance matrices. In a practical view, this</span>
+0111             <span class="comment">%   options.Gamma                a fractional part of the accumulators that should</span>
+0112             <span class="comment">%                                be maintained after a restart.</span>
+0113             <span class="comment">%                                parameter defines the size of the distributions.</span>
+0114             <span class="comment">%   options.SPMin|options.VMin:  The SPMin and VMin parameters are used to</span>
+0115             <span class="comment">%                                remove noisy components. When a new input</span>
+0116             <span class="comment">%                                pattern is presented to the model, it verifies</span>
+0117             <span class="comment">%                                if some component is older than vMin and have</span>
+0118             <span class="comment">%                                less activation than spMin, if it is the case,</span>
+0119             <span class="comment">%                                the component is removed.</span>
+0120             <span class="comment">%   options.RegValue             The regularization value.</span>
+0121             <span class="comment">%   options.MaxNc                The maximum number of gaussian components to be accepted.</span>
+0122             <span class="comment">%                                The default value is inf.</span>
+0123             <span class="comment">%   options.UseRankOne           Exeperimental flag to enable Rank one updates in IGMN.</span>
+0124             arguments
+0125                 range (2,:) double { <span class="keyword">...</span>
+0126                     mustBeNumeric, <span class="keyword">...</span>
+0127                     mustBeNonempty, <span class="keyword">...</span>
+0128                     mustBeNonNan, <span class="keyword">...</span>
+0129                     mustBeFinite, <span class="keyword">...</span>
+0130                     mustBeReal, <span class="keyword">...</span>
+0131                     <a href="#_sub4" class="code" title="subfunction mustBeSortedInAscendingOrder(range)">mustBeSortedInAscendingOrder</a>(range) <span class="keyword">...</span>
+0132                 },
+0133                 options.Tau (1,1) double { <span class="keyword">...</span>
+0134                     mustBeReal, <span class="keyword">...</span>
+0135                     mustBeGreaterThan(options.Tau, 0), <span class="keyword">...</span>
+0136                     mustBeLessThan(options.Tau, 1) <span class="keyword">...</span>
+0137                 } = igmn.defaultTau,
+0138                 options.Delta (1,1) double { <span class="keyword">...</span>
+0139                     mustBeReal, <span class="keyword">...</span>
+0140                     mustBeGreaterThan(options.Delta, 0), <span class="keyword">...</span>
+0141                     mustBeLessThan(options.Delta, 1) <span class="keyword">...</span>
+0142                 } = igmn.defaultDelta,
+0143                 options.Gamma (1,1) double { <span class="keyword">...</span>
+0144                     mustBeReal, <span class="keyword">...</span>
+0145                     mustBeGreaterThan(options.Gamma, 0), <span class="keyword">...</span>
+0146                     mustBeLessThanOrEqual(options.Gamma, 1) <span class="keyword">...</span>
+0147                 } = igmn.defaultGamma,
+0148                 options.Phi (1,1) double { <span class="keyword">...</span>
+0149                     mustBeReal, <span class="keyword">...</span>
+0150                     mustBeGreaterThan(options.Phi, 0), <span class="keyword">...</span>
+0151                     mustBeLessThanOrEqual(options.Phi, 1) <span class="keyword">...</span>
+0152                 } = igmn.defaultPhi,
+0153                 options.SPMin (1,1) double { <span class="keyword">...</span>
+0154                     mustBeGreaterThanOrEqual(options.SPMin, 2) <span class="keyword">...</span>
+0155                 } = igmn.defaultSPMin,
+0156                 options.VMin (1,1) double { <span class="keyword">...</span>
+0157                     mustBeInteger, <span class="keyword">...</span>
+0158                     mustBeGreaterThanOrEqual(options.VMin, 2) <span class="keyword">...</span>
+0159                 } = min(igmn.defaultVMin, 2 * size(range, 2)),
+0160                 options.RegValue (1,1) double { <span class="keyword">...</span>
+0161                     mustBeReal, <span class="keyword">...</span>
+0162                     mustBeGreaterThanOrEqual(options.RegValue, 0) <span class="keyword">...</span>
+0163                 } = igmn.defaultRegValue,
+0164                 options.MaxNc (1,1) double { <span class="keyword">...</span>
+0165                     mustBeGreaterThanOrEqual(options.MaxNc, 3), <span class="keyword">...</span>
+0166                     mustBeLessThanOrEqual(options.MaxNc, 10000) <span class="keyword">...</span>
+0167                 } = igmn.defaultMaxNc,
+0168                 options.UseRankOne (1, 1) double { <span class="keyword">...</span>
+0169                     mustBeMember(options.UseRankOne, [0, 1]) <span class="keyword">...</span>
+0170                 } = igmn.defaultUseRankOne;
+0171             <span class="keyword">end</span>
+0172             self.range = range;
+0173             self.Tau = options.Tau;
+0174             self.Delta = options.Delta;
+0175             self.Gamma = options.Gamma;
+0176             self.Phi = options.Phi;
+0177             self.SPMin = options.SPMin; 
+0178             self.VMin = options.VMin;
+0179             self.RegValue = options.RegValue;
+0180             self.MaxNc = options.MaxNc;
+0181             self.UseRankOne = options.UseRankOne;
+0182         <span class="keyword">end</span>
+0183     <span class="keyword">end</span>
+0184 <span class="keyword">end</span>
+0185 
+0186 <a name="_sub3" href="#_subfunctions" class="code">function mustBeSortedInAscendingOrder(range)</a>
+0187     <span class="keyword">if</span> ~all(range(1, :) &lt; range(2, :))
+0188         eidType = <span class="string">'mustBeSortedInAscendingOrder:notSortedInAscendingOrder'</span>;
+0189         msgType = [<span class="string">'range must be a two row real-valued matrix, '</span> <span class="keyword">...</span>
+0190             <span class="string">'where each column must be sorted in ascending order.'</span>];
+0191         error(eidType,msgType);
+0192     <span class="keyword">end</span>
+0193 <span class="keyword">end</span>
+0194</pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

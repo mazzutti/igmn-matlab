@@ -1,0 +1,445 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of psogsa</title>
+  <meta name="keywords" content="psogsa">
+  <meta name="description" content="{">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; psogsa.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>psogsa
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>{</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">{</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="extractBounds.html" class="code" title="function [lbRow, ubRow, nhps] = extractBounds(hyperparameters, hpIndexes) %#codegen">extractBounds</a>	extractBounds - Extracts the lower and upper bounds of hyperparameters.</li><li><a href="extractHyperarameterNames.html" class="code" title="function [hpNames, hpIndexes] = extractHyperarameterNames(optOptions)">extractHyperarameterNames</a>	extractHyperarameterNames - Extracts the names and indexes of hyperparameters</li><li><a href="initialPopulationCheck.html" class="code" title="function options = initialPopulationCheck(options) %#codegen">initialPopulationCheck</a>	initialPopulationCheck - Validates and adjusts the initial population for optimization.</li><li><a href="meanf.html" class="code" title="function m = meanf(x)">meanf</a>	MEANF Compute the mean of an array, ignoring NaN values.</li><li><a href="psogsa.html" class="code" title="">psogsa</a>	{</li><li><a href="roundDiscreteHyperparameters.html" class="code" title="function population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes) %#codegen">roundDiscreteHyperparameters</a>	roundDiscreteHyperparameters - Rounds discrete hyperparameters in a population matrix.</li><li><a href="validateOptimizationOptions.html" class="code" title="">validateOptimizationOptions</a>	{</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="psogsa.html" class="code" title="">psogsa</a>	{</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [x, fval, exitFlag] = psogsa(problem)</a></li><li><a href="#_sub2" class="code">function [x,fval,exitFlag] = psogsacore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes)</a></li><li><a href="#_sub3" class="code">function optimValues = i_updateOptimValues</a></li><li><a href="#_sub4" class="code">function bestNeighborIndex = generateBestNeighborIndex(state ,adaptiveNeighborhoodSize, numParticles)</a></li><li><a href="#_sub5" class="code">function newVelocities = updateVelocities(state, adaptiveInertia, bestNeighborIndex, cSelf, cSocial, pIdx, nhps)</a></li><li><a href="#_sub6" class="code">function [newPositions, tfInvalid] = updatePositions(</a></li><li><a href="#_sub7" class="code">function [state,adaptiveInertiaCounter,bestFvals,adaptiveNeighborhoodSize,adaptiveInertia] =</a></li><li><a href="#_sub8" class="code">function mass = calculateMass(state, numParticles)</a></li><li><a href="#_sub9" class="code">function newForces = updateForces(state, nhps, G, pIdx)</a></li><li><a href="#_sub10" class="code">function newAccelerations = updateAccelerations(state, pIdx)</a></li><li><a href="#_sub11" class="code">function state = update(state, adaptiveInertia, bestNeighborIndex, cSelf,</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%{</span>
+0002 <a href="psogsa.html" class="code" title="">psogsa</a> - Particle Swarm Optimization with Gravitational Search Algorithm (PSOGSA)
+0003 
+0004 This <span class="keyword">function</span> implements a hybrid optimization algorithm combining Particle 
+0005 Swarm Optimization (PSO) and Gravitational Search Algorithm (GSA) to solve 
+0006 optimization problems. The algorithm is designed to optimize hyperparameters 
+0007 <span class="keyword">for</span> a given problem.
+0008 
+0009 Inputs:
+0010     problem - A structure containing the following fields:
+0011         OptimizeOptions - A structure with optimization options, including:
+0012             PopulationSize - Number of particles in the swarm.
+0013             SelfAdjustment - Coefficient <span class="keyword">for</span> self-adjustment in velocity update.
+0014             SocialAdjustment - Coefficient <span class="keyword">for</span> social adjustment in velocity update.
+0015             MinFractionNeighbors - Minimum fraction of neighbors <span class="keyword">for</span> adaptive neighborhood size.
+0016             InertiaRange - Range <span class="keyword">for</span> inertia coefficient [min, max].
+0017             hyperparameters - Hyperparameter bounds and types.
+0018             StallIterLimit - Maximum number of iterations without improvement before stopping.
+0019             PlotFcns - Plot functions <span class="keyword">for</span> visualization during optimization.
+0020             Verbosity - Level of verbosity <span class="keyword">for</span> displaying progress.
+0021             UseParallel - Boolean indicating whether to use parallel computation.
+0022         DefaultIgmnOptions - Default options <span class="keyword">for</span> the IGMN algorithm, including:
+0023             range - Range of output variables.
+0024         OutputVarIndexes - Indexes of output variables.
+0025 
+0026 Outputs:
+0027     x - The best solution found by the algorithm.
+0028     fval - The objective <span class="keyword">function</span> value of the best solution.
+0029     exitFlag - A flag indicating the reason <span class="keyword">for</span> termination.
+0030 
+0031 Subfunctions:
+0032     <a href="#_sub2" class="code" title="subfunction [x,fval,exitFlag] = psogsacore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes) ">psogsacore</a> - Core implementation of the PSOGSA algorithm.
+0033     <a href="#_sub4" class="code" title="subfunction bestNeighborIndex = generateBestNeighborIndex(state ,adaptiveNeighborhoodSize, numParticles) ">generateBestNeighborIndex</a> - Generates the index of the best neighbor <span class="keyword">for</span> each particle.
+0034     <a href="#_sub5" class="code" title="subfunction newVelocities = updateVelocities(state, adaptiveInertia, bestNeighborIndex, cSelf, cSocial, pIdx, nhps) ">updateVelocities</a> - Updates the velocities of particles based on PSO and GSA rules.
+0035     <a href="#_sub6" class="code" title="subfunction [newPositions, tfInvalid] = updatePositions( ">updatePositions</a> - Updates the positions of particles and enforces bounds.
+0036     updateInertia - Updates the adaptive inertia and neighborhood size.
+0037     <a href="#_sub8" class="code" title="subfunction mass = calculateMass(state, numParticles) ">calculateMass</a> - Calculates the mass of particles based on their fitness values.
+0038     <a href="#_sub9" class="code" title="subfunction newForces = updateForces(state, nhps, G, pIdx) ">updateForces</a> - Updates the gravitational forces acting on particles.
+0039     <a href="#_sub10" class="code" title="subfunction newAccelerations = updateAccelerations(state, pIdx) ">updateAccelerations</a> - Updates the accelerations of particles based on forces and mass.
+0040     <a href="#_sub11" class="code" title="subfunction state = update(state, adaptiveInertia, bestNeighborIndex, cSelf, ">update</a> - Updates the state of the swarm, including positions, velocities, forces, and accelerations.
+0041 
+0042 Notes:
+0043 - The algorithm uses adaptive parameters <span class="keyword">for</span> inertia and neighborhood size to balance exploration and exploitation.
+0044 - Parallel computation can be enabled <span class="keyword">for</span> faster evaluation of the objective function.
+0045 - Plot functions can be used to visualize the optimization process.
+0046 
+0047 Example Usage:
+0048     problem.OptimizeOptions = struct(<span class="keyword">...</span><span class="comment">);</span>
+0049     [x, fval, exitFlag] = <a href="psogsa.html" class="code" title="">psogsa</a>(problem);
+0050 
+0051 <span class="comment">%}</span>
+0052 <a name="_sub0" href="#_subfunctions" class="code">function [x, fval, exitFlag] = psogsa(problem) </a><span class="comment">%#codegen</span>
+0053     
+0054     optOptions = problem.OptimizeOptions;
+0055     [hpNames, hpIndexes] = <a href="extractHyperarameterNames.html" class="code" title="function [hpNames, hpIndexes] = extractHyperarameterNames(optOptions)">extractHyperarameterNames</a>(optOptions);
+0056 
+0057     [lbRow , ubRow, nhps] =  <a href="extractBounds.html" class="code" title="function [lbRow, ubRow, nhps] = extractBounds(hyperparameters, hpIndexes) %#codegen">extractBounds</a>(optOptions.hyperparameters, hpIndexes); 
+0058 
+0059     optOptions = <a href="validateOptimizationOptions.html" class="code" title="">validateOptimizationOptions</a>(optOptions, nhps, hpIndexes);
+0060 
+0061     <span class="comment">% Perform check on initial population, fvals, and range</span>
+0062     problem.OptimizeOptions = <a href="initialPopulationCheck.html" class="code" title="function options = initialPopulationCheck(options) %#codegen">initialPopulationCheck</a>(optOptions);
+0063 
+0064     <span class="comment">% Start the core algorithm</span>
+0065     [x, fval, exitFlag] = <a href="#_sub2" class="code" title="subfunction [x,fval,exitFlag] = psogsacore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes) ">psogsacore</a>(nhps, lbRow, ubRow, problem, hpNames, hpIndexes);
+0066 <span class="keyword">end</span>
+0067 
+0068 <a name="_sub1" href="#_subfunctions" class="code">function [x,fval,exitFlag] = psogsacore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes) </a><span class="comment">%#codegen</span>
+0069 
+0070     coder.extrinsic(<span class="string">'callPlotFcns'</span>);
+0071 
+0072     optOptions = problem.OptimizeOptions;
+0073     
+0074     exitFlag = [];
+0075     coder.varsize(<span class="string">'exitFlag'</span>);
+0076 
+0077     <span class="comment">% Get algorithmic options</span>
+0078     numParticles = optOptions.PopulationSize;
+0079     cSelf = optOptions.SelfAdjustment;
+0080     cSocial = optOptions.SocialAdjustment;
+0081 
+0082     minNeighborhoodSize = max(2, floor(numParticles * optOptions.MinFractionNeighbors));
+0083     minInertia = optOptions.InertiaRange(1);
+0084     maxInertia = optOptions.InertiaRange(2);
+0085     hyperparameters = optOptions.hyperparameters;
+0086 
+0087     lbMatrix = repmat(lbRow, numParticles, 1);
+0088     ubMatrix = repmat(ubRow, numParticles, 1);
+0089 
+0090     range = problem.DefaultIgmnOptions.range;
+0091     outVarIndexes = problem.OutputVarIndexes;
+0092     maxPenalty = 0.1 * mean( <span class="keyword">...</span>
+0093         range(2, outVarIndexes) - range(1, outVarIndexes), <span class="string">'all'</span>);
+0094 
+0095     objFun = @(params) evaluate(params, problem, hpNames, maxPenalty);
+0096       
+0097     <span class="comment">% Create initial state: particle positions &amp; velocities, fvals, status data</span>
+0098     state = makeOptimizationState(nhps, lbMatrix, ubMatrix, optOptions, objFun, hpIndexes);
+0099 
+0100     bestFvals = min(state.Fvals, [], &quot;all&quot;);
+0101     <span class="comment">% Create a vector to store the last StallIterLimit bestFvals.</span>
+0102     <span class="comment">% bestFvalsWindow is a circular buffer, so that the value from the i'th</span>
+0103     <span class="comment">% iteration is stored in element with index mod(i-1,StallIterLimit)+1.</span>
+0104     bestFvalsWindow = nan(optOptions.StallIterLimit, 1);
+0105 
+0106     <span class="comment">% Initialize adaptive parameters:</span>
+0107     <span class="comment">%   initial inertia = maximum *magnitude* inertia</span>
+0108     <span class="comment">%   initial neighborhood size = minimum neighborhood size</span>
+0109     adaptiveInertiaCounter = 0;
+0110     <span class="keyword">if</span> all(optOptions.InertiaRange &gt;= 0)
+0111         adaptiveInertia = maxInertia;
+0112     <span class="keyword">elseif</span> all(optOptions.InertiaRange &lt;= 0)
+0113         adaptiveInertia = minInertia;
+0114     <span class="keyword">else</span>
+0115         <span class="comment">% checkfield should prevent InertiaRange from having positive and</span>
+0116         <span class="comment">% negative vlaues.</span>
+0117         error(<span class="string">'The InertiaRange option should not contain both positive and negative numbers.'</span>);
+0118     <span class="keyword">end</span>
+0119     adaptiveNeighborhoodSize = minNeighborhoodSize;
+0120 
+0121   
+0122     <span class="comment">% Allow plot functions to perform any initialization tasks</span>
+0123     <span class="keyword">if</span> isempty(optOptions.PlotFcns)
+0124         haveplotfcn = false;
+0125     <span class="keyword">else</span>
+0126         <span class="keyword">if</span> coder.target(<span class="string">'MATLAB'</span>) || coder.target(<span class="string">'MEX'</span>)
+0127             haveplotfcn = true;
+0128             state.StopFlag = false;
+0129             state.StopFlag = callPlotFcns(<a href="#_sub3" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'init'</span>);
+0130             <span class="comment">% check to see if any stopping criteria have been met</span>
+0131             exitFlag = stopOptimization(optOptions, state, bestFvalsWindow);
+0132         <span class="keyword">else</span>
+0133             haveplotfcn = false;
+0134         <span class="keyword">end</span>
+0135     <span class="keyword">end</span>
+0136 
+0137     <span class="comment">% Setup display header</span>
+0138     <span class="keyword">if</span>  optOptions.Verbosity &gt; 1
+0139         bestFvalDisplay = bestFvals;
+0140         meanFvalDisplay = mean(state.Fvals, <span class="string">'all'</span>);
+0141         fprintf(<span class="string">'\n                                 Best            Mean    Stall\n'</span>);
+0142         fprintf(  <span class="string">'Iteration     f-count            f(x)            f(x)    Iterations\n'</span>);
+0143         fprintf(<span class="string">'%5.0f         %7.0f    %12.4g    %12.4g    %5.0f\n'</span>, <span class="keyword">...</span>
+0144             0, state.FunEval, bestFvalDisplay, meanFvalDisplay, 0);
+0145         pause(0.000001);
+0146     <span class="keyword">end</span>
+0147 
+0148     pIdx = (1:numParticles)';
+0149 
+0150     <span class="comment">% Run the main loop until some exit condition becomes true</span>
+0151     <span class="keyword">while</span> isempty(exitFlag)
+0152         state.Iteration = state.Iteration + 1;
+0153 
+0154         bestNeighborIndex = <a href="#_sub4" class="code" title="subfunction bestNeighborIndex = generateBestNeighborIndex(state ,adaptiveNeighborhoodSize, numParticles) ">generateBestNeighborIndex</a>(state, adaptiveNeighborhoodSize, numParticles);
+0155         G = optOptions.GravitationalConstant * exp(-23 * state.Iteration / optOptions.MaxIter);
+0156 
+0157         <span class="comment">% Update velocities, positions, forces, accelarations and mass.</span>
+0158         state = <a href="#_sub11" class="code" title="subfunction state = update(state, adaptiveInertia, bestNeighborIndex, cSelf, ">update</a>(state, adaptiveInertia, bestNeighborIndex, <span class="keyword">...</span>
+0159             cSelf, cSocial, pIdx, numParticles, nhps, lbMatrix, ubMatrix, hyperparameters, hpIndexes, G);
+0160 
+0161         pos = state.Positions;
+0162         popSize = size(pos, 1);
+0163         fvals = zeros(popSize, 1);
+0164         <span class="keyword">if</span> optOptions.UseParallel
+0165             parfor (i = 1:popSize)
+0166                 fvals(i) = objFun(pos(i, :));
+0167             <span class="keyword">end</span>
+0168         <span class="keyword">else</span>
+0169             <span class="keyword">for</span> i = 1:popSize
+0170                 fvals(i) = objFun(pos(i, :));
+0171             <span class="keyword">end</span>
+0172         <span class="keyword">end</span>
+0173 
+0174         state.Fvals = fvals(:);
+0175 
+0176         <span class="comment">% Update state with best fvals and best individual positions.</span>
+0177         state = updateState(state, numParticles, pIdx);
+0178 
+0179         bestFvalsWindow(1 + mod(state.Iteration - 1, optOptions.StallIterLimit)) = min(state.IndividualBestFvals);
+0180 
+0181         [state, adaptiveInertiaCounter, bestFvals, adaptiveNeighborhoodSize, adaptiveInertia] = <span class="keyword">...</span>
+0182               updateInertia(state, minInertia, maxInertia, bestFvals, <span class="keyword">...</span>
+0183               adaptiveInertiaCounter, adaptiveNeighborhoodSize, adaptiveInertia, numParticles, minNeighborhoodSize);
+0184 
+0185         <span class="comment">% Call plot functions</span>
+0186         <span class="keyword">if</span> haveplotfcn
+0187             <span class="keyword">if</span> coder.target(<span class="string">'MATLAB'</span>) || coder.target(<span class="string">'MEX'</span>)
+0188                 state.StopFlag = callPlotFcns(<a href="#_sub3" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'iter'</span>);
+0189             <span class="keyword">end</span>
+0190         <span class="keyword">else</span>
+0191             state.StopFlag = false;
+0192         <span class="keyword">end</span>
+0193 
+0194         <span class="comment">% check to see if any stopping criteria have been met</span>
+0195         exitFlag = stopOptimization(optOptions, state, bestFvalsWindow);
+0196     <span class="keyword">end</span> <span class="comment">% End while loop</span>
+0197 
+0198 
+0199     <span class="comment">% Find and return the best solution</span>
+0200     [fval, indexBestFval] = min(state.IndividualBestFvals);
+0201     x = state.IndividualBestPositions(indexBestFval, :);
+0202 
+0203     <span class="comment">% Allow output and plot functions to perform any clean up tasks.</span>
+0204     <span class="keyword">if</span> haveplotfcn
+0205         <span class="keyword">if</span> coder.target(<span class="string">'MATLAB'</span>) || coder.target(<span class="string">'MEX'</span>)
+0206             callPlotFcns(<a href="#_sub3" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'done'</span>);
+0207         <span class="keyword">end</span>
+0208     <span class="keyword">end</span>
+0209 
+0210     <span class="comment">% Nested function</span>
+0211     <a name="_sub2" href="#_subfunctions" class="code">function optimValues = i_updateOptimValues</a>
+0212         optimValues.bestfval = min(state.IndividualBestFvals);
+0213         optimValues.iteration = state.Iteration;
+0214         optimValues.meanfval = <a href="meanf.html" class="code" title="function m = meanf(x)">meanf</a>(state.Fvals);
+0215         optimValues.population = state.Positions;
+0216         optimValues.populationRange = state.PopulationRange;
+0217         optimValues.populationfvals = state.Fvals;
+0218         optimValues.plotFcns = state.PlotFcns;
+0219         optimValues.hpNames = hpNames;
+0220         optimValues.algorithm = <span class="string">'PSOGSA'</span>;
+0221     <span class="keyword">end</span>
+0222 
+0223 <span class="keyword">end</span> <span class="comment">% End function pswcore</span>
+0224 
+0225 <a name="_sub3" href="#_subfunctions" class="code">function bestNeighborIndex = generateBestNeighborIndex(state ,adaptiveNeighborhoodSize, numParticles) </a><span class="comment">%#codegen</span>
+0226     <span class="comment">% Generate the particle index corresponding to the best particle in random</span>
+0227     <span class="comment">% neighborhood. The size of the random neighborhood is controlled by the</span>
+0228     <span class="comment">% adaptiveNeighborhoodSize parameter.</span>
+0229 
+0230     neighborIndex = zeros(numParticles, adaptiveNeighborhoodSize);
+0231     neighborIndex(:, 1) = 1:numParticles; <span class="comment">% First neighbor is self</span>
+0232     <span class="keyword">for</span> i = 1:numParticles
+0233         <span class="comment">% Determine random neighbors that exclude the particle itself,</span>
+0234         <span class="comment">% which is (numParticles-1) particles</span>
+0235         neighbors = randperm(numParticles - 1, adaptiveNeighborhoodSize - 1);
+0236         <span class="comment">% Add 1 to indicies that are &gt;= current particle index</span>
+0237         iShift = neighbors &gt;= i;
+0238         neighbors(iShift) = neighbors(iShift) + 1;
+0239         neighborIndex(i, 2:end) = neighbors;
+0240     <span class="keyword">end</span>
+0241     <span class="comment">% Identify the best neighbor</span>
+0242     [~, bestRowIndex] = min(state.IndividualBestFvals(neighborIndex), [], 2);
+0243     <span class="comment">% Create the linear index into neighborIndex</span>
+0244     bestLinearIndex = (bestRowIndex.' - 1) .* numParticles + (1:numParticles);
+0245     bestNeighborIndex = neighborIndex(bestLinearIndex);
+0246 <span class="keyword">end</span>
+0247 
+0248 <a name="_sub4" href="#_subfunctions" class="code">function newVelocities = updateVelocities(state, adaptiveInertia, bestNeighborIndex, cSelf, cSocial, pIdx, nhps) </a><span class="comment">%#codegen</span>
+0249     <span class="comment">% Update the velocities of particles with indices pIdx, according to an</span>
+0250     <span class="comment">% update rule.</span>
+0251 
+0252     <span class="comment">% Generate random number distributions for Self and Social components</span>
+0253     randSelf = rand(numel(pIdx), nhps);
+0254     randSocial = rand(numel(pIdx), nhps);
+0255 
+0256     oldVelocities = state.Velocities(pIdx,:);
+0257     accelerations = state.Accelerations(pIdx,:);
+0258 
+0259     <span class="comment">% Update rule</span>
+0260     newVelocities = adaptiveInertia * oldVelocities + <span class="keyword">...</span>
+0261         cSelf * randSelf .* accelerations .* (state.IndividualBestPositions(pIdx,:) - state.Positions(pIdx,:)) + <span class="keyword">...</span>
+0262         cSocial * randSocial .* (state.IndividualBestPositions(bestNeighborIndex(pIdx), :) - state.Positions(pIdx,:));
+0263 
+0264     <span class="comment">% Ignore infinite velocities</span>
+0265     tfInvalid = ~all(isfinite(newVelocities), 2);
+0266     newVelocities(tfInvalid) = oldVelocities(tfInvalid);
+0267 <span class="keyword">end</span>
+0268 
+0269 <a name="_sub5" href="#_subfunctions" class="code">function [newPositions, tfInvalid] = updatePositions( </a><span class="keyword">...</span>
+0270     state, lbMatrix, ubMatrix, pIdx, numParticles, nhps, hyperparameters, hpIndexes) <span class="comment">%#codegen</span>
+0271     <span class="comment">% Update positions of particles with indices pIdx.</span>
+0272 
+0273     newPositions = state.Positions(pIdx, :) + state.Velocities(pIdx, :);
+0274 
+0275     <span class="comment">% Remove positions if infinite.</span>
+0276     tfInvalid = any(~isfinite(newPositions), 2);
+0277     tfInvalidFull = false(numParticles, 1);
+0278     tfInvalidFull(pIdx) = tfInvalid;
+0279     newPositions(tfInvalid, :) = state.Positions(tfInvalidFull, :);
+0280 
+0281     <span class="comment">% Enforce bounds on positions and return logical array to update velocities where position exceeds bounds.</span>
+0282     tfInvalidLB = newPositions &lt; lbMatrix(pIdx, :);
+0283     <span class="keyword">if</span> any(tfInvalidLB(:))
+0284         tfInvalidLBFull = false(numParticles, nhps);
+0285         tfInvalidLBFull(pIdx, :) = tfInvalidLB;
+0286         newPositions(tfInvalidLB) = lbMatrix(tfInvalidLBFull);
+0287         tfInvalid = tfInvalidLBFull;
+0288     <span class="keyword">else</span>
+0289         tfInvalid = false(numParticles,nhps);
+0290     <span class="keyword">end</span>
+0291 
+0292     tfInvalidUB = newPositions &gt; ubMatrix(pIdx,:);
+0293     <span class="keyword">if</span> any(tfInvalidUB(:))
+0294         tfInvalidUBFull = false(numParticles,nhps);
+0295         tfInvalidUBFull(pIdx,:) = tfInvalidUB;
+0296         newPositions(tfInvalidUB) = ubMatrix(tfInvalidUBFull);
+0297         tfInvalid = tfInvalid | tfInvalidUBFull;
+0298     <span class="keyword">end</span>
+0299 
+0300     newPositions = <a href="roundDiscreteHyperparameters.html" class="code" title="function population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes) %#codegen">roundDiscreteHyperparameters</a>(newPositions, hyperparameters, hpIndexes);
+0301 <span class="keyword">end</span>
+0302 
+0303 <a name="_sub6" href="#_subfunctions" class="code">function [state,adaptiveInertiaCounter,bestFvals,adaptiveNeighborhoodSize,adaptiveInertia] = </a><span class="keyword">...</span>
+0304     updateInertia(state,minInertia,maxInertia,bestFvals, <span class="keyword">...</span>
+0305         adaptiveInertiaCounter, adaptiveNeighborhoodSize,adaptiveInertia,numParticles,minNeighborhoodSize) <span class="comment">%#codegen</span>
+0306     <span class="comment">% Keep track of improvement in bestFvals and update the adaptive</span>
+0307     <span class="comment">% parameters according to the approach described in S. Iadevaia et</span>
+0308     <span class="comment">% al. Cancer Res 2010;70:6704-6714 and M. Liu, D. Shin, and H. I.</span>
+0309     <span class="comment">% Kang. International Conference on Information, Communications and</span>
+0310     <span class="comment">% Signal Processing 2009:1-5.</span>
+0311     newBest = min(state.IndividualBestFvals, [], &quot;all&quot;);
+0312     <span class="keyword">if</span> isfinite(newBest) &amp;&amp; newBest &lt; bestFvals 
+0313         bestFvals = newBest;
+0314         state.LastImprovement = state.Iteration;
+0315         state.LastImprovementTime = toc(state.StartTime);
+0316         adaptiveInertiaCounter = max(0, adaptiveInertiaCounter - 1);
+0317         adaptiveNeighborhoodSize = minNeighborhoodSize;
+0318     <span class="keyword">else</span>
+0319         adaptiveInertiaCounter = adaptiveInertiaCounter + 1;
+0320         adaptiveNeighborhoodSize = min(numParticles, adaptiveNeighborhoodSize + minNeighborhoodSize);
+0321     <span class="keyword">end</span>
+0322 
+0323     <span class="comment">% Update the inertia coefficient, enforcing limits (Since inertia</span>
+0324     <span class="comment">% can be negative, enforcing both upper *and* lower bounds after</span>
+0325     <span class="comment">% multiplying.)</span>
+0326     <span class="keyword">if</span> adaptiveInertiaCounter &lt; 2
+0327         adaptiveInertia = max(minInertia, min(maxInertia, 2 * adaptiveInertia));
+0328     <span class="keyword">elseif</span> adaptiveInertiaCounter &gt; 5
+0329         adaptiveInertia = max(minInertia, min(maxInertia, 0.5 * adaptiveInertia));
+0330     <span class="keyword">end</span>
+0331 <span class="keyword">end</span>
+0332 
+0333 <a name="_sub7" href="#_subfunctions" class="code">function mass = calculateMass(state, numParticles) </a><span class="comment">%#codegen</span>
+0334     fvals = state.Fvals;
+0335     best = min(fvals, [], <span class="string">'all'</span>);
+0336     worst = max(fvals, [], <span class="string">'all'</span>);
+0337     mass = (fvals - 0.99 .* worst) ./ (best - worst);
+0338     <span class="keyword">for</span> i = 1:numParticles
+0339         mass(i) = mass(i) * 5 / sum(mass);    
+0340     <span class="keyword">end</span>
+0341 <span class="keyword">end</span>
+0342 
+0343 <a name="_sub8" href="#_subfunctions" class="code">function newForces = updateForces(state, nhps, G, pIdx) </a><span class="comment">%#codegen</span>
+0344     np = numel(pIdx);
+0345     pos = state.Positions(pIdx, :);
+0346     newForces = state.Forces(pIdx, :);
+0347     repMass = repmat(state.Mass(pIdx), 1, nhps);
+0348     diffs = cell(1, np);
+0349     <span class="keyword">for</span> i = 1:np; diffs{i} = pos - pos(i, :); <span class="keyword">end</span>
+0350 
+0351     <span class="keyword">for</span> i = 1:np
+0352         diffMatrix = diffs{i};
+0353         diffIndexes = diffMatrix ~= 0;
+0354         <span class="keyword">for</span> j = 1:nhps
+0355             indexes = diffIndexes(:, j);
+0356             diff = diffMatrix(indexes, j);
+0357             diff = diff ./ abs(diff);
+0358             r = randn(sum(indexes, <span class="string">'all'</span>), 1);
+0359             newForces(pIdx(i), j) = newForces(pIdx(i), j) + sum(r .* G .* repMass(indexes) .* repMass(i, 1) .* diff);
+0360         <span class="keyword">end</span>
+0361     <span class="keyword">end</span>
+0362 <span class="keyword">end</span>
+0363 
+0364 <a name="_sub9" href="#_subfunctions" class="code">function newAccelerations = updateAccelerations(state, pIdx) </a><span class="comment">%#codegen</span>
+0365     newAccelerations = state.Accelerations(pIdx, :);
+0366     mass = state.Mass(pIdx);
+0367     forces = state.Forces(pIdx, :);
+0368     nonZeroMass = mass ~= 0;
+0369     newAccelerations(nonZeroMass, :) = forces(nonZeroMass, :) ./ mass(nonZeroMass, 1);
+0370 <span class="keyword">end</span>
+0371 
+0372 <a name="_sub10" href="#_subfunctions" class="code">function state = update(state, adaptiveInertia, bestNeighborIndex, cSelf, </a><span class="keyword">...</span>
+0373     cSocial, pIdx, numParticles, nhps, lbMatrix, ubMatrix, hyperparameters, hpIndexes, G) <span class="comment">%#codegen</span>
+0374 
+0375     <span class="comment">% Calculate mass</span>
+0376     state.Mass(pIdx, :) = <a href="#_sub8" class="code" title="subfunction mass = calculateMass(state, numParticles) ">calculateMass</a>(state, numParticles);
+0377 
+0378     <span class="comment">% Update forces</span>
+0379     state.Forces(pIdx, :) = <a href="#_sub9" class="code" title="subfunction newForces = updateForces(state, nhps, G, pIdx) ">updateForces</a>(state, nhps, G, pIdx);
+0380 
+0381     <span class="comment">% Update Accelerations</span>
+0382     state.Accelerations(pIdx, :) = <a href="#_sub10" class="code" title="subfunction newAccelerations = updateAccelerations(state, pIdx) ">updateAccelerations</a>(state, pIdx);
+0383 
+0384     <span class="comment">% Update the velocities.</span>
+0385     state.Velocities(pIdx, :) = <a href="#_sub5" class="code" title="subfunction newVelocities = updateVelocities(state, adaptiveInertia, bestNeighborIndex, cSelf, cSocial, pIdx, nhps) ">updateVelocities</a>( <span class="keyword">...</span>
+0386         state, adaptiveInertia, bestNeighborIndex, cSelf, cSocial, pIdx, nhps);
+0387 
+0388     <span class="comment">% Update the positions.</span>
+0389     [state.Positions(pIdx, :), tfInvalid] = <a href="#_sub6" class="code" title="subfunction [newPositions, tfInvalid] = updatePositions( ">updatePositions</a>( <span class="keyword">...</span>
+0390         state, lbMatrix, ubMatrix, pIdx, numParticles, nhps, hyperparameters, hpIndexes);
+0391 
+0392     <span class="comment">% For any particle on the boundary, enforce velocity = 0.</span>
+0393     <span class="keyword">if</span> any(tfInvalid(:))
+0394         state.Velocities(tfInvalid) = 0;
+0395     <span class="keyword">end</span>
+0396 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

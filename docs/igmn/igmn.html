@@ -1,0 +1,291 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of igmn</title>
+  <meta name="keywords" content="igmn">
+  <meta name="description" content="IGMN Class">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; igmn.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>igmn
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>IGMN Class</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> IGMN Class
+ 
+ The `igmn` class implements an Incremental Gaussian Mixture Network (IGMN).
+ It provides methods and properties for building and managing a Gaussian 
+ Mixture Model incrementally.
+
+ Properties:
+   Constant:
+     - minimum: Minimum value for single-precision floating-point numbers.
+     - maximum: Maximum value for single-precision floating-point numbers.
+     - minTau: Minimum value for the tau parameter.
+     - defaultTau: Default value for the tau parameter.
+     - defaultDelta: Default value for the delta parameter.
+     - defaultGamma: Default value for the gamma parameter.
+     - defaultPhi: Default value for the phi parameter.
+     - defaultSPMin: Default minimum value for spMin.
+     - defaultVMin: Default minimum value for vMin.
+     - defaultRegValue: Default regularization value.
+     - defaultMaxNc: Default maximum number of components.
+     - defaultUseRankOne: Default flag for using rank-one updates.
+
+   Instance:
+     - name: Name of the current instance (default: filename).
+     - dimension: Dimensionality of the data.
+     - maxDistance: Maximum Mahalanobis distance for component assignment.
+     - initialCov: Initial covariance matrix.
+     - initialInvCov: Initial inverse covariance matrix.
+     - initialLogDet: Initial log determinant of the covariance matrix.
+     - minCov: Minimum covariance matrix for regularization.
+     - useRankOne: Flag indicating whether to use rank-one updates.
+     - range: Range of the data.
+     - nc: Current number of components.
+     - maxNc: Maximum number of components.
+     - delta: Delta parameter for covariance initialization.
+     - gamma: Gamma parameter for component updates.
+     - phi: Phi parameter for component updates.
+     - tau: Tau parameter for component assignment.
+     - spMin: Minimum value for sp.
+     - vMin: Minimum value for v.
+     - priors: Prior probabilities of the components.
+     - means: Means of the components.
+     - covs: Covariance matrices of the components.
+     - invCovs: Inverse covariance matrices of the components.
+     - logDets: Log determinants of the covariance matrices.
+     - sp: Sufficient statistics for sp.
+     - spu: Sufficient statistics for spu.
+     - vs: Sufficient statistics for v.
+     - distances: Mahalanobis distances for component assignment.
+     - logLikes: Log-likelihoods of the components.
+     - posteriors: Posterior probabilities of the components.
+     - numSamples: Number of samples processed.
+     - converged: Flag indicating whether the model has converged.
+
+ Methods:
+   - igmn(options): Constructor for the `igmn` class. Initializes the 
+     IGMN instance with the specified options.
+
+ Constructor Inputs:
+   - options: An instance of the `igmnoptions` class containing configuration 
+     parameters for the IGMN instance.
+
+ Constructor Outputs:
+   - self: The handle to the newly created `igmn` instance.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="classify.html" class="code" title="function Y = classify(net, X, features)">classify</a>	CLASSIFY Classifies a given input using the IGMN model.</li><li><a href="clusterize.html" class="code" title="function idx = clusterize(net, X) %#codegen">clusterize</a>	CLUSTERIZE Computes the index of the component with the largest likelihood</li><li><a href="evaluate.html" class="code" title="">evaluate</a>	{</li><li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="igmnBuilder.html" class="code" title="function self = igmnBuilder(options) %#codegen">igmnBuilder</a>	IGMNBUILDER Incremental Gaussian Mixture Network Builder.</li><li><a href="learn.html" class="code" title="function net = learn(net, x) %#codegen">learn</a>	LEARN Learns a single training sample and updates the network.</li><li><a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>	PREDICT Classifies a given input and computes posterior probabilities.</li><li><a href="recall.html" class="code" title="function [Y, probabilities] = recall(net, X, features, featureGrid) %#codegen">recall</a>	RECALL Performs the Gaussian Mixture Regression for a given input.</li><li><a href="train.html" class="code" title="function  net = train(net, X) %#codegen">train</a>	TRAIN Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = igmn(options)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% IGMN Class</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% The `igmn` class implements an Incremental Gaussian Mixture Network (IGMN).</span>
+0004 <span class="comment">% It provides methods and properties for building and managing a Gaussian</span>
+0005 <span class="comment">% Mixture Model incrementally.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Properties:</span>
+0008 <span class="comment">%   Constant:</span>
+0009 <span class="comment">%     - minimum: Minimum value for single-precision floating-point numbers.</span>
+0010 <span class="comment">%     - maximum: Maximum value for single-precision floating-point numbers.</span>
+0011 <span class="comment">%     - minTau: Minimum value for the tau parameter.</span>
+0012 <span class="comment">%     - defaultTau: Default value for the tau parameter.</span>
+0013 <span class="comment">%     - defaultDelta: Default value for the delta parameter.</span>
+0014 <span class="comment">%     - defaultGamma: Default value for the gamma parameter.</span>
+0015 <span class="comment">%     - defaultPhi: Default value for the phi parameter.</span>
+0016 <span class="comment">%     - defaultSPMin: Default minimum value for spMin.</span>
+0017 <span class="comment">%     - defaultVMin: Default minimum value for vMin.</span>
+0018 <span class="comment">%     - defaultRegValue: Default regularization value.</span>
+0019 <span class="comment">%     - defaultMaxNc: Default maximum number of components.</span>
+0020 <span class="comment">%     - defaultUseRankOne: Default flag for using rank-one updates.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%   Instance:</span>
+0023 <span class="comment">%     - name: Name of the current instance (default: filename).</span>
+0024 <span class="comment">%     - dimension: Dimensionality of the data.</span>
+0025 <span class="comment">%     - maxDistance: Maximum Mahalanobis distance for component assignment.</span>
+0026 <span class="comment">%     - initialCov: Initial covariance matrix.</span>
+0027 <span class="comment">%     - initialInvCov: Initial inverse covariance matrix.</span>
+0028 <span class="comment">%     - initialLogDet: Initial log determinant of the covariance matrix.</span>
+0029 <span class="comment">%     - minCov: Minimum covariance matrix for regularization.</span>
+0030 <span class="comment">%     - useRankOne: Flag indicating whether to use rank-one updates.</span>
+0031 <span class="comment">%     - range: Range of the data.</span>
+0032 <span class="comment">%     - nc: Current number of components.</span>
+0033 <span class="comment">%     - maxNc: Maximum number of components.</span>
+0034 <span class="comment">%     - delta: Delta parameter for covariance initialization.</span>
+0035 <span class="comment">%     - gamma: Gamma parameter for component updates.</span>
+0036 <span class="comment">%     - phi: Phi parameter for component updates.</span>
+0037 <span class="comment">%     - tau: Tau parameter for component assignment.</span>
+0038 <span class="comment">%     - spMin: Minimum value for sp.</span>
+0039 <span class="comment">%     - vMin: Minimum value for v.</span>
+0040 <span class="comment">%     - priors: Prior probabilities of the components.</span>
+0041 <span class="comment">%     - means: Means of the components.</span>
+0042 <span class="comment">%     - covs: Covariance matrices of the components.</span>
+0043 <span class="comment">%     - invCovs: Inverse covariance matrices of the components.</span>
+0044 <span class="comment">%     - logDets: Log determinants of the covariance matrices.</span>
+0045 <span class="comment">%     - sp: Sufficient statistics for sp.</span>
+0046 <span class="comment">%     - spu: Sufficient statistics for spu.</span>
+0047 <span class="comment">%     - vs: Sufficient statistics for v.</span>
+0048 <span class="comment">%     - distances: Mahalanobis distances for component assignment.</span>
+0049 <span class="comment">%     - logLikes: Log-likelihoods of the components.</span>
+0050 <span class="comment">%     - posteriors: Posterior probabilities of the components.</span>
+0051 <span class="comment">%     - numSamples: Number of samples processed.</span>
+0052 <span class="comment">%     - converged: Flag indicating whether the model has converged.</span>
+0053 <span class="comment">%</span>
+0054 <span class="comment">% Methods:</span>
+0055 <span class="comment">%   - igmn(options): Constructor for the `igmn` class. Initializes the</span>
+0056 <span class="comment">%     IGMN instance with the specified options.</span>
+0057 <span class="comment">%</span>
+0058 <span class="comment">% Constructor Inputs:</span>
+0059 <span class="comment">%   - options: An instance of the `igmnoptions` class containing configuration</span>
+0060 <span class="comment">%     parameters for the IGMN instance.</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">% Constructor Outputs:</span>
+0063 <span class="comment">%   - self: The handle to the newly created `igmn` instance.</span>
+0064 classdef <a href="igmn.html" class="code" title="">igmn</a> <span class="comment">%#codegen</span>
+0065 
+0066     properties (Constant)
+0067         minimum = double(realmin(<span class="string">'single'</span>));
+0068         maximum = double(realmax(<span class="string">'single'</span>));
+0069         minTau = 1.0e-5;
+0070         defaultTau = 0.1;
+0071         defaultDelta = 0.01;
+0072         defaultGamma = 1;
+0073         defaultPhi = 0.35;
+0074         defaultSPMin = 3;
+0075         defaultVMin = 4;
+0076         defaultRegValue = 0;
+0077         defaultMaxNc = 100;
+0078         defaultUseRankOne = 0;
+0079     <span class="keyword">end</span>
+0080     
+0081     properties
+0082         <span class="comment">%% Configuration params</span>
+0083         name = mfilename;
+0084         dimension;
+0085         maxDistance;
+0086         initialCov;
+0087         initialInvCov;
+0088         initialLogDet;
+0089 
+0090         minCov;
+0091         useRankOne;
+0092 
+0093         <span class="comment">%% Configuration params</span>
+0094         range;
+0095         nc;
+0096         maxNc;
+0097         delta;
+0098         gamma;
+0099         phi;
+0100         tau;
+0101         spMin;
+0102         vMin;
+0103         
+0104         <span class="comment">%% Components params</span>
+0105         priors;
+0106         means;
+0107         covs;
+0108         invCovs;
+0109         logDets;
+0110         sp;
+0111         spu;
+0112         vs;
+0113 
+0114         <span class="comment">% Mahalanobis distance</span>
+0115         distances;
+0116 
+0117         <span class="comment">% Components outputs</span>
+0118         logLikes;
+0119         posteriors;
+0120 
+0121         <span class="comment">% sample seen</span>
+0122         numSamples;
+0123 
+0124         converged;
+0125     <span class="keyword">end</span>
+0126 
+0127     methods
+0128     
+0129         <span class="comment">%Constructor</span>
+0130         <a name="_sub0" href="#_subfunctions" class="code">function self = igmn(options) </a><span class="comment">%#codegen</span>
+0131             <span class="comment">% IGMN Incremental Gaussian Mixture Network Builder.</span>
+0132             <span class="comment">%</span>
+0133             <span class="comment">% Inputs:</span>
+0134             <span class="comment">%   options: The igmn options as described in igmnoptions.</span>
+0135             <span class="comment">%</span>
+0136             <span class="comment">% Output:</span>
+0137             <span class="comment">%   self:    The IGMN handle for the new instance.</span>
+0138             arguments
+0139                 options (1, 1) {mustBeA(options, <span class="string">'igmnoptions'</span>)};
+0140             <span class="keyword">end</span>
+0141             self.range = options.range;
+0142             self.dimension = size(self.range, 2);
+0143             self.nc = 0;
+0144             self.maxNc = options.MaxNc;
+0145             self.vMin = options.VMin;
+0146             self.spMin = options.SPMin;
+0147             self.tau = options.Tau;
+0148             self.phi = options.Phi;
+0149             self.delta = options.Delta;
+0150             self.gamma = options.Gamma;
+0151             self.useRankOne = logical(options.UseRankOne);
+0152             sigma = ((self.delta * (self.range(2, :) - self.range(1, :))) .^ 2);
+0153             self.initialCov = diag(sigma);
+0154             self.initialInvCov = diag(1.0 ./ sigma);
+0155             self.initialLogDet = prod(sigma);
+0156             self.maxDistance = chi2inv(1 - self.tau, double(self.dimension));
+0157             minSigma = igmn.minimum + options.RegValue;
+0158             self.minCov = eye(self.dimension) * minSigma;
+0159             self.numSamples = 0;
+0160             self.converged = true;
+0161 
+0162             <span class="comment">% to make coder happy.</span>
+0163             self.means = 1; self.priors = 1; self.covs = 1; self.invCovs = 1;
+0164             self.logDets = 1; self.sp = 1; self.spu = 1; self.vs = 1; 
+0165             self.distances = 1; self.posteriors = 1;  self.logLikes = 1;
+0166 
+0167             self.covs = zeros(0, 0, 0);
+0168             self.invCovs = zeros(0, 0, 0);
+0169             self.logDets = zeros(0, 0);
+0170             self.means = zeros(0, 0);
+0171             self.priors = zeros(1, 0);
+0172             self.sp = zeros(1, 0);
+0173             self.spu = zeros(1, 0);
+0174             self.vs = zeros(1, 0);
+0175             self.distances = zeros(1, 0);
+0176             self.logLikes = zeros(1, 0);
+0177             self.posteriors = zeros(1, 0);
+0178         <span class="keyword">end</span>
+0179     <span class="keyword">end</span>
+0180 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

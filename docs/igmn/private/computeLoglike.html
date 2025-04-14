@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computeLoglike</title>
+  <meta name="keywords" content="computeLoglike">
+  <meta name="description" content="computeLoglike - Computes the log-likelihood and distance for given data.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; computeLoglike.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>computeLoglike
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>computeLoglike - Computes the log-likelihood and distance for given data.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [logLike, distance] = computeLoglike(X, cov, data, options) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> computeLoglike - Computes the log-likelihood and distance for given data.
+
+ Syntax:
+   [logLike, distance] = computeLoglike(X, cov, data, options)
+
+ Inputs:
+   X       - (double) Input data matrix of size [M, D], where M is the number
+             of samples and D is the dimensionality of the data.
+   cov     - (double) Covariance matrix of size [D, D].
+   data    - (double) Data matrix of size [N, D], where N is the number of
+             data points.
+   options - (struct) Optional parameters:
+             - isProbability: (logical) If true, computes probabilities
+               instead of distances. Default is false.
+             - useRankOne: (logical) If true, uses a rank-one update
+               approach. Default is false.
+             - determinant: (double) Determinant of the covariance matrix.
+               Default is 1.
+
+ Outputs:
+   logLike  - (double) Log-likelihood values of size [N, M] or [N, 1],
+              depending on the options.
+   distance - (double) Distance values of size [N, M] or [N, 1], depending
+              on the options.
+
+ Description:
+   This function computes the log-likelihood and distance for the given
+   data points using the provided covariance matrix. It supports both
+   standard and rank-one update approaches, and can optionally compute
+   probabilities instead of distances.
+
+ Notes:
+   - The function uses Cholesky decomposition for efficient computation
+     when the 'useRankOne' option is false.
+   - Parallel computation (parfor) is used for certain operations to
+     improve performance when the 'isProbability' option is true.
+
+ See also:
+   <a href="computeChol.html" class="code" title="function [L, diagL, cov] = computeChol(cov) %#codegen">computeChol</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="computeChol.html" class="code" title="function [L, diagL, cov] = computeChol(cov) %#codegen">computeChol</a>	computeChol - Computes the Cholesky decomposition of a covariance matrix.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% computeLoglike - Computes the log-likelihood and distance for given data.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Syntax:</span>
+0004 <span class="comment">%   [logLike, distance] = computeLoglike(X, cov, data, options)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Inputs:</span>
+0007 <span class="comment">%   X       - (double) Input data matrix of size [M, D], where M is the number</span>
+0008 <span class="comment">%             of samples and D is the dimensionality of the data.</span>
+0009 <span class="comment">%   cov     - (double) Covariance matrix of size [D, D].</span>
+0010 <span class="comment">%   data    - (double) Data matrix of size [N, D], where N is the number of</span>
+0011 <span class="comment">%             data points.</span>
+0012 <span class="comment">%   options - (struct) Optional parameters:</span>
+0013 <span class="comment">%             - isProbability: (logical) If true, computes probabilities</span>
+0014 <span class="comment">%               instead of distances. Default is false.</span>
+0015 <span class="comment">%             - useRankOne: (logical) If true, uses a rank-one update</span>
+0016 <span class="comment">%               approach. Default is false.</span>
+0017 <span class="comment">%             - determinant: (double) Determinant of the covariance matrix.</span>
+0018 <span class="comment">%               Default is 1.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Outputs:</span>
+0021 <span class="comment">%   logLike  - (double) Log-likelihood values of size [N, M] or [N, 1],</span>
+0022 <span class="comment">%              depending on the options.</span>
+0023 <span class="comment">%   distance - (double) Distance values of size [N, M] or [N, 1], depending</span>
+0024 <span class="comment">%              on the options.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Description:</span>
+0027 <span class="comment">%   This function computes the log-likelihood and distance for the given</span>
+0028 <span class="comment">%   data points using the provided covariance matrix. It supports both</span>
+0029 <span class="comment">%   standard and rank-one update approaches, and can optionally compute</span>
+0030 <span class="comment">%   probabilities instead of distances.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% Notes:</span>
+0033 <span class="comment">%   - The function uses Cholesky decomposition for efficient computation</span>
+0034 <span class="comment">%     when the 'useRankOne' option is false.</span>
+0035 <span class="comment">%   - Parallel computation (parfor) is used for certain operations to</span>
+0036 <span class="comment">%     improve performance when the 'isProbability' option is true.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% See also:</span>
+0039 <span class="comment">%   computeChol</span>
+0040 <a name="_sub0" href="#_subfunctions" class="code">function [logLike, distance] = computeLoglike(X, cov, data, options) </a><span class="comment">%#codegen</span>
+0041     arguments
+0042         X double
+0043         cov double
+0044         data double
+0045         options.isProbability (1, 1) logical = false
+0046         options.useRankOne (1, 1) logical = false
+0047         options.determinant (1, 1) double = 1
+0048     <span class="keyword">end</span>
+0049     dim = size(X, 2);
+0050     twopi = 2 * pi;
+0051     <span class="keyword">if</span> options.useRankOne
+0052         N = size(data, 1);
+0053         distance = zeros(N, size(X, 1));
+0054         regularization = (twopi .^ (dim / 2.0)) * sqrt(options.determinant);
+0055         <span class="keyword">if</span> ~options.isProbability
+0056             diff = bsxfun(@minus, X, data);
+0057             distance = sum(diff * cov .* diff, 2);
+0058         <span class="keyword">else</span>
+0059             parfor i = 1:N
+0060                 diff = bsxfun(@minus, data(i, :), X);
+0061                 distance(i, :) = sum(diff * cov .* diff, 2);
+0062             <span class="keyword">end</span>
+0063         <span class="keyword">end</span>
+0064         logLike = exp(-0.5 .* distance) ./ regularization;
+0065         logLike = fillmissing(logLike, <span class="string">'constant'</span>, 0);
+0066     <span class="keyword">else</span>
+0067         [L, diagL, ~] = <a href="computeChol.html" class="code" title="function [L, diagL, cov] = computeChol(cov) %#codegen">computeChol</a>(cov);
+0068         <span class="keyword">if</span> ~options.isProbability
+0069             xRinv = data / L;
+0070             distance = sum(xRinv .^ 2, 2);
+0071         <span class="keyword">else</span>
+0072             N = size(data, 1);
+0073             distance = zeros(N, size(X, 1));
+0074             parfor i = 1:N
+0075                 distance(i, :) = sum((L \ bsxfun(@minus, X, data(i, :))') .^ 2, 1);
+0076             <span class="keyword">end</span>
+0077         <span class="keyword">end</span>
+0078         logDetCov = 2 * sum(log(diagL));
+0079         regValue = dim * log(twopi);
+0080         logLike = -0.5 * (distance + logDetCov + regValue);
+0081     <span class="keyword">end</span>
+0082 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

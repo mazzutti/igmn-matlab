@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of optimize</title>
+  <meta name="keywords" content="optimize">
+  <meta name="description" content="{">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; optimize.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>optimize
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>{</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">{</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="optimize.html" class="code" title="">optimize</a>	{</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	COMPILE - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li><li><a href="optimize.html" class="code" title="">optimize</a>	{</li><li><a href="transpile.html" class="code" title="function transpile(options)">transpile</a>	TRANSPILE Transpile MATLAB code to MEX functions using MATLAB Coder.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function options = optimize(problem)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%{</span>
+0002 OPTIMIZE - Optimizes the parameters of a given problem using a specified algorithm.
+0003 
+0004 Syntax:
+0005     options = <a href="optimize.html" class="code" title="">optimize</a>(problem)
+0006 
+0007 Description:
+0008     This <span class="keyword">function</span> takes a problem structure as input and optimizes its parameters
+0009     based on the specified optimization algorithm. The <span class="keyword">function</span> supports multiple
+0010     algorithms such as <span class="string">'pso'</span>, <span class="string">'psogsa'</span>, and <span class="string">'imode'</span>. It determines which properties
+0011     of the default options need to be changed and applies the optimization accordingly.
+0012 
+0013 Inputs:
+0014     problem - A structure containing the following fields:
+0015         - OptimizeOptions: A structure specifying the optimization settings, including:
+0016             * Algorithm: The optimization algorithm to use (<span class="string">'pso'</span>, <span class="string">'psogsa'</span>, or <span class="string">'imode'</span>).
+0017             * UseDefaultsFor: A cell array of property names <span class="keyword">for</span> which default values should be used.
+0018         - DefaultIgmnOptions: A structure containing the default options <span class="keyword">for</span> the IGMN algorithm.
+0019 
+0020 Outputs:
+0021     options - A structure containing the optimized parameters <span class="keyword">for</span> the problem.
+0022 
+0023 Notes:
+0024     - The <span class="keyword">function</span> uses helper functions `pso`, `psogsa`, and `imode` to perform the optimization
+0025       based on the selected algorithm.
+0026     - The `igmnoptions.from` method is used to construct the final options structure by
+0027       combining the default options with the optimized values <span class="keyword">for</span> the specified properties.
+0028 
+0029 Example:
+0030     <span class="comment">% Define a problem structure</span>
+0031     problem.OptimizeOptions.Algorithm = <span class="string">'pso'</span>;
+0032     problem.OptimizeOptions.UseDefaultsFor = {<span class="string">'property1'</span>, <span class="string">'property2'</span>};
+0033     problem.DefaultIgmnOptions = defaultOptions;
+0034 
+0035     <span class="comment">% Optimize the problem</span>
+0036     options = <a href="optimize.html" class="code" title="">optimize</a>(problem);
+0037 
+0038 See also:
+0039     pso, psogsa, imode, igmnoptions.from
+0040 <span class="comment">%}</span>
+0041 <a name="_sub0" href="#_subfunctions" class="code">function options = optimize(problem) </a><span class="comment">%#codegen</span>
+0042     optOptions = problem.OptimizeOptions;
+0043     defaultIgmnOptions = problem.DefaultIgmnOptions;
+0044     props = properties(defaultIgmnOptions);
+0045     useDefaultsFor = [<span class="string">'range'</span>, optOptions.UseDefaultsFor];
+0046     toChangeProps = repmat({<span class="string">''</span>}, 1, length(props) - length(useDefaultsFor));
+0047     index = 1;
+0048     <span class="keyword">for</span> i = 1:length(props)
+0049         <span class="keyword">if</span> ~any(strcmp(useDefaultsFor, props{i}))
+0050             toChangeProps{index} = props{i};
+0051             index = index + 1;
+0052         <span class="keyword">end</span>
+0053     <span class="keyword">end</span>
+0054     <span class="keyword">if</span> strcmp(optOptions.Algorithm, <span class="string">'pso'</span>)
+0055         options = igmnoptions.from(defaultIgmnOptions, toChangeProps, num2cell(pso(problem)));
+0056     <span class="keyword">elseif</span> strcmp(optOptions.Algorithm, <span class="string">'psogsa'</span>)
+0057         options = igmnoptions.from(defaultIgmnOptions, toChangeProps, num2cell(psogsa(problem)));
+0058     <span class="keyword">else</span>
+0059         options = igmnoptions.from(defaultIgmnOptions, toChangeProps, num2cell(imode(problem)));
+0060     <span class="keyword">end</span>
+0061 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

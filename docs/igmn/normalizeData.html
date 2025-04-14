@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of normalizeData</title>
+  <meta name="keywords" content="normalizeData">
+  <meta name="description" content="normalizeData - Normalizes the input data to a specified range [0, 1].">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; normalizeData.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>normalizeData
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>normalizeData - Normalizes the input data to a specified range [0, 1].</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [normalizedData, minMaxProportion] = normalizeData(data, minMaxProportion) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> normalizeData - Normalizes the input data to a specified range [0, 1].
+
+ Syntax:
+   [normalizedData, minMaxProportion] = normalizeData(data)
+   [normalizedData, minMaxProportion] = normalizeData(data, minMaxProportion)
+
+ Description:
+   This function normalizes the input data to the range [0, 1] using the
+   `mapminmax` function. If the `minMaxProportion` parameter is not provided,
+   it is computed from the input data. The normalization is applied to each
+   slice of the 3D input data independently.
+
+ Inputs:
+   data - A 3D array of size (R, C, S) where:
+          R - Number of rows.
+          C - Number of columns.
+          S - Number of slices.
+   minMaxProportion (optional) - A structure containing the minimum and
+          maximum values used for normalization, as returned by `mapminmax`.
+
+ Outputs:
+   normalizedData - A 3D array of the same size as `data`, containing the
+          normalized values in the range [0, 1].
+   minMaxProportion - A structure containing the minimum and maximum values
+          used for normalization, as returned by `mapminmax`. This can be
+          reused for consistent normalization of other datasets.
+
+ Example:
+   % Normalize data and retrieve normalization parameters
+   [normalizedData, minMaxProportion] = normalizeData(data);
+
+   % Normalize another dataset using the same parameters
+   [normalizedData2, ~] = normalizeData(data2, minMaxProportion);
+
+ Notes:
+   - The function uses `mapminmax` for normalization, which is part of the
+     Neural Network Toolbox in MATLAB.
+   - The normalization is applied independently to each slice along the
+     third dimension of the input data.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% normalizeData - Normalizes the input data to a specified range [0, 1].</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Syntax:</span>
+0004 <span class="comment">%   [normalizedData, minMaxProportion] = normalizeData(data)</span>
+0005 <span class="comment">%   [normalizedData, minMaxProportion] = normalizeData(data, minMaxProportion)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Description:</span>
+0008 <span class="comment">%   This function normalizes the input data to the range [0, 1] using the</span>
+0009 <span class="comment">%   `mapminmax` function. If the `minMaxProportion` parameter is not provided,</span>
+0010 <span class="comment">%   it is computed from the input data. The normalization is applied to each</span>
+0011 <span class="comment">%   slice of the 3D input data independently.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% Inputs:</span>
+0014 <span class="comment">%   data - A 3D array of size (R, C, S) where:</span>
+0015 <span class="comment">%          R - Number of rows.</span>
+0016 <span class="comment">%          C - Number of columns.</span>
+0017 <span class="comment">%          S - Number of slices.</span>
+0018 <span class="comment">%   minMaxProportion (optional) - A structure containing the minimum and</span>
+0019 <span class="comment">%          maximum values used for normalization, as returned by `mapminmax`.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Outputs:</span>
+0022 <span class="comment">%   normalizedData - A 3D array of the same size as `data`, containing the</span>
+0023 <span class="comment">%          normalized values in the range [0, 1].</span>
+0024 <span class="comment">%   minMaxProportion - A structure containing the minimum and maximum values</span>
+0025 <span class="comment">%          used for normalization, as returned by `mapminmax`. This can be</span>
+0026 <span class="comment">%          reused for consistent normalization of other datasets.</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Example:</span>
+0029 <span class="comment">%   % Normalize data and retrieve normalization parameters</span>
+0030 <span class="comment">%   [normalizedData, minMaxProportion] = normalizeData(data);</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%   % Normalize another dataset using the same parameters</span>
+0033 <span class="comment">%   [normalizedData2, ~] = normalizeData(data2, minMaxProportion);</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% Notes:</span>
+0036 <span class="comment">%   - The function uses `mapminmax` for normalization, which is part of the</span>
+0037 <span class="comment">%     Neural Network Toolbox in MATLAB.</span>
+0038 <span class="comment">%   - The normalization is applied independently to each slice along the</span>
+0039 <span class="comment">%     third dimension of the input data.</span>
+0040 <a name="_sub0" href="#_subfunctions" class="code">function [normalizedData, minMaxProportion] = normalizeData(data, minMaxProportion)</a>
+0041     [R, C, S] = size(data);
+0042     normalizedData = zeros(R, C, S);
+0043     <span class="keyword">if</span> nargin == 1
+0044         [~, minMaxProportion] = mapminmax(reshape(permute(data, [2 1 3]), C, []), 0, 1);
+0045     <span class="keyword">end</span>
+0046     <span class="keyword">for</span> i = 1:S
+0047         normalizedData(:, :, i) = mapminmax(<span class="string">'apply'</span>, data(:, :, i)', minMaxProportion)';
+0048     <span class="keyword">end</span>    
+0049 <span class="keyword">end</span>
+0050</pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

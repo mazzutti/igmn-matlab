@@ -57,18 +57,18 @@ inputData = 0:0.01:(2 * pi);
 inputData = inputData(randperm(size(inputData, 2)));
 outputData = linspace(0, 2 * pi, 100);
 
-maxNc = 3;
+maxNc = 7;
 
 problem = Problem( ...
     [inputData; sin(inputData)]', ...
     [outputData; sin(outputData)]', ...
     'ExecutionMode', 'mex', ...
-    'DoParametersTuning', true, ...
+    'DoParametersTuning', false, ...
     'CompileOptions', compileoptions(...
         size(inputData, 2), size(outputData, 2),  ...
         'NumberOfVariables', 2, ...
         'NumberOfOutputVars', 1, ...
-        'EnableRecompile', true, ...
+        'EnableRecompile', false, ...
         'IsOptimization', true ...
     ));
 
@@ -90,7 +90,6 @@ problem.DefaultIgmnOptions.SPMin = 2;
 problem.OptimizeOptions.hyperparameters{5}.ub = 6;
 problem.OptimizeOptions.hyperparameters{5}.lb = 2;
 
-
 if strcmpi(problem.ExecutionMode, 'mex') || strcmpi(problem.ExecutionMode, 'native') 
     compile(problem);
     if strcmpi(problem.ExecutionMode, 'mex')
@@ -102,11 +101,13 @@ if strcmpi(problem.ExecutionMode, 'mex') || strcmpi(problem.ExecutionMode, 'nati
 end
 
 if ~strcmpi(problem.ExecutionMode, 'native')
-    igmnOptions = problem.DefaultIgmnOptions;
     if problem.DoParametersTuning
         tic;
         igmnOptions = optimize(problem);
+        save('igmnOptions', 'igmnOptions');
         toc;
+    else
+        igmnOptions = load('igmnOptions.mat').igmnOptions;
     end
     
     trainData = problem.trainData;
@@ -123,8 +124,10 @@ if ~strcmpi(problem.ExecutionMode, 'native')
     
     figure; plotregression(testData(:, outputVarIndexes), Y);
     figure;
-    scatter(inputData + rand(1, size(inputData, 2)) .* 0.2, sin(inputData), 'Marker', '.' ,'Color', [0 0.4470 0.7410]);
-    plotNet(net, 'sd', 4.5, 'ax', gca, 'sd', 2);
-    exportgraphics(gcf, sprintf('%s.pdf', 'igmn_gaussians'), 'BackgroundColor', 'none', 'Resolution', 300)
-
+    scatter(inputData + rand(1, size(inputData, 2)) .* 0.2, ...
+        sin(inputData), 'Marker', '.' ,'Color', [0 0.4470 0.7410]);
+    plotNet(net, 'sd', 4.5, 'ax', gca, 'sd', 4);
+    exportgraphics( ...
+        gcf, sprintf('%s.pdf', 'igmn_gaussians'), ...
+        'BackgroundColor', 'none', 'Resolution', 300)
 end

@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computeProbDensity</title>
+  <meta name="keywords" content="computeProbDensity">
+  <meta name="description" content="COMPUTEPROBDENSITY Compute the probability density of a multivariate normal distribution.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; computeProbDensity.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>computeProbDensity
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>COMPUTEPROBDENSITY Compute the probability density of a multivariate normal distribution.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = computeProbDensity(net, x, i) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> COMPUTEPROBDENSITY Compute the probability density of a multivariate normal distribution.
+
+   net = computeProbDensity(net, x, i)
+
+   This function calculates the probability density of a multivariate 
+   normal distribution for a given data point `x` and updates the 
+   corresponding fields in the `net` structure. The computation is 
+   performed differently depending on whether rank-one updates are used.
+
+   Inputs:
+       net - A structure containing the parameters of the multivariate 
+             normal distribution, including means, covariances, and 
+             other related fields.
+       x   - A row vector representing the data point for which the 
+             probability density is to be computed.
+       i   - An index specifying which component of the distribution 
+             to use for the computation.
+
+   Outputs:
+       net - The updated structure with the computed probability density 
+             and related values stored in the appropriate fields.
+
+   Notes:
+       - If `net.useRankOne` is true, the computation uses a rank-one 
+         update approach for efficiency.
+       - If `net.useRankOne` is false, the computation involves 
+         Cholesky decomposition of the covariance matrix.
+       - The function assumes that the covariance matrices are positive 
+         definite and symmetric.
+
+   See also: <a href="computeChol.html" class="code" title="function [L, diagL, cov] = computeChol(cov) %#codegen">computeChol</a>, <a href="wrapValues.html" class="code" title="function values = wrapValues(values, options) %#codegen">wrapValues</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="computeChol.html" class="code" title="function [L, diagL, cov] = computeChol(cov) %#codegen">computeChol</a>	computeChol - Computes the Cholesky decomposition of a covariance matrix.</li><li><a href="wrapValues.html" class="code" title="function values = wrapValues(values, options) %#codegen">wrapValues</a>	wrapValues - Restrict values to a specified range.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="addComponent.html" class="code" title="function net = addComponent(net, x) %#codegen">addComponent</a>	ADDCOMPONENT Adds a new component to the network.</li><li><a href="computeProbDensities.html" class="code" title="function net = computeProbDensities(net, x) %#codegen">computeProbDensities</a>	COMPUTEPROBDENSITIES Compute log probability densities for IGMN components.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% COMPUTEPROBDENSITY Compute the probability density of a multivariate normal distribution.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   net = computeProbDensity(net, x, i)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   This function calculates the probability density of a multivariate</span>
+0006 <span class="comment">%   normal distribution for a given data point `x` and updates the</span>
+0007 <span class="comment">%   corresponding fields in the `net` structure. The computation is</span>
+0008 <span class="comment">%   performed differently depending on whether rank-one updates are used.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   Inputs:</span>
+0011 <span class="comment">%       net - A structure containing the parameters of the multivariate</span>
+0012 <span class="comment">%             normal distribution, including means, covariances, and</span>
+0013 <span class="comment">%             other related fields.</span>
+0014 <span class="comment">%       x   - A row vector representing the data point for which the</span>
+0015 <span class="comment">%             probability density is to be computed.</span>
+0016 <span class="comment">%       i   - An index specifying which component of the distribution</span>
+0017 <span class="comment">%             to use for the computation.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%   Outputs:</span>
+0020 <span class="comment">%       net - The updated structure with the computed probability density</span>
+0021 <span class="comment">%             and related values stored in the appropriate fields.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%   Notes:</span>
+0024 <span class="comment">%       - If `net.useRankOne` is true, the computation uses a rank-one</span>
+0025 <span class="comment">%         update approach for efficiency.</span>
+0026 <span class="comment">%       - If `net.useRankOne` is false, the computation involves</span>
+0027 <span class="comment">%         Cholesky decomposition of the covariance matrix.</span>
+0028 <span class="comment">%       - The function assumes that the covariance matrices are positive</span>
+0029 <span class="comment">%         definite and symmetric.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%   See also: computeChol, wrapValues</span>
+0032 <a name="_sub0" href="#_subfunctions" class="code">function net = computeProbDensity(net, x, i) </a><span class="comment">%#codegen</span>
+0033     coder.inline(<span class="string">'always'</span>);
+0034     diff = x - net.means(i, :);
+0035     dim = net.dimension;
+0036     twopi = 2 * pi;
+0037     <span class="keyword">if</span> net.useRankOne
+0038         diff = x - net.means(i, :);
+0039         net.distances(i) = diff * net.invCovs(:, :, i) * diff';
+0040         regularization = ((2 * pi) .^ (dim / 2.0)) * sqrt(net.logDets(i));
+0041         net.logLikes(i) = <a href="wrapValues.html" class="code" title="function values = wrapValues(values, options) %#codegen">wrapValues</a>(exp(-0.5 * net.distances(i)) / regularization);
+0042     <span class="keyword">else</span>
+0043         [L, diagL, net.covs(:, :, i)] = <a href="computeChol.html" class="code" title="function [L, diagL, cov] = computeChol(cov) %#codegen">computeChol</a>(net.covs(:, :, i));
+0044         xRinv = diff / L;
+0045         net.distances(i) = sum(xRinv .^ 2, 2);
+0046         net.logLikes(i) = -0.5 * ( <span class="keyword">...</span>
+0047             net.distances(i) + 2 * sum(log(diagL)) + dim * log(twopi));
+0048     <span class="keyword">end</span>
+0049 <span class="keyword">end</span>
+0050 
+0051</pre></div>
+<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>
