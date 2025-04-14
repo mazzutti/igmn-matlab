@@ -70,7 +70,7 @@ This example integrates IGMN with Kriging for spatial conditioning, enabling rob
 
 ---
 
-### 4. [Marmousi Stratified Partitioning](examples/regression/marmousi/README.md)
+### 4. [Marmousi Inversion](examples/regression/marmousi/README.md)
 Explore stratified partitioning of the Marmousi dataset for regression tasks. This example includes:
 
 - Dataset partitioning into training, testing, and validation sets.
