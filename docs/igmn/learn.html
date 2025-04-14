@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of learn</title>
+  <meta name="keywords" content="learn">
+  <meta name="description" content="learn - Learns a single training sample and updates the network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; learn.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>learn
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>learn - Learns a single training sample and updates the network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function net = learn(net, x) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> learn - Learns a single training sample and updates the network.
+
+ This function processes a single training sample `x` and updates the 
+ Incremental Gaussian Mixture Network (IGMN) `net`. It computes the 
+ probability densities, adds new components if necessary, and updates 
+ the network's components and parameters.
+
+ Inputs:
+   net : An instance of the `igmn` class representing the network.
+   x   : A 1xD numeric array representing a single training sample.
+         - Must be numeric.
+         - Must be non-empty.
+         - Must have dimensions compatible with the network.
+
+ Outputs:
+   net : The updated `igmn` network after processing the training sample.
+
+ Internal Functions:
+   - computeProbDensities: Computes the probability densities for the 
+     given sample.
+   - addComponent: Adds a new component to the network if the sample 
+     is sufficiently distant from existing components.
+   - update: Updates the network by computing posteriors, updating 
+     components, pruning components, and incrementing the sample count.
+
+ See also: computeProbDensities, addComponent, update</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="../igmn/private/addComponent.html" class="code" title="function net = addComponent(net, x) %#codegen">addComponent</a>	addComponent Adds a new component to the network.</li><li><a href="../igmn/private/computePosteriors.html" class="code" title="function net = computePosteriors(net) %#codegen">computePosteriors</a>	computePosteriors Compute the posterior probabilities for each IGMN component.</li><li><a href="../igmn/private/computeProbDensities.html" class="code" title="function net = computeProbDensities(net, x) %#codegen">computeProbDensities</a>	computeProbDensities Compute log probability densities for IGMN components.</li><li><a href="../igmn/private/mustBeNDimensional.html" class="code" title="function mustBeNDimensional(net, x, y)">mustBeNDimensional</a>	mustBeNDimensional - Validate that input dimensions match the network's dimension</li><li><a href="../igmn/private/pruneComponents.html" class="code" title="function net = pruneComponents(net) %#codegen">pruneComponents</a>	pruneComponents Remove spurious components from the network.</li><li><a href="../igmn/private/updateComponents.html" class="code" title="function net = updateComponents(net, x) %#codegen">updateComponents</a>	updateComponents Updates the components of the network based on input data.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="train.html" class="code" title="function  net = train(net, X) %#codegen">train</a>	train - Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function net = update(net, x)</a></li></ul>
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="learn.m">learn.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% learn - Learns a single training sample and updates the network.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% This function processes a single training sample `x` and updates the</span>
+0004 <span class="comment">% Incremental Gaussian Mixture Network (IGMN) `net`. It computes the</span>
+0005 <span class="comment">% probability densities, adds new components if necessary, and updates</span>
+0006 <span class="comment">% the network's components and parameters.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Inputs:</span>
+0009 <span class="comment">%   net : An instance of the `igmn` class representing the network.</span>
+0010 <span class="comment">%   x   : A 1xD numeric array representing a single training sample.</span>
+0011 <span class="comment">%         - Must be numeric.</span>
+0012 <span class="comment">%         - Must be non-empty.</span>
+0013 <span class="comment">%         - Must have dimensions compatible with the network.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Outputs:</span>
+0016 <span class="comment">%   net : The updated `igmn` network after processing the training sample.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Internal Functions:</span>
+0019 <span class="comment">%   - computeProbDensities: Computes the probability densities for the</span>
+0020 <span class="comment">%     given sample.</span>
+0021 <span class="comment">%   - addComponent: Adds a new component to the network if the sample</span>
+0022 <span class="comment">%     is sufficiently distant from existing components.</span>
+0023 <span class="comment">%   - update: Updates the network by computing posteriors, updating</span>
+0024 <span class="comment">%     components, pruning components, and incrementing the sample count.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% See also: computeProbDensities, addComponent, update</span>
+0027 <a name="_sub0" href="#_subfunctions" class="code">function net = learn(net, x) </a><span class="comment">%#codegen</span>
+0028     arguments
+0029         net (1,1) <a href="igmn.html" class="code" title="">igmn</a>;
+0030         x (1, :) { <span class="keyword">...</span>
+0031             mustBeNumeric,<span class="keyword">...</span><span class="comment"> </span>
+0032             mustBeNonempty, <span class="keyword">...</span>
+0033             <a href="../igmn/private/mustBeNDimensional.html" class="code" title="function mustBeNDimensional(net, x, y)">mustBeNDimensional</a>(net, x) <span class="keyword">...</span>
+0034         };
+0035     <span class="keyword">end</span>
+0036     coder.inline(<span class="string">'always'</span>);
+0037     net = <a href="../igmn/private/computeProbDensities.html" class="code" title="function net = computeProbDensities(net, x) %#codegen">computeProbDensities</a>(net, x);
+0038     <span class="keyword">if</span> isempty(net.distances) || all(net.distances &gt; net.maxDistance, <span class="string">'all'</span>)
+0039         net = <a href="../igmn/private/addComponent.html" class="code" title="function net = addComponent(net, x) %#codegen">addComponent</a>(net, x); 
+0040     <span class="keyword">end</span>
+0041     net = <a href="#_sub1" class="code" title="subfunction net = update(net, x) ">update</a>(net, x);
+0042 <span class="keyword">end</span>
+0043     
+0044 
+0045 <a name="_sub1" href="#_subfunctions" class="code">function net = update(net, x) </a><span class="comment">%#codegen</span>
+0046     coder.inline(<span class="string">'always'</span>);
+0047     net = <a href="../igmn/private/computePosteriors.html" class="code" title="function net = computePosteriors(net) %#codegen">computePosteriors</a>(net);
+0048     net = <a href="../igmn/private/updateComponents.html" class="code" title="function net = updateComponents(net, x) %#codegen">updateComponents</a>(net, x);
+0049     net = <a href="../igmn/private/pruneComponents.html" class="code" title="function net = pruneComponents(net) %#codegen">pruneComponents</a>(net);
+0050     net.numSamples = net.numSamples + 1;
+0051 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

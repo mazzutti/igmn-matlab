@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of roundDiscreteHyperparameters</title>
+  <meta name="keywords" content="roundDiscreteHyperparameters">
+  <meta name="description" content="roundDiscreteHyperparameters - Rounds discrete hyperparameters in a population matrix.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; roundDiscreteHyperparameters.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>roundDiscreteHyperparameters
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>roundDiscreteHyperparameters - Rounds discrete hyperparameters in a population matrix.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> roundDiscreteHyperparameters - Rounds discrete hyperparameters in a population matrix.
+
+ Syntax:
+   population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes)
+
+ Description:
+   This function iterates over a set of hyperparameters and rounds the values
+   of discrete hyperparameters in the given population matrix. It modifies the
+   population matrix in-place for the specified hyperparameter indexes.
+
+ Inputs:
+   population      - A matrix where each row represents an individual in the
+                     population, and each column corresponds to a hyperparameter.
+   hyperparameters - A cell array of hyperparameter structures. Each structure
+                     contains information about a hyperparameter, including
+                     whether it is discrete (isDiscrete field).
+   hpIndexes       - A vector of indexes indicating which hyperparameters in
+                     the hyperparameters cell array should be processed.
+
+ Outputs:
+   population      - The updated population matrix with discrete hyperparameters
+                     rounded to the nearest integer.
+
+ Notes:
+   - The function assumes that the `isDiscrete` field in each hyperparameter
+     structure is a logical value indicating whether the hyperparameter is discrete.
+   - The function uses MATLAB's `round` function to round the values.
+
+ Example:
+   % Define a population matrix
+   population = [1.2, 3.5; 4.7, 2.8];
+
+   % Define hyperparameters
+   hyperparameters = {struct('isDiscrete', true), struct('isDiscrete', false)};
+
+   % Specify indexes of hyperparameters to process
+   hpIndexes = [1];
+
+   % Round discrete hyperparameters
+   population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes);</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="createUniformPopulation.html" class="code" title="function population = createUniformPopulation(problemStruct, hpIndexes) %#codegen">createUniformPopulation</a>	createUniformPopulation - Generates a uniform population of individuals for optimization.</li><li><a href="imode.html" class="code" title="function [x, fval, exitFlag] = imode(problem) %#codegen">imode</a>	imode.m - Perform optimization using the IMODE algorithm.</li><li><a href="pso.html" class="code" title="function [x, fval, exitFlag] = pso(problem) %#codegen">pso</a>	pso - Particle Swarm Optimization Algorithm</li><li><a href="psogsa.html" class="code" title="function [x, fval, exitFlag] = psogsa(problem) %#codegen">psogsa</a>	psogsa - Particle Swarm Optimization with Gravitational Search Algorithm (PSOGSA)</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="roundDiscreteHyperparameters.m">roundDiscreteHyperparameters.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% roundDiscreteHyperparameters - Rounds discrete hyperparameters in a population matrix.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Syntax:</span>
+0004 <span class="comment">%   population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Description:</span>
+0007 <span class="comment">%   This function iterates over a set of hyperparameters and rounds the values</span>
+0008 <span class="comment">%   of discrete hyperparameters in the given population matrix. It modifies the</span>
+0009 <span class="comment">%   population matrix in-place for the specified hyperparameter indexes.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Inputs:</span>
+0012 <span class="comment">%   population      - A matrix where each row represents an individual in the</span>
+0013 <span class="comment">%                     population, and each column corresponds to a hyperparameter.</span>
+0014 <span class="comment">%   hyperparameters - A cell array of hyperparameter structures. Each structure</span>
+0015 <span class="comment">%                     contains information about a hyperparameter, including</span>
+0016 <span class="comment">%                     whether it is discrete (isDiscrete field).</span>
+0017 <span class="comment">%   hpIndexes       - A vector of indexes indicating which hyperparameters in</span>
+0018 <span class="comment">%                     the hyperparameters cell array should be processed.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Outputs:</span>
+0021 <span class="comment">%   population      - The updated population matrix with discrete hyperparameters</span>
+0022 <span class="comment">%                     rounded to the nearest integer.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Notes:</span>
+0025 <span class="comment">%   - The function assumes that the `isDiscrete` field in each hyperparameter</span>
+0026 <span class="comment">%     structure is a logical value indicating whether the hyperparameter is discrete.</span>
+0027 <span class="comment">%   - The function uses MATLAB's `round` function to round the values.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% Example:</span>
+0030 <span class="comment">%   % Define a population matrix</span>
+0031 <span class="comment">%   population = [1.2, 3.5; 4.7, 2.8];</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%   % Define hyperparameters</span>
+0034 <span class="comment">%   hyperparameters = {struct('isDiscrete', true), struct('isDiscrete', false)};</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%   % Specify indexes of hyperparameters to process</span>
+0037 <span class="comment">%   hpIndexes = [1];</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%   % Round discrete hyperparameters</span>
+0040 <span class="comment">%   population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes);</span>
+0041 <a name="_sub0" href="#_subfunctions" class="code">function population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes) </a><span class="comment">%#codegen</span>
+0042     <span class="keyword">for</span> i = 1:length(hpIndexes)
+0043         hp = hyperparameters{hpIndexes(i)};
+0044         <span class="keyword">if</span> hp.isDiscrete
+0045             population(:, i) = round(population(:, i));
+0046         <span class="keyword">end</span>
+0047     <span class="keyword">end</span>
+0048 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

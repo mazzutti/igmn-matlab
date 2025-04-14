@@ -1,0 +1,403 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of optimizeoptions</title>
+  <meta name="keywords" content="optimizeoptions">
+  <meta name="description" content="OPTIMIZEOPTIONS Class for configuring optimization options.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; optimizeoptions.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>optimizeoptions
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>OPTIMIZEOPTIONS Class for configuring optimization options.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> OPTIMIZEOPTIONS Class for configuring optimization options.
+
+   The `optimizeoptions` class provides a flexible way to configure
+   optimization settings for algorithms such as 'pso', 'psogsa', and 'imode'.
+   It allows users to specify hyperparameters, algorithm-specific settings,
+   and other options to control the optimization process.
+
+ PROPERTIES:
+   hyperparameters          - Array of Hyperparameters to be used as inputs.
+                              Default is an empty array.
+   Algorithm                - Optimizer name as a char. Options are 'pso',
+                              'psogsa', or 'imode'. Default is 'pso'.
+   UseDefaultsFor           - Array of Hyperparameters to be used as inputs
+                              without optimization. Default is an empty cell array.
+   InitialPopulation        - Initial or partial population of individuals
+                              as an M-by-nvars matrix. Default is [].
+   InitialPopulationSpan    - Initial range of individual positions. Default
+                              is based on hyperparameter bounds.
+   PlotFcns                 - Cell array of plot function names. Default is
+                              {'plotbestf', 'plotpopulation'}.
+   Display                  - Level of display output ('off', 'final', 'iter').
+                              Default is 'iter'.
+   DisplayInterval          - Interval for iterative display. Default is 1.
+   PopulationSize           - Number of individuals in the population. Default
+                              is min(100, 10*nvars).
+   UseParallel              - Boolean to compute objective function in parallel.
+                              Default is false.
+   StallIterLimit           - Maximum iterations without improvement. Default is 20.
+   StallTimeLimit           - Maximum time in seconds without improvement.
+                              Default is Inf.
+   TolFunValue              - Tolerance for function value change. Default is 1e-6.
+   InertiaRange             - Adaptive inertia range for 'pso'. Default is [0.1, 1.1].
+   MaxIter                  - Maximum number of iterations. Default is 200*nvars.
+   MaxTime                  - Maximum runtime in seconds. Default is Inf.
+   MaxFunEval               - Maximum number of function evaluations. Default
+                              is max(10000, PopulationSize * 100).
+   MinFractionNeighbors     - Minimum adaptive neighborhood size for 'pso'.
+                              Default is 0.25.
+   ObjectiveLimit           - Minimum objective value as a stopping criterion.
+                              Default is -Inf.
+   SelfAdjustment           - Weight for individual's best position in 'pso'.
+                              Default is 1.49.
+   SocialAdjustment         - Weight for neighborhood's best position in 'pso'.
+                              Default is 1.49.
+   MinPopulationSize        - Minimum population size for 'imode'. Default is 4.
+   PopulationArquiveRate    - Archive size ratio for 'imode'. Default is 2.6.
+   GravitationalConstant    - Gravitational constant. Default is 1.
+   ExtraEvalArgs            - Additional arguments for evaluation. Default is {}.
+   ExtraEvalCellArgs        - Additional cell arguments for evaluation. Default is {}.
+   Verbosity                - Verbosity level based on Display property.
+
+ METHODS:
+   optimizeoptions          - Constructor to initialize the optimization options.
+   initialPopulationSpan    - Static method to compute the initial population span
+                              based on hyperparameter bounds.
+
+ USAGE:
+   options = optimizeoptions(hyperparameters, options);
+   - `hyperparameters`: Array of Hyperparameters.
+   - `options`: Struct with fields corresponding to the properties above.
+
+ EXAMPLE:
+   hyperparams = {Hyperparameter('x', 0, 10), Hyperparameter('y', -5, 5)};
+   options = optimizeoptions(hyperparams, ...
+       'Algorithm', 'pso', ...
+       'PopulationSize', 50, ...
+       'Display', 'iter');</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="optimizeoptions.html" class="code" title="">optimizeoptions</a>	OPTIMIZEOPTIONS Class for configuring optimization options.</li><li><a href="../igmn/private/mustBeACellArrayOf.html" class="code" title="function mustBeACellArrayOf(cellArray, className)">mustBeACellArrayOf</a>	mustBeACellArrayOf - Validate that input is a cell array of a specific class</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="Problem.html" class="code" title="">Problem</a>	Problem Class</li><li><a href="optimizeoptions.html" class="code" title="">optimizeoptions</a>	OPTIMIZEOPTIONS Class for configuring optimization options.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function PopulationSpan = initialPopulationSpan(populationSpan, hyperparameters)</a></li><li><a href="#_sub2" class="code">function self = optimizeoptions(hyperparameters, options)</a></li></ul>
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="optimizeoptions.m">optimizeoptions.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% OPTIMIZEOPTIONS Class for configuring optimization options.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   The `optimizeoptions` class provides a flexible way to configure</span>
+0004 <span class="comment">%   optimization settings for algorithms such as 'pso', 'psogsa', and 'imode'.</span>
+0005 <span class="comment">%   It allows users to specify hyperparameters, algorithm-specific settings,</span>
+0006 <span class="comment">%   and other options to control the optimization process.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% PROPERTIES:</span>
+0009 <span class="comment">%   hyperparameters          - Array of Hyperparameters to be used as inputs.</span>
+0010 <span class="comment">%                              Default is an empty array.</span>
+0011 <span class="comment">%   Algorithm                - Optimizer name as a char. Options are 'pso',</span>
+0012 <span class="comment">%                              'psogsa', or 'imode'. Default is 'pso'.</span>
+0013 <span class="comment">%   UseDefaultsFor           - Array of Hyperparameters to be used as inputs</span>
+0014 <span class="comment">%                              without optimization. Default is an empty cell array.</span>
+0015 <span class="comment">%   InitialPopulation        - Initial or partial population of individuals</span>
+0016 <span class="comment">%                              as an M-by-nvars matrix. Default is [].</span>
+0017 <span class="comment">%   InitialPopulationSpan    - Initial range of individual positions. Default</span>
+0018 <span class="comment">%                              is based on hyperparameter bounds.</span>
+0019 <span class="comment">%   PlotFcns                 - Cell array of plot function names. Default is</span>
+0020 <span class="comment">%                              {'plotbestf', 'plotpopulation'}.</span>
+0021 <span class="comment">%   Display                  - Level of display output ('off', 'final', 'iter').</span>
+0022 <span class="comment">%                              Default is 'iter'.</span>
+0023 <span class="comment">%   DisplayInterval          - Interval for iterative display. Default is 1.</span>
+0024 <span class="comment">%   PopulationSize           - Number of individuals in the population. Default</span>
+0025 <span class="comment">%                              is min(100, 10*nvars).</span>
+0026 <span class="comment">%   UseParallel              - Boolean to compute objective function in parallel.</span>
+0027 <span class="comment">%                              Default is false.</span>
+0028 <span class="comment">%   StallIterLimit           - Maximum iterations without improvement. Default is 20.</span>
+0029 <span class="comment">%   StallTimeLimit           - Maximum time in seconds without improvement.</span>
+0030 <span class="comment">%                              Default is Inf.</span>
+0031 <span class="comment">%   TolFunValue              - Tolerance for function value change. Default is 1e-6.</span>
+0032 <span class="comment">%   InertiaRange             - Adaptive inertia range for 'pso'. Default is [0.1, 1.1].</span>
+0033 <span class="comment">%   MaxIter                  - Maximum number of iterations. Default is 200*nvars.</span>
+0034 <span class="comment">%   MaxTime                  - Maximum runtime in seconds. Default is Inf.</span>
+0035 <span class="comment">%   MaxFunEval               - Maximum number of function evaluations. Default</span>
+0036 <span class="comment">%                              is max(10000, PopulationSize * 100).</span>
+0037 <span class="comment">%   MinFractionNeighbors     - Minimum adaptive neighborhood size for 'pso'.</span>
+0038 <span class="comment">%                              Default is 0.25.</span>
+0039 <span class="comment">%   ObjectiveLimit           - Minimum objective value as a stopping criterion.</span>
+0040 <span class="comment">%                              Default is -Inf.</span>
+0041 <span class="comment">%   SelfAdjustment           - Weight for individual's best position in 'pso'.</span>
+0042 <span class="comment">%                              Default is 1.49.</span>
+0043 <span class="comment">%   SocialAdjustment         - Weight for neighborhood's best position in 'pso'.</span>
+0044 <span class="comment">%                              Default is 1.49.</span>
+0045 <span class="comment">%   MinPopulationSize        - Minimum population size for 'imode'. Default is 4.</span>
+0046 <span class="comment">%   PopulationArquiveRate    - Archive size ratio for 'imode'. Default is 2.6.</span>
+0047 <span class="comment">%   GravitationalConstant    - Gravitational constant. Default is 1.</span>
+0048 <span class="comment">%   ExtraEvalArgs            - Additional arguments for evaluation. Default is {}.</span>
+0049 <span class="comment">%   ExtraEvalCellArgs        - Additional cell arguments for evaluation. Default is {}.</span>
+0050 <span class="comment">%   Verbosity                - Verbosity level based on Display property.</span>
+0051 <span class="comment">%</span>
+0052 <span class="comment">% METHODS:</span>
+0053 <span class="comment">%   optimizeoptions          - Constructor to initialize the optimization options.</span>
+0054 <span class="comment">%   initialPopulationSpan    - Static method to compute the initial population span</span>
+0055 <span class="comment">%                              based on hyperparameter bounds.</span>
+0056 <span class="comment">%</span>
+0057 <span class="comment">% USAGE:</span>
+0058 <span class="comment">%   options = optimizeoptions(hyperparameters, options);</span>
+0059 <span class="comment">%   - `hyperparameters`: Array of Hyperparameters.</span>
+0060 <span class="comment">%   - `options`: Struct with fields corresponding to the properties above.</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">% EXAMPLE:</span>
+0063 <span class="comment">%   hyperparams = {Hyperparameter('x', 0, 10), Hyperparameter('y', -5, 5)};</span>
+0064 <span class="comment">%   options = optimizeoptions(hyperparams, ...</span>
+0065 <span class="comment">%       'Algorithm', 'pso', ...</span>
+0066 <span class="comment">%       'PopulationSize', 50, ...</span>
+0067 <span class="comment">%       'Display', 'iter');</span>
+0068 classdef <a href="optimizeoptions.html" class="code" title="">optimizeoptions</a>
+0069     
+0070     properties
+0071         hyperparameters
+0072         Algorithm
+0073         UseDefaultsFor
+0074         InitialPopulation
+0075         InitialPopulationSpan
+0076         PlotFcns
+0077         DisplayInterval
+0078         Display
+0079         PopulationSize
+0080         UseParallel
+0081         StallIterLimit
+0082         StallTimeLimit
+0083         TolFunValue
+0084         InertiaRange
+0085         MaxIter
+0086         MaxTime
+0087         MaxFunEval
+0088         MinFractionNeighbors
+0089         ObjectiveLimit
+0090         SelfAdjustment
+0091         SocialAdjustment
+0092         MinPopulationSize
+0093         PopulationArquiveRate
+0094         GravitationalConstant
+0095         Verbosity
+0096         ExtraEvalArgs
+0097         ExtraEvalCellArgs
+0098     <span class="keyword">end</span>
+0099 
+0100     methods(Static)
+0101         <a name="_sub0" href="#_subfunctions" class="code">function PopulationSpan = initialPopulationSpan(populationSpan, hyperparameters)</a>
+0102             <span class="keyword">if</span> isempty(populationSpan)
+0103                 nvars = length(hyperparameters);
+0104                 PopulationSpan = zeros(1, nvars);
+0105                 <span class="keyword">for</span> i = 1:nvars
+0106                     var = hyperparameters{i};
+0107                     span = var.ub - var.lb;
+0108                     <span class="keyword">if</span> var.isDiscrete; span = round(span); <span class="keyword">end</span>
+0109                     PopulationSpan(i) = span;
+0110                 <span class="keyword">end</span>
+0111             <span class="keyword">else</span> 
+0112                 PopulationSpan = populationSpan;
+0113             <span class="keyword">end</span>
+0114         <span class="keyword">end</span>
+0115     <span class="keyword">end</span>
+0116     
+0117     methods
+0118         <a name="_sub1" href="#_subfunctions" class="code">function self = optimizeoptions(hyperparameters, options)</a>
+0119             <span class="comment">%   hyperparameters:               An array of Hyperparameters to be used as inputs to be be used</span>
+0120             <span class="comment">%                                  directly, without optimization. Default value is [].</span>
+0121             <span class="comment">%   options.Algorithm              Optimzer name as a char. Current options are 'pso' or 'imode'.</span>
+0122             <span class="comment">%                                  Default is  'pso'.</span>
+0123             <span class="comment">%   options.UseDefaultsFor:        An array of Hyperparameters to be used as inputs, without</span>
+0124             <span class="comment">%                                  doing any optimization. Default value is an empty cell array.</span>
+0125             <span class="comment">%   options.InitialPopulation:     Initial population or partial population of individuals.</span>
+0126             <span class="comment">%                                  M-by-nvars matrix, where each row represents one individual.</span>
+0127             <span class="comment">%                                  If M &lt; PopulationSize, then the optimization creates more</span>
+0128             <span class="comment">%                                  individuals so  that the total number is PopulationSize.</span>
+0129             <span class="comment">%                                  If M &gt; PopulationSize, then the optimization uses  the first</span>
+0130             <span class="comment">%                                  PopulationSize rows. Default value is [].</span>
+0131             <span class="comment">%   options.InitialPopulationSpan: Initial range of individual positions to be created. Can be a</span>
+0132             <span class="comment">%                                  positive scalar or a vector with nvars elements, where nvars is</span>
+0133             <span class="comment">%                                  the number of Hyperparameters. The range for any individual component</span>
+0134             <span class="comment">%                                  is -InitialPopulationSpan/2, InitialPopulationSpan/2, shifted and scaled</span>
+0135             <span class="comment">%                                  if necessary to match any hyperparameter. Default is [hyperparameter.ub</span>
+0136             <span class="comment">%                                  - hyperparameter.lb].</span>
+0137             <span class="comment">%   options.PlotFcns:              Function names as a cell array of char. Plot functions can plot</span>
+0138             <span class="comment">%                                  each iteration, and stop the solver, when closed. Default is</span>
+0139             <span class="comment">%                                  {'plotbestf', 'plotpopulation'}.</span>
+0140             <span class="comment">%   options.Display:               Level of display returned to the command line.</span>
+0141             <span class="comment">%                                    - 'off' or 'none' displays no output.</span>
+0142             <span class="comment">%                                    - 'final' displays just the final output (default).</span>
+0143             <span class="comment">%                                    - 'iter' gives iterative display.</span>
+0144             <span class="comment">%   options.DisplayInterval:       Interval for iterative display. The iterative display prints</span>
+0145             <span class="comment">%                                  one line for every DisplayInterval iterations. Default is 1.</span>
+0146             <span class="comment">%   options.PopulationSize:        The number of individualss in the population, an integer greater than 1.</span>
+0147             <span class="comment">%                                  Default is min(100, 10*nvars), where nvars is the number of</span>
+0148             <span class="comment">%                                  hyperparameters.</span>
+0149             <span class="comment">%   options.UseParallel:           Compute objective function in parallel when true. Default is false.</span>
+0150             <span class="comment">%   options.StallIterLimit:        Positive integer with default 20. Iterations end when the relative</span>
+0151             <span class="comment">%                                  change in best objective function value over the last StallIterLimit</span>
+0152             <span class="comment">%                                  iterations is less than options.TolFunValue.</span>
+0153             <span class="comment">%   options.StallTimeLimit:        Maximum number of seconds without an improvement in the best known</span>
+0154             <span class="comment">%                                  objective function value. Positive scalar with default Inf.</span>
+0155             <span class="comment">%   options.TolFunValue:           Nonnegative scalar with default 1e-6. Iterations end when the relative</span>
+0156             <span class="comment">%                                  change in best objective function value over the last StallTimeLimit</span>
+0157             <span class="comment">%                                  iterations is less than options.TolFunValue.</span>
+0158             <span class="comment">%   options.InertiaRange:          Two-element real vector with same sign values in increasing order.</span>
+0159             <span class="comment">%                                  Gives the lower and upper bound of the adaptive inertia. To obtain a</span>
+0160             <span class="comment">%                                  constant (nonadaptive) inertia, set both elements of InertiaRange to</span>
+0161             <span class="comment">%                                  the same value. Default is [0.1, 1.1]. Only used in the 'pso' Algorithm.</span>
+0162             <span class="comment">%   options.MaxIter:               Maximum number of iterations the optimization process takes.</span>
+0163             <span class="comment">%                                  Default is 200*nvars, where nvars is the number of hyperparameters.</span>
+0164             <span class="comment">%   options.MaxFunEval:            Maximum number of fun evaluations the optimization process takes.</span>
+0165             <span class="comment">%                                  Only used in the 'imode' Algorithm. The default value is</span>
+0166             <span class="comment">%                                  max(10000, options.PopulationSize * 100).</span>
+0167             <span class="comment">%</span>
+0168             <span class="comment">%   options.MaxTime:               Maximum time in seconds that the optimization runs. Default is Inf.</span>
+0169             <span class="comment">%   options.MinFractionNeighbors:  Minimum adaptive neighborhood size, a scalar from 0 to 1. Default</span>
+0170             <span class="comment">%                                  is 0.25. Only used in the 'pso' Algorithm.</span>
+0171             <span class="comment">%   options.ObjectiveLimit:        Minimum objective value, a stopping criterion. Scalar, with</span>
+0172             <span class="comment">%                                  default -Inf. Only used in the 'pso' Algorithm.</span>
+0173             <span class="comment">%   options.SelfAdjustment:        Weighting of each individual s best position when adjusting</span>
+0174             <span class="comment">%                                  velocity. Finite scalar with default 1.49. Only used in the 'pso'</span>
+0175             <span class="comment">%                                  Algorithm.</span>
+0176             <span class="comment">%   options.SocialAdjustment:      Weighting of the neighborhood s best position when adjusting</span>
+0177             <span class="comment">%                                  velocity. Finite scalar with default 1.49. Only used in the 'pso'</span>
+0178             <span class="comment">%                                  Algorithm.</span>
+0179             <span class="comment">%   options.MinPopulationSize      Minimum population size. Only used in the 'imode' Algorithm.</span>
+0180             <span class="comment">%                                  The default value is 4.</span>
+0181             <span class="comment">%   options.PopulationArquiveRate  Ratio of archive size to population size. Only used in the 'imode'</span>
+0182             <span class="comment">%                                  Algorithm. The default value is 2.6.</span>
+0183             <span class="comment">%   options.GravitationalConstant  The gravitational constant. The default value is 1.</span>
+0184             arguments
+0185                 hyperparameters (1,:) { <span class="keyword">...</span>
+0186                     <a href="../igmn/private/mustBeACellArrayOf.html" class="code" title="function mustBeACellArrayOf(cellArray, className)">mustBeACellArrayOf</a>(hyperparameters, <span class="string">'Hyperparameter'</span>) <span class="keyword">...</span>
+0187                 } = [],
+0188                 options.Algorithm (1, :) char { <span class="keyword">...</span>
+0189                     mustBeMember(options.Algorithm, {<span class="string">'pso'</span>, <span class="string">'psogsa'</span>, <span class="string">'imode'</span>}) <span class="keyword">...</span>
+0190                 }  = <span class="string">'pso'</span>,
+0191                 options.UseDefaultsFor (1,:) { <span class="keyword">...</span>
+0192                     <a href="../igmn/private/mustBeACellArrayOf.html" class="code" title="function mustBeACellArrayOf(cellArray, className)">mustBeACellArrayOf</a>(options.UseDefaultsFor, <span class="string">'char'</span>) <span class="keyword">...</span>
+0193                 } = {},
+0194                 options.InitialPopulation (:, :) double { <span class="keyword">...</span>
+0195                     mustBeNumeric, <span class="keyword">...</span>
+0196                     mustBeNonNan, <span class="keyword">...</span><span class="comment"> </span>
+0197                     mustBeFinite <span class="keyword">...</span>
+0198                 } = [],
+0199                 options.InitialPopulationSpan (1, :) double { <span class="keyword">...</span>
+0200                     mustBeNumeric, <span class="keyword">...</span>
+0201                     mustBeNonNan, <span class="keyword">...</span>
+0202                     mustBeFinite <span class="keyword">...</span>
+0203                 } = zeros(1, 0),
+0204                 options.PlotFuncs (1, :) { <span class="keyword">...</span>
+0205                     mustBeMember(options.PlotFuncs, {<span class="keyword">...</span>
+0206                         <span class="string">'plotbestf'</span>, <span class="string">'plotpopulation'</span>, <span class="string">'plotscorediversity'</span>} <span class="keyword">...</span>
+0207                     ) <span class="keyword">...</span>
+0208                 } = {<span class="string">'plotbestf'</span>, <span class="string">'plotpopulation'</span>},
+0209                 options.Display (1, :) char { <span class="keyword">...</span>
+0210                     mustBeMember(options.Display, {<span class="string">'off'</span>, <span class="string">'iter'</span>, <span class="string">'final'</span>}) <span class="keyword">...</span>
+0211                 }  = <span class="string">'iter'</span>,
+0212                 options.DisplayInterval (1, 1) double {mustBeInteger} = 1,
+0213                 options.PopulationSize (1, 1) double { <span class="keyword">...</span>
+0214                     mustBeNumeric, <span class="keyword">...</span>
+0215                     mustBeGreaterThan(options.PopulationSize, 1) <span class="keyword">...</span>
+0216                 } = min(100, 10 * length(hyperparameters)),
+0217                 options.UseParallel (1, 1) logical = false,
+0218                 options.StallIterLimit (1, 1) double {mustBeInteger, mustBePositive} = 20,
+0219                 options.StallTimeLimit (1, 1) double {mustBeNonNan, mustBePositive} = Inf,
+0220                 options.TolFunValue (1, 1) double {mustBeNonNan, mustBePositive} = 1e-6,
+0221                 options.InertiaRange (1, 2) double {mustBeNonNan, mustBePositive} = [0.1, 1.1],
+0222                 options.MaxIter (1, 1) double { <span class="keyword">...</span>
+0223                     mustBeInteger, <span class="keyword">...</span>
+0224                     mustBePositive <span class="keyword">...</span>
+0225                 } = 200 * length(hyperparameters),
+0226                 options.MaxTime (1, 1) double {mustBeNonNan, mustBePositive} = Inf,
+0227                 options.MaxFunEval (1, 1) double { <span class="keyword">...</span>
+0228                     mustBeInteger, <span class="keyword">...</span>
+0229                     mustBePositive <span class="keyword">...</span>
+0230                 } = 10000,
+0231                 options.MinFractionNeighbors (1, 1) double { <span class="keyword">...</span>
+0232                     mustBeInRange(options.MinFractionNeighbors, 0, 1) <span class="keyword">...</span>
+0233                 } = 0.25,
+0234                 options.ObjectiveLimit (1, 1) double {mustBeNumeric, mustBeNonNan} = -Inf,
+0235                 options.SelfAdjustment (1, 1) double {mustBeFinite, mustBeNonNan} = 1.49,
+0236                 options.SocialAdjustment (1, 1) double {mustBeFinite, mustBeNonNan} = 1.49,
+0237                 options.MinPopulationSize (1, 1) double { <span class="keyword">...</span>
+0238                     mustBeFinite, <span class="keyword">...</span>
+0239                     mustBeNonNan, <span class="keyword">...</span>
+0240                     mustBeInteger, <span class="keyword">...</span>
+0241                     mustBeGreaterThan(options.MinPopulationSize, 3) <span class="keyword">...</span>
+0242                 } = 4,
+0243                 options.PopulationArquiveRate (1, 1) double {mustBeFinite, mustBeNonNan} = 2.6, <span class="keyword">...</span>
+0244                 options.GravitationalConstant (1, 1) double {mustBeFinite, mustBeNonNan} = 1, <span class="keyword">...</span>
+0245                 options.ExtraEvalArgs (:, :) cell = {}, <span class="keyword">...</span>
+0246                 options.ExtraEvalCellArgs (:, :) cell = {}
+0247             <span class="keyword">end</span>
+0248             self.hyperparameters = hyperparameters;
+0249             self.Algorithm = options.Algorithm;
+0250             self.UseDefaultsFor = options.UseDefaultsFor;
+0251             self.InitialPopulation = options.InitialPopulation;
+0252             self.InitialPopulationSpan = <span class="keyword">...</span>
+0253                 optimizeoptions.initialPopulationSpan(options.InitialPopulationSpan, hyperparameters);
+0254             self.PlotFcns = options.PlotFuncs;
+0255             self.Display = options.Display;
+0256             self.DisplayInterval = options.DisplayInterval;
+0257             self.PopulationSize = options.PopulationSize;
+0258             self.UseParallel = options.UseParallel;
+0259             self.StallIterLimit = options.StallIterLimit;
+0260             self.StallTimeLimit = options.StallTimeLimit;
+0261             self.TolFunValue = options.TolFunValue;
+0262             self.InertiaRange = options.InertiaRange;
+0263             self.MaxIter = options.MaxIter;
+0264             self.MaxTime = options.MaxTime;
+0265             self.MaxFunEval = max(options.MaxFunEval, options.PopulationSize * 100);
+0266             self.MinFractionNeighbors = options.MinFractionNeighbors;
+0267             self.ObjectiveLimit = options.ObjectiveLimit;
+0268             self.SelfAdjustment = options.SelfAdjustment;
+0269             self.SocialAdjustment = options.SocialAdjustment;
+0270             self.MinPopulationSize = options.MinPopulationSize;
+0271             self.PopulationArquiveRate = options.PopulationArquiveRate;
+0272             self.GravitationalConstant = options.GravitationalConstant;
+0273             self.ExtraEvalArgs = options.ExtraEvalArgs;
+0274             self.ExtraEvalCellArgs = options.ExtraEvalCellArgs;
+0275             
+0276             <span class="comment">% Determine the verbosity</span>
+0277             <span class="keyword">switch</span>  self.Display
+0278                 <span class="keyword">case</span> {<span class="string">'off'</span>,<span class="string">'none'</span>}
+0279                     self.Verbosity = 0;
+0280                 <span class="keyword">case</span> <span class="string">'final'</span>
+0281                     self.Verbosity = 1;
+0282                 <span class="keyword">case</span> <span class="string">'iter'</span>
+0283                     self.Verbosity = 2;
+0284             <span class="keyword">end</span>
+0285         <span class="keyword">end</span>
+0286     <span class="keyword">end</span>
+0287 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

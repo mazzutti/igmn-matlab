@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of createUniformPopulation</title>
+  <meta name="keywords" content="createUniformPopulation">
+  <meta name="description" content="createUniformPopulation - Generates a uniform population of individuals for optimization.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; createUniformPopulation.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>createUniformPopulation
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>createUniformPopulation - Generates a uniform population of individuals for optimization.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function population = createUniformPopulation(problemStruct, hpIndexes) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> createUniformPopulation - Generates a uniform population of individuals for optimization.
+
+ Syntax:
+   population = createUniformPopulation(problemStruct, hpIndexes)
+
+ Inputs:
+   problemStruct - A structure containing the problem definition, including:
+       - nhps: Number of hyperparameters.
+       - options: A structure with options for the optimization process, including:
+           - PopulationSize: Total number of individuals in the population.
+           - InitialPopulation: Matrix of initial individuals (optional).
+           - InitialPopulationSpan: Span for generating initial individuals.
+       - lb: Lower bounds for the hyperparameters.
+       - ub: Upper bounds for the hyperparameters.
+   hpIndexes - Indices of discrete hyperparameters in the population.
+
+ Outputs:
+   population - A matrix where each row represents an individual in the population,
+                and each column corresponds to a hyperparameter.
+
+ Description:
+   This function generates a population of individuals for an optimization problem.
+   It uses the provided initial population (if any) and fills the remaining slots
+   by sampling uniformly within the specified bounds. The function ensures that
+   all values are finite and rounds discrete hyperparameters to valid values.
+
+ Notes:
+   - The function relies on the helper functions `determinePositionInitBounds` to
+     calculate finite bounds and `roundDiscreteHyperparameters` to handle discrete
+     hyperparameters.
+   - An error is raised if any value in the generated population is not finite.
+
+ See also:
+   determinePositionInitBounds, <a href="roundDiscreteHyperparameters.html" class="code" title="function population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes) %#codegen">roundDiscreteHyperparameters</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="roundDiscreteHyperparameters.html" class="code" title="function population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes) %#codegen">roundDiscreteHyperparameters</a>	roundDiscreteHyperparameters - Rounds discrete hyperparameters in a population matrix.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../igmn/makeOptimizationState.html" class="code" title="function state = makeOptimizationState(nhps, lbMatrix, ubMatrix, optOptions, objFun, hpIndexes) %#codegen">makeOptimizationState</a>	makeOptimizationState - Initializes the optimization state structure for an optimization algorithm.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [lb, ub] = determinePositionInitBounds(lb, ub, initialPopulationSpan)</a></li></ul>
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="createUniformPopulation.m">createUniformPopulation.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 
+0002 <span class="comment">% createUniformPopulation - Generates a uniform population of individuals for optimization.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Syntax:</span>
+0005 <span class="comment">%   population = createUniformPopulation(problemStruct, hpIndexes)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Inputs:</span>
+0008 <span class="comment">%   problemStruct - A structure containing the problem definition, including:</span>
+0009 <span class="comment">%       - nhps: Number of hyperparameters.</span>
+0010 <span class="comment">%       - options: A structure with options for the optimization process, including:</span>
+0011 <span class="comment">%           - PopulationSize: Total number of individuals in the population.</span>
+0012 <span class="comment">%           - InitialPopulation: Matrix of initial individuals (optional).</span>
+0013 <span class="comment">%           - InitialPopulationSpan: Span for generating initial individuals.</span>
+0014 <span class="comment">%       - lb: Lower bounds for the hyperparameters.</span>
+0015 <span class="comment">%       - ub: Upper bounds for the hyperparameters.</span>
+0016 <span class="comment">%   hpIndexes - Indices of discrete hyperparameters in the population.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Outputs:</span>
+0019 <span class="comment">%   population - A matrix where each row represents an individual in the population,</span>
+0020 <span class="comment">%                and each column corresponds to a hyperparameter.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% Description:</span>
+0023 <span class="comment">%   This function generates a population of individuals for an optimization problem.</span>
+0024 <span class="comment">%   It uses the provided initial population (if any) and fills the remaining slots</span>
+0025 <span class="comment">%   by sampling uniformly within the specified bounds. The function ensures that</span>
+0026 <span class="comment">%   all values are finite and rounds discrete hyperparameters to valid values.</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Notes:</span>
+0029 <span class="comment">%   - The function relies on the helper functions `determinePositionInitBounds` to</span>
+0030 <span class="comment">%     calculate finite bounds and `roundDiscreteHyperparameters` to handle discrete</span>
+0031 <span class="comment">%     hyperparameters.</span>
+0032 <span class="comment">%   - An error is raised if any value in the generated population is not finite.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% See also:</span>
+0035 <span class="comment">%   determinePositionInitBounds, roundDiscreteHyperparameters</span>
+0036 <a name="_sub0" href="#_subfunctions" class="code">function population = createUniformPopulation(problemStruct, hpIndexes) </a><span class="comment">%#codegen</span>
+0037 
+0038     nhps = problemStruct.nhps;
+0039     options = problemStruct.options;
+0040     <span class="comment">% Determine finite bounds for the initial individuals based on the problem's</span>
+0041     <span class="comment">% bounds and options.InitialPopulationSpan.</span>
+0042     [lb, ub] = <a href="#_sub1" class="code" title="subfunction [lb, ub] = determinePositionInitBounds(lb, ub, initialPopulationSpan) ">determinePositionInitBounds</a>(problemStruct.lb, problemStruct.ub, options.InitialPopulationSpan);
+0043 
+0044     numIndividuals = options.PopulationSize;
+0045     numInitPositions = size(options.InitialPopulation, 1);
+0046     numPositionsToCreate = numIndividuals - numInitPositions;
+0047 
+0048     <span class="comment">% Initialize individuals to be created</span>
+0049     population = zeros(numIndividuals, nhps);
+0050     
+0051     <span class="comment">% Use initial individuals provided already</span>
+0052     <span class="keyword">if</span> numInitPositions &gt; 0
+0053         population(1:numInitPositions, :) = options.InitialPopulation;
+0054     <span class="keyword">end</span>
+0055     
+0056     <span class="comment">% Create remaining individuals, randomly sampling within lb and ub</span>
+0057 
+0058     population(numInitPositions + 1:<span class="keyword">end</span>, :) = unifrnd( <span class="keyword">...</span>
+0059         repmat(lb, numPositionsToCreate, 1), repmat(ub, numPositionsToCreate, 1));
+0060 
+0061     <span class="comment">% Error if any values are not finite</span>
+0062     <span class="keyword">if</span> ~all(isfinite(population(:)))
+0063         error(<span class="string">'Position not finite'</span>);
+0064     <span class="keyword">end</span>
+0065     population = <a href="roundDiscreteHyperparameters.html" class="code" title="function population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes) %#codegen">roundDiscreteHyperparameters</a>(population, options.hyperparameters, hpIndexes);
+0066 <span class="keyword">end</span>
+0067 
+0068 <span class="comment">% DETERMINEPOSITIONINITBOUNDS Adjusts lower and upper bounds for initialization.</span>
+0069 <span class="comment">%</span>
+0070 <span class="comment">%   [LB, UB] = DETERMINEPOSITIONINITBOUNDS(LB, UB, INITIALPOPULATIONSPAN)</span>
+0071 <span class="comment">%   updates the lower bounds (LB) and upper bounds (UB) based on the</span>
+0072 <span class="comment">%   specified INITIALPOPULATIONSPAN. This ensures that the initial bounds</span>
+0073 <span class="comment">%   are always finite.</span>
+0074 <span class="comment">%</span>
+0075 <span class="comment">%   Inputs:</span>
+0076 <span class="comment">%       LB - Vector of lower bounds. Can contain finite or infinite values.</span>
+0077 <span class="comment">%       UB - Vector of upper bounds. Can contain finite or infinite values.</span>
+0078 <span class="comment">%       INITIALPOPULATIONSPAN - Vector specifying the span for initializing</span>
+0079 <span class="comment">%                               the population. Must be the same size as LB</span>
+0080 <span class="comment">%                               and UB.</span>
+0081 <span class="comment">%</span>
+0082 <span class="comment">%   Outputs:</span>
+0083 <span class="comment">%       LB - Updated vector of lower bounds with finite values.</span>
+0084 <span class="comment">%       UB - Updated vector of upper bounds with finite values.</span>
+0085 <span class="comment">%</span>
+0086 <span class="comment">%   Behavior:</span>
+0087 <span class="comment">%       - If both LB and UB are finite, the bounds remain unchanged.</span>
+0088 <span class="comment">%       - If both LB and UB are infinite, the range is centered around 0</span>
+0089 <span class="comment">%         using INITIALPOPULATIONSPAN.</span>
+0090 <span class="comment">%       - If only LB is finite, UB is set to LB + INITIALPOPULATIONSPAN.</span>
+0091 <span class="comment">%       - If only UB is finite, LB is set to UB - INITIALPOPULATIONSPAN.</span>
+0092 <span class="comment">%</span>
+0093 <span class="comment">%   Note:</span>
+0094 <span class="comment">%       This function is designed to handle cases where bounds may be</span>
+0095 <span class="comment">%       partially or fully infinite, ensuring that the resulting bounds</span>
+0096 <span class="comment">%       are always finite and suitable for initialization purposes.</span>
+0097 <a name="_sub1" href="#_subfunctions" class="code">function [lb, ub] = determinePositionInitBounds(lb, ub, initialPopulationSpan) </a><span class="comment">%#codegen</span>
+0098     <span class="comment">% Update lb and ub using positionInitSpan, so that initial bounds are</span>
+0099     <span class="comment">% always finite</span>
+0100     lbFinite = isfinite(lb);
+0101     ubFinite = isfinite(ub);
+0102     lbInf = ~lbFinite;
+0103     ubInf = ~ubFinite;
+0104     
+0105     <span class="comment">% If lb and ub are both finite, do not update the bounds.</span>
+0106     
+0107     <span class="comment">% If lb &amp; ub are both infinite, center the range around 0.</span>
+0108     idx = lbInf &amp; ubInf;
+0109     lb(idx) = -initialPopulationSpan(idx)/2;
+0110     ub(idx) = initialPopulationSpan(idx)/2;
+0111     
+0112     <span class="comment">% If only lb is finite, start the range at lb.</span>
+0113     idx = lbFinite &amp; ubInf;
+0114     ub(idx) = lb(idx) + initialPopulationSpan(idx);
+0115     
+0116     <span class="comment">% If only ub is finite, end the range at ub.</span>
+0117     idx = lbInf &amp; ubFinite;
+0118     lb(idx) = ub(idx) - initialPopulationSpan(idx);
+0119 <span class="keyword">end</span>
+0120</pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plotscorediversity</title>
+  <meta name="keywords" content="plotscorediversity">
+  <meta name="description" content="plotscorediversity Plots a histogram of the best and mean scores of individuals.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; plotscorediversity.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>plotscorediversity
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>plotscorediversity Plots a histogram of the best and mean scores of individuals.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function plotscorediversity(optimValues,flag) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> plotscorediversity Plots a histogram of the best and mean scores of individuals.
+
+   plotscorediversity(optimValues, flag) generates a histogram to visualize
+   the diversity of scores in the population during an optimization process.
+
+   Inputs:
+       optimValues - A structure containing information about the current
+                     state of the optimization. The field 'populationfvals'
+                     is expected to contain the fitness values of the population.
+       flag        - A string indicating the current state of the optimization.
+                     If flag is 'init', the function initializes the plot.
+
+   Behavior:
+       - When flag is 'init', the function sets up the axes properties for
+         the histogram plot.
+       - During subsequent calls, the function plots a histogram of the
+         fitness values in optimValues.populationfvals.
+
+   Notes:
+       - The histogram uses the 'hist' function to compute the bin counts
+         and bin edges.
+       - The histogram bars are displayed with a specific color ([0.1 0.1 0.5]).
+
+   Example:
+       % Assuming optimValues.populationfvals contains fitness values:
+       plotscorediversity(optimValues, 'init');
+       plotscorediversity(optimValues, 'iter');
+
+   See also: bar, hist</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="plotscorediversity.m">plotscorediversity.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% plotscorediversity Plots a histogram of the best and mean scores of individuals.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   plotscorediversity(optimValues, flag) generates a histogram to visualize</span>
+0004 <span class="comment">%   the diversity of scores in the population during an optimization process.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%   Inputs:</span>
+0007 <span class="comment">%       optimValues - A structure containing information about the current</span>
+0008 <span class="comment">%                     state of the optimization. The field 'populationfvals'</span>
+0009 <span class="comment">%                     is expected to contain the fitness values of the population.</span>
+0010 <span class="comment">%       flag        - A string indicating the current state of the optimization.</span>
+0011 <span class="comment">%                     If flag is 'init', the function initializes the plot.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   Behavior:</span>
+0014 <span class="comment">%       - When flag is 'init', the function sets up the axes properties for</span>
+0015 <span class="comment">%         the histogram plot.</span>
+0016 <span class="comment">%       - During subsequent calls, the function plots a histogram of the</span>
+0017 <span class="comment">%         fitness values in optimValues.populationfvals.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%   Notes:</span>
+0020 <span class="comment">%       - The histogram uses the 'hist' function to compute the bin counts</span>
+0021 <span class="comment">%         and bin edges.</span>
+0022 <span class="comment">%       - The histogram bars are displayed with a specific color ([0.1 0.1 0.5]).</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%   Example:</span>
+0025 <span class="comment">%       % Assuming optimValues.populationfvals contains fitness values:</span>
+0026 <span class="comment">%       plotscorediversity(optimValues, 'init');</span>
+0027 <span class="comment">%       plotscorediversity(optimValues, 'iter');</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%   See also: bar, hist</span>
+0030 <a name="_sub0" href="#_subfunctions" class="code">function plotscorediversity(optimValues,flag)</a>
+0031     <span class="keyword">if</span> strcmp(flag,<span class="string">'init'</span>)
+0032         set(gca,<span class="string">'NextPlot'</span>,<span class="string">'replacechildren'</span>,<span class="keyword">...</span>
+0033             <span class="string">'XLabel'</span>,xlabel(<span class="string">'Fvals'</span>),<span class="keyword">...</span>
+0034             <span class="string">'YLabel'</span>,ylabel(<span class="string">'Number of inidividuals'</span>))
+0035     <span class="keyword">end</span>
+0036     
+0037     [n, bins] = hist(optimValues.populationfvals); <span class="comment">%#ok&lt;HIST&gt;</span>
+0038     bar(bins, n, <span class="string">'Tag'</span>, <span class="string">'scorehistogram'</span>, <span class="string">'FaceColor'</span>, [0.1 0.1 0.5])
+0039 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

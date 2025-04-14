@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dump</title>
+  <meta name="keywords" content="dump">
+  <meta name="description" content="dump Dumps the properties of an IGMN network object to the console.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; dump.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>dump
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>dump Dumps the properties of an IGMN network object to the console.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function dump(net) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> dump Dumps the properties of an IGMN network object to the console.
+
+   dump(net) displays the public properties of the given IGMN network
+   object `net` in a formatted manner. If the properties are stored as
+   GPU arrays, they are gathered back to the CPU before being displayed.
+   The function handles specific formatting for properties like `covs`
+   and `means` based on the number of components (`net.nc`).
+
+   Input:
+       net - An instance of the IGMN network object whose properties
+             are to be displayed.
+
+   Behavior:
+       - Only public properties with non-empty values are displayed.
+       - The output is formatted with separators for better readability.
+       - GPU arrays are converted to standard arrays using `gather`.
+       - The display width dynamically adjusts to the longest line of
+         the formatted property values.
+
+   Example:
+       dump(myIGMN);
+       % This will display the public properties of the `myIGMN` object
+       % in a structured and readable format.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="dump.m">dump.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% dump Dumps the properties of an IGMN network object to the console.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   dump(net) displays the public properties of the given IGMN network</span>
+0004 <span class="comment">%   object `net` in a formatted manner. If the properties are stored as</span>
+0005 <span class="comment">%   GPU arrays, they are gathered back to the CPU before being displayed.</span>
+0006 <span class="comment">%   The function handles specific formatting for properties like `covs`</span>
+0007 <span class="comment">%   and `means` based on the number of components (`net.nc`).</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   Input:</span>
+0010 <span class="comment">%       net - An instance of the IGMN network object whose properties</span>
+0011 <span class="comment">%             are to be displayed.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   Behavior:</span>
+0014 <span class="comment">%       - Only public properties with non-empty values are displayed.</span>
+0015 <span class="comment">%       - The output is formatted with separators for better readability.</span>
+0016 <span class="comment">%       - GPU arrays are converted to standard arrays using `gather`.</span>
+0017 <span class="comment">%       - The display width dynamically adjusts to the longest line of</span>
+0018 <span class="comment">%         the formatted property values.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%   Example:</span>
+0021 <span class="comment">%       dump(myIGMN);</span>
+0022 <span class="comment">%       % This will display the public properties of the `myIGMN` object</span>
+0023 <span class="comment">%       % in a structured and readable format.</span>
+0024 <a name="_sub0" href="#_subfunctions" class="code">function dump(net) </a><span class="comment">%#codegen</span>
+0025     metaClass = ?igmn;
+0026     properties = metaClass.PropertyList;
+0027     buffer = {};
+0028     width = 0;
+0029     <span class="keyword">for</span> i = 1:size(properties, 1)
+0030         prop = properties(i);
+0031         propName = prop.Name;
+0032         <span class="keyword">if</span> isa(class(net.(propName)), <span class="string">'gpuArray'</span>)
+0033             value = gather(net.(propName));
+0034             <span class="keyword">if</span> strcmp(propName, &quot;covs&quot;) || strcmp(propName, &quot;means&quot;)
+0035                 value = value(1:net.nc);
+0036             <span class="keyword">else</span>
+0037                 <span class="keyword">if</span> strcmp(propName, &quot;covs&quot;)
+0038                     value = value(:, :, 1:net.nc);
+0039                 <span class="keyword">else</span>
+0040                     value(:, 1:net.nc);
+0041                 <span class="keyword">end</span>
+0042             <span class="keyword">end</span>
+0043         <span class="keyword">else</span>
+0044             value = net.(propName);
+0045         <span class="keyword">end</span>
+0046         <span class="keyword">if</span> (strcmp(prop.GetAccess, <span class="string">'public'</span>) &amp;&amp; ~isempty(value))
+0047             valueText = formattedDisplayText(value);
+0048             lengths = strlength(strsplit(valueText, <span class="string">'\n'</span>));
+0049             width = max([width max(lengths)]);
+0050             buffer{end+1} = strcat(sprintf(<span class="keyword">...</span>
+0051                 &quot;<span class="comment">%s\n&quot;, [propName ':']), valueText);</span>
+0052         <span class="keyword">end</span> 
+0053     <span class="keyword">end</span>
+0054     disp(repmat(<span class="string">'='</span>,1, width));
+0055     N = size(buffer, 2);
+0056     <span class="keyword">for</span> i = 1:N
+0057         disp(buffer{i});
+0058         <span class="keyword">if</span> i &lt; N
+0059             disp(repmat(<span class="string">'-'</span>,1, width));
+0060         <span class="keyword">end</span>
+0061     <span class="keyword">end</span>
+0062     disp(repmat(<span class="string">'='</span>,1, width));
+0063 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

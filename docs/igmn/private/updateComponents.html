@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of updateComponents</title>
+  <meta name="keywords" content="updateComponents">
+  <meta name="description" content="updateComponents Updates the components of the network based on input data.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; updateComponents.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>updateComponents
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>updateComponents Updates the components of the network based on input data.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function net = updateComponents(net, x) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> updateComponents Updates the components of the network based on input data.
+
+   net = updateComponents(net, x)
+
+   This function updates the parameters of a network structure `net` 
+   using the input data `x`. It modifies the means, covariances, priors, 
+   and other internal parameters of the network based on the posterior 
+   probabilities and the input data.
+
+   Inputs:
+       net - A structure representing the network, containing fields such as:
+             - vs: A vector of component counts.
+             - sp: A vector of posterior sums.
+             - spu: A vector of posterior sums (used for updates).
+             - means: A matrix of component means.
+             - invCovs: A matrix of inverse covariances.
+             - logDets: A vector of log determinants of covariances.
+             - priors: A vector of component priors.
+             - posteriors: A vector of posterior probabilities.
+             - minCov: A minimum covariance value to ensure numerical stability.
+             - dimension: Dimensionality of the data.
+             - nc: Number of components.
+             - useRankOne: A flag indicating whether to use rank-one updates.
+             - covs: A matrix of component covariances.
+       x   - A vector representing the input data point.
+
+   Outputs:
+       net - The updated network structure with modified fields:
+             - Updated means, covariances, priors, and other parameters.
+
+   Notes:
+       - If `useRankOne` is true, the function performs rank-one updates 
+         and downdates for the inverse covariance matrices.
+       - If `useRankOne` is false, the function updates the covariance 
+         matrices directly.
+       - The function ensures numerical stability by adding `minCov` to 
+         the covariance updates.
+
+   Example:
+       net = updateComponents(net, x);
+
+   See also: Other related functions in the IGMN framework.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="wrapValues.html" class="code" title="function values = wrapValues(values, options) %#codegen">wrapValues</a>	wrapValues - Restrict values to a specified range.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../igmn/learn.html" class="code" title="function net = learn(net, x) %#codegen">learn</a>	learn - Learns a single training sample and updates the network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="updateComponents.m">updateComponents.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% updateComponents Updates the components of the network based on input data.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   net = updateComponents(net, x)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   This function updates the parameters of a network structure `net`</span>
+0006 <span class="comment">%   using the input data `x`. It modifies the means, covariances, priors,</span>
+0007 <span class="comment">%   and other internal parameters of the network based on the posterior</span>
+0008 <span class="comment">%   probabilities and the input data.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   Inputs:</span>
+0011 <span class="comment">%       net - A structure representing the network, containing fields such as:</span>
+0012 <span class="comment">%             - vs: A vector of component counts.</span>
+0013 <span class="comment">%             - sp: A vector of posterior sums.</span>
+0014 <span class="comment">%             - spu: A vector of posterior sums (used for updates).</span>
+0015 <span class="comment">%             - means: A matrix of component means.</span>
+0016 <span class="comment">%             - invCovs: A matrix of inverse covariances.</span>
+0017 <span class="comment">%             - logDets: A vector of log determinants of covariances.</span>
+0018 <span class="comment">%             - priors: A vector of component priors.</span>
+0019 <span class="comment">%             - posteriors: A vector of posterior probabilities.</span>
+0020 <span class="comment">%             - minCov: A minimum covariance value to ensure numerical stability.</span>
+0021 <span class="comment">%             - dimension: Dimensionality of the data.</span>
+0022 <span class="comment">%             - nc: Number of components.</span>
+0023 <span class="comment">%             - useRankOne: A flag indicating whether to use rank-one updates.</span>
+0024 <span class="comment">%             - covs: A matrix of component covariances.</span>
+0025 <span class="comment">%       x   - A vector representing the input data point.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%   Outputs:</span>
+0028 <span class="comment">%       net - The updated network structure with modified fields:</span>
+0029 <span class="comment">%             - Updated means, covariances, priors, and other parameters.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%   Notes:</span>
+0032 <span class="comment">%       - If `useRankOne` is true, the function performs rank-one updates</span>
+0033 <span class="comment">%         and downdates for the inverse covariance matrices.</span>
+0034 <span class="comment">%       - If `useRankOne` is false, the function updates the covariance</span>
+0035 <span class="comment">%         matrices directly.</span>
+0036 <span class="comment">%       - The function ensures numerical stability by adding `minCov` to</span>
+0037 <span class="comment">%         the covariance updates.</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%   Example:</span>
+0040 <span class="comment">%       net = updateComponents(net, x);</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%   See also: Other related functions in the IGMN framework.</span>
+0043 <a name="_sub0" href="#_subfunctions" class="code">function net = updateComponents(net, x) </a><span class="comment">%#codegen</span>
+0044     net.vs = net.vs + 1;
+0045     net.sp = net.sp + net.posteriors;
+0046     net.spu = net.spu + net.posteriors;
+0047     means = permute(net.means, [3, 2, 1]);
+0048     lr = permute(net.posteriors ./ net.sp, [3, 1, 2]);
+0049     diff = (x - means) .* lr;
+0050     means = means + diff;
+0051     updateDiff = x - means;
+0052     <span class="keyword">if</span> net.useRankOne
+0053         lrInv = (1.0 - lr);
+0054         updateDiff = updateDiff .* sqrt(lr);
+0055         invCovs = net.invCovs ./ lrInv;
+0056 
+0057         <span class="comment">% Rank-one update</span>
+0058         numerator = sum(invCovs .* updateDiff, 2);
+0059         denominator = 1 + sum(updateDiff .* pagectranspose(numerator), 2);
+0060         partial = bsxfun(@mtimes, numerator,  pagetranspose(numerator));
+0061         invCovs = invCovs - partial ./ denominator;
+0062         logdet = net.logDets .* <span class="keyword">...</span>
+0063             (squeeze(lrInv)' .^ net.dimension) .* squeeze(denominator)';
+0064 
+0065         <span class="comment">% Rank-one downdate</span>
+0066         numerator = sum(invCovs .* diff, 2);
+0067         denominator = 1 - sum(diff .* pagectranspose(numerator), 2);
+0068         partial = bsxfun(@mtimes, numerator, pagetranspose(numerator));
+0069         net.invCovs = invCovs + partial ./ denominator + net.minCov;
+0070         net.logDets(1:end) = <a href="wrapValues.html" class="code" title="function values = wrapValues(values, options) %#codegen">wrapValues</a>(logdet .* squeeze(denominator)');
+0071     <span class="keyword">else</span>
+0072         deltaMUMult = pagemtimes(permute(diff, [2 1 3]), diff);
+0073         diffMultTemp = pagemtimes(permute(updateDiff,[2 1 3]), updateDiff);
+0074         diffMult = bsxfun(@minus, diffMultTemp, net.covs);
+0075         wightedDiff = bsxfun(@plus, pagemtimes(lr, diffMult), net.minCov);
+0076         deltaSum = bsxfun(@minus, net.covs, deltaMUMult);
+0077         net.covs = bsxfun(@plus, deltaSum, wightedDiff); 
+0078     <span class="keyword">end</span>
+0079     net.means = reshape(means, net.dimension, net.nc)';
+0080     net.priors = bsxfun(@rdivide, net.sp, sum(net.sp, 2));
+0081 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

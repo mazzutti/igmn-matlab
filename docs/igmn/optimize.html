@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of optimize</title>
+  <meta name="keywords" content="optimize">
+  <meta name="description" content="optimize - Optimizes the parameters of a given problem using a specified algorithm.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; optimize.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>optimize
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>optimize - Optimizes the parameters of a given problem using a specified algorithm.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function options = optimize(problem) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> optimize - Optimizes the parameters of a given problem using a specified algorithm.
+ 
+ Syntax:
+     options = optimize(problem)
+ 
+ Description:
+     This function takes a problem structure as input and optimizes its parameters
+     based on the specified optimization algorithm. The function supports multiple
+     algorithms such as 'pso', 'psogsa', and 'imode'. It determines which properties
+     of the default options need to be changed and applies the optimization accordingly.
+ 
+ Inputs:
+     problem - A structure containing the following fields:
+         - OptimizeOptions: A structure specifying the optimization settings, including:
+             * Algorithm: The optimization algorithm to use ('pso', 'psogsa', or 'imode').
+             * UseDefaultsFor: A cell array of property names for which default values should be used.
+         - DefaultIgmnOptions: A structure containing the default options for the IGMN algorithm.
+ 
+ Outputs:
+     options - A structure containing the optimized parameters for the problem.
+ 
+ Notes:
+     - The function uses helper functions `pso`, `psogsa`, and `imode` to perform the optimization
+       based on the selected algorithm.
+     - The `igmnoptions.from` method is used to construct the final options structure by
+       combining the default options with the optimized values for the specified properties.
+ 
+ Example:
+     % Define a problem structure
+     problem.OptimizeOptions.Algorithm = 'pso';
+     problem.OptimizeOptions.UseDefaultsFor = {'property1', 'property2'};
+     problem.DefaultIgmnOptions = defaultOptions;
+ 
+     % Optimize the problem
+     options = optimize(problem);
+ 
+ See also:
+     pso, psogsa, imode, <a href="igmnoptions.html" class="code" title="">igmnoptions</a>.from</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../igmn/private/imode.html" class="code" title="function [x, fval, exitFlag] = imode(problem) %#codegen">imode</a>	imode.m - Perform optimization using the IMODE algorithm.</li><li><a href="../igmn/private/pso.html" class="code" title="function [x, fval, exitFlag] = pso(problem) %#codegen">pso</a>	pso - Particle Swarm Optimization Algorithm</li><li><a href="../igmn/private/psogsa.html" class="code" title="function [x, fval, exitFlag] = psogsa(problem) %#codegen">psogsa</a>	psogsa - Particle Swarm Optimization with Gravitational Search Algorithm (PSOGSA)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	compile - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li><li><a href="transpile.html" class="code" title="function transpile(options)">transpile</a>	transpile - Transpile MATLAB code to MEX functions using MATLAB Coder.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="optimize.m">optimize.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% optimize - Optimizes the parameters of a given problem using a specified algorithm.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Syntax:</span>
+0004 <span class="comment">%     options = optimize(problem)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Description:</span>
+0007 <span class="comment">%     This function takes a problem structure as input and optimizes its parameters</span>
+0008 <span class="comment">%     based on the specified optimization algorithm. The function supports multiple</span>
+0009 <span class="comment">%     algorithms such as 'pso', 'psogsa', and 'imode'. It determines which properties</span>
+0010 <span class="comment">%     of the default options need to be changed and applies the optimization accordingly.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Inputs:</span>
+0013 <span class="comment">%     problem - A structure containing the following fields:</span>
+0014 <span class="comment">%         - OptimizeOptions: A structure specifying the optimization settings, including:</span>
+0015 <span class="comment">%             * Algorithm: The optimization algorithm to use ('pso', 'psogsa', or 'imode').</span>
+0016 <span class="comment">%             * UseDefaultsFor: A cell array of property names for which default values should be used.</span>
+0017 <span class="comment">%         - DefaultIgmnOptions: A structure containing the default options for the IGMN algorithm.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Outputs:</span>
+0020 <span class="comment">%     options - A structure containing the optimized parameters for the problem.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% Notes:</span>
+0023 <span class="comment">%     - The function uses helper functions `pso`, `psogsa`, and `imode` to perform the optimization</span>
+0024 <span class="comment">%       based on the selected algorithm.</span>
+0025 <span class="comment">%     - The `igmnoptions.from` method is used to construct the final options structure by</span>
+0026 <span class="comment">%       combining the default options with the optimized values for the specified properties.</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Example:</span>
+0029 <span class="comment">%     % Define a problem structure</span>
+0030 <span class="comment">%     problem.OptimizeOptions.Algorithm = 'pso';</span>
+0031 <span class="comment">%     problem.OptimizeOptions.UseDefaultsFor = {'property1', 'property2'};</span>
+0032 <span class="comment">%     problem.DefaultIgmnOptions = defaultOptions;</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%     % Optimize the problem</span>
+0035 <span class="comment">%     options = optimize(problem);</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% See also:</span>
+0038 <span class="comment">%     pso, psogsa, imode, igmnoptions.from</span>
+0039 <a name="_sub0" href="#_subfunctions" class="code">function options = optimize(problem) </a><span class="comment">%#codegen</span>
+0040     optOptions = problem.OptimizeOptions;
+0041     defaultIgmnOptions = problem.DefaultIgmnOptions;
+0042     props = properties(defaultIgmnOptions);
+0043     useDefaultsFor = [<span class="string">'range'</span>, optOptions.UseDefaultsFor];
+0044     toChangeProps = repmat({<span class="string">''</span>}, 1, length(props) - length(useDefaultsFor));
+0045     index = 1;
+0046     <span class="keyword">for</span> i = 1:length(props)
+0047         <span class="keyword">if</span> ~any(strcmp(useDefaultsFor, props{i}))
+0048             toChangeProps{index} = props{i};
+0049             index = index + 1;
+0050         <span class="keyword">end</span>
+0051     <span class="keyword">end</span>
+0052     <span class="keyword">if</span> strcmp(optOptions.Algorithm, <span class="string">'pso'</span>)
+0053         options = igmnoptions.from(defaultIgmnOptions, toChangeProps, num2cell(<a href="../igmn/private/pso.html" class="code" title="function [x, fval, exitFlag] = pso(problem) %#codegen">pso</a>(problem)));
+0054     <span class="keyword">elseif</span> strcmp(optOptions.Algorithm, <span class="string">'psogsa'</span>)
+0055         options = igmnoptions.from(defaultIgmnOptions, toChangeProps, num2cell(<a href="../igmn/private/psogsa.html" class="code" title="function [x, fval, exitFlag] = psogsa(problem) %#codegen">psogsa</a>(problem)));
+0056     <span class="keyword">else</span>
+0057         options = igmnoptions.from(defaultIgmnOptions, toChangeProps, num2cell(<a href="../igmn/private/imode.html" class="code" title="function [x, fval, exitFlag] = imode(problem) %#codegen">imode</a>(problem)));
+0058     <span class="keyword">end</span>
+0059 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

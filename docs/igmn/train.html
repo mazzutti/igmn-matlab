@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of train</title>
+  <meta name="keywords" content="train">
+  <meta name="description" content="train - Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; train.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>train
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>train - Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function  net = train(net, X) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> train - Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.
+
+ This function updates the IGMN model by iteratively learning from each 
+ example in the provided dataset X. The training process stops early if 
+ the network does not converge during the learning phase.
+
+ Inputs:
+   net : An instance of the IGMN model (of type `igmn`) to be trained.
+   X   : A numeric, non-empty matrix of size N x D, where N is the number 
+         of training examples and D is the dimensionality of each example.
+
+ Outputs:
+   net : The updated IGMN model after training with the dataset X.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="learn.html" class="code" title="function net = learn(net, x) %#codegen">learn</a>	learn - Learns a single training sample and updates the network.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	compile - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li><li><a href="evaluate.html" class="code" title="function fit = evaluate(params, problem, hpNames, maxPenalty) %#codegen">evaluate</a>	evaluate - Evaluates the performance of an IGMN (Incremental Gaussian Mixture Network) model.</li><li><a href="transpile.html" class="code" title="function transpile(options)">transpile</a>	transpile - Transpile MATLAB code to MEX functions using MATLAB Coder.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="train.m">train.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% train - Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% This function updates the IGMN model by iteratively learning from each</span>
+0004 <span class="comment">% example in the provided dataset X. The training process stops early if</span>
+0005 <span class="comment">% the network does not converge during the learning phase.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Inputs:</span>
+0008 <span class="comment">%   net : An instance of the IGMN model (of type `igmn`) to be trained.</span>
+0009 <span class="comment">%   X   : A numeric, non-empty matrix of size N x D, where N is the number</span>
+0010 <span class="comment">%         of training examples and D is the dimensionality of each example.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Outputs:</span>
+0013 <span class="comment">%   net : The updated IGMN model after training with the dataset X.</span>
+0014 <a name="_sub0" href="#_subfunctions" class="code">function  net = train(net, X) </a><span class="comment">%#codegen</span>
+0015     arguments
+0016         net (1,1) <a href="igmn.html" class="code" title="">igmn</a>;
+0017         X (:, :) { <span class="keyword">...</span>
+0018             mustBeNumeric, <span class="keyword">...</span>
+0019             mustBeNonempty <span class="keyword">...</span>
+0020         };
+0021     <span class="keyword">end</span>
+0022     N = size(X, 1);
+0023 
+0024     <span class="keyword">for</span> i = 1:N
+0025         net = <a href="learn.html" class="code" title="function net = learn(net, x) %#codegen">learn</a>(net, X(i, :));
+0026         <span class="keyword">if</span> ~net.converged; <span class="keyword">return</span>; <span class="keyword">end</span>
+0027     <span class="keyword">end</span>
+0028 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of nonOverlappingInitialCov</title>
+  <meta name="keywords" content="nonOverlappingInitialCov">
+  <meta name="description" content="nonOverlappingInitialCov - Computes the initial covariance matrix for a new component">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; nonOverlappingInitialCov.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>nonOverlappingInitialCov
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>nonOverlappingInitialCov - Computes the initial covariance matrix for a new component</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function initialCov = nonOverlappingInitialCov(net, x) %# codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> nonOverlappingInitialCov - Computes the initial covariance matrix for a new component
+ in the Incremental Gaussian Mixture Network (IGMN) model, ensuring it does not overlap
+ significantly with existing components.
+
+ Syntax:
+   initialCov = nonOverlappingInitialCov(net, x)
+
+ Inputs:
+   net - A structure representing the IGMN model. It contains the following fields:
+       useRankOne     - A boolean indicating whether rank-one updates are used.
+       initialCov     - The initial covariance matrix.
+       initialInvCov  - The initial inverse covariance matrix (used if useRankOne is true).
+       initialLogDet  - The log determinant of the initial covariance matrix (used if useRankOne is true).
+       nc             - The number of components in the model.
+       means          - A matrix where each row represents the mean of a component.
+       covs           - A 3D array where each slice represents the covariance matrix of a component.
+       invCovs        - A 3D array where each slice represents the inverse covariance matrix of a component.
+       logDets        - A vector containing the log determinants of the covariance matrices of the components.
+       phi            - A threshold parameter for determining overlap.
+
+   x - A 1xD vector representing the data point for which the initial covariance
+       matrix is being computed.
+
+ Outputs:
+   initialCov - The computed initial covariance matrix for the new component.
+
+ Description:
+   This function calculates the initial covariance matrix for a new component in the IGMN model.
+   If the model has more than one component, it computes the Bhattacharyya distances between
+   the new component and existing components to ensure minimal overlap. If the overlap exceeds
+   a threshold (phi), the initial covariance matrix is adjusted to reduce the overlap.
+
+ Notes:
+   - The function supports both standard covariance updates and rank-one updates.
+   - Parallel computation (parfor) is used when rank-one updates are not enabled.
+
+ See also:
+   <a href="bhattDistance.html" class="code" title="function bhattDist = bhattDistance(meanX, meanY, covX, covY, useRankOne, logDetX, logDetY) %# codegen">bhattDistance</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="bhattDistance.html" class="code" title="function bhattDist = bhattDistance(meanX, meanY, covX, covY, useRankOne, logDetX, logDetY) %# codegen">bhattDistance</a>	bhattDistance - Computes the Bhattacharyya distance between two distributions.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="addComponent.html" class="code" title="function net = addComponent(net, x) %#codegen">addComponent</a>	addComponent Adds a new component to the network.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="nonOverlappingInitialCov.m">nonOverlappingInitialCov.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% nonOverlappingInitialCov - Computes the initial covariance matrix for a new component</span>
+0002 <span class="comment">% in the Incremental Gaussian Mixture Network (IGMN) model, ensuring it does not overlap</span>
+0003 <span class="comment">% significantly with existing components.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Syntax:</span>
+0006 <span class="comment">%   initialCov = nonOverlappingInitialCov(net, x)</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Inputs:</span>
+0009 <span class="comment">%   net - A structure representing the IGMN model. It contains the following fields:</span>
+0010 <span class="comment">%       useRankOne     - A boolean indicating whether rank-one updates are used.</span>
+0011 <span class="comment">%       initialCov     - The initial covariance matrix.</span>
+0012 <span class="comment">%       initialInvCov  - The initial inverse covariance matrix (used if useRankOne is true).</span>
+0013 <span class="comment">%       initialLogDet  - The log determinant of the initial covariance matrix (used if useRankOne is true).</span>
+0014 <span class="comment">%       nc             - The number of components in the model.</span>
+0015 <span class="comment">%       means          - A matrix where each row represents the mean of a component.</span>
+0016 <span class="comment">%       covs           - A 3D array where each slice represents the covariance matrix of a component.</span>
+0017 <span class="comment">%       invCovs        - A 3D array where each slice represents the inverse covariance matrix of a component.</span>
+0018 <span class="comment">%       logDets        - A vector containing the log determinants of the covariance matrices of the components.</span>
+0019 <span class="comment">%       phi            - A threshold parameter for determining overlap.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%   x - A 1xD vector representing the data point for which the initial covariance</span>
+0022 <span class="comment">%       matrix is being computed.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Outputs:</span>
+0025 <span class="comment">%   initialCov - The computed initial covariance matrix for the new component.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Description:</span>
+0028 <span class="comment">%   This function calculates the initial covariance matrix for a new component in the IGMN model.</span>
+0029 <span class="comment">%   If the model has more than one component, it computes the Bhattacharyya distances between</span>
+0030 <span class="comment">%   the new component and existing components to ensure minimal overlap. If the overlap exceeds</span>
+0031 <span class="comment">%   a threshold (phi), the initial covariance matrix is adjusted to reduce the overlap.</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% Notes:</span>
+0034 <span class="comment">%   - The function supports both standard covariance updates and rank-one updates.</span>
+0035 <span class="comment">%   - Parallel computation (parfor) is used when rank-one updates are not enabled.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% See also:</span>
+0038 <span class="comment">%   bhattDistance</span>
+0039 <a name="_sub0" href="#_subfunctions" class="code">function initialCov = nonOverlappingInitialCov(net, x) </a><span class="comment">%# codegen</span>
+0040     isRankOne = net.useRankOne;
+0041     initialCov = net.initialCov;
+0042     <span class="keyword">if</span> isRankOne; initialCov = net.initialInvCov; <span class="keyword">end</span>
+0043     <span class="keyword">if</span> net.nc &gt; 1
+0044         <span class="keyword">if</span> isRankOne
+0045             logDetX = net.initialLogDet;
+0046             bhattDists = arrayfun(@(i) <span class="keyword">...</span>
+0047                 <a href="bhattDistance.html" class="code" title="function bhattDist = bhattDistance(meanX, meanY, covX, covY, useRankOne, logDetX, logDetY) %# codegen">bhattDistance</a>(x, net.means(i, :), initialCov, <span class="keyword">...</span>
+0048                 net.invCovs(:, :, i), true, logDetX, net.logDets(i)), 1:net.nc);
+0049         <span class="keyword">else</span>
+0050             means = net.means;
+0051             covs = net.covs;
+0052             bhattDists = zeros(1, net.nc);
+0053             parfor i = 1:net.nc
+0054                 bhattDists(i) = <a href="bhattDistance.html" class="code" title="function bhattDist = bhattDistance(meanX, meanY, covX, covY, useRankOne, logDetX, logDetY) %# codegen">bhattDistance</a>(x, <span class="keyword">...</span>
+0055                     means(i, :), initialCov, covs(:, :, i), false, [], []);
+0056             <span class="keyword">end</span>
+0057         <span class="keyword">end</span>
+0058 
+0059         distsCoefs = 1 ./ max(exp(bhattDists), igmn.minimum);
+0060         bhattCoef = max(distsCoefs);
+0061 
+0062         <span class="keyword">if</span> bhattCoef &gt; net.phi
+0063             initialCov = initialCov * (1 - min(1 - igmn.minimum, bhattCoef));
+0064         <span class="keyword">end</span>
+0065     <span class="keyword">end</span>
+0066 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

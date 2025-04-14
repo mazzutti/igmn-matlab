@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of recall</title>
+  <meta name="keywords" content="recall">
+  <meta name="description" content="recall - Performs the Gaussian Mixture Regression for a given input.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; recall.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>recall
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>recall - Performs the Gaussian Mixture Regression for a given input.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [Y, probabilities] = recall(net, X, features, featureGrid) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> recall - Performs the Gaussian Mixture Regression for a given input.
+   This function estimates the missing values in the input data `X` 
+   using the Incremental Gaussian Mixture Network (IGMN). The known 
+   attributes are specified by the `features` parameter, and the 
+   optional `featureGrid` parameter can be used to compute posterior 
+   probabilities over a grid.
+
+ Inputs:
+   net (1, 1) igmn:
+       An instance of the IGMN model containing the learned parameters.
+
+   X (:, :) numeric:
+       A numeric matrix where each row represents an input sample with 
+       known values for some attributes.
+
+   features (1, :) numeric (optional):
+       An array of integers specifying the indices of the known attributes 
+       in `X`. If not provided, the function assumes that the first `M` 
+       attributes are known, where `M` is the number of columns in `X`.
+
+   featureGrid (:, :) numeric (optional):
+       A numeric matrix representing a grid of values over which the 
+       posterior probabilities are computed. If not provided, no grid 
+       computation is performed.
+
+ Outputs:
+   Y (:, :) numeric:
+       A numeric matrix containing the estimated values for the missing 
+       attributes in `X`.
+
+   probabilities (:, :) numeric:
+       A numeric matrix containing the computed posterior probabilities 
+       for the given `featureGrid`. If `featureGrid` is not provided, 
+       this output will be an empty matrix.
+
+ Notes:
+   - The function uses the learned parameters of the IGMN model, such as 
+     means, covariances, and priors, to perform the regression.
+   - If `features` is not specified, the function assumes that the known 
+     attributes are the first `M` columns of `X`.
+   - The `useRankOne` property of the IGMN model determines whether a 
+     rank-one update is used for covariance computations.
+   - The function handles cases where probabilities or posterior 
+     assignments (`pajs`) result in NaN values by setting them to zero.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="../igmn/private/computeLoglike.html" class="code" title="function [logLike, distance] = computeLoglike(X, cov, data, options) %#codegen">computeLoglike</a>	computeLoglike - Computes the log-likelihood and distance for given data.</li><li><a href="../igmn/private/mustBeNDimensional.html" class="code" title="function mustBeNDimensional(net, x, y)">mustBeNDimensional</a>	mustBeNDimensional - Validate that input dimensions match the network's dimension</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>	predict - Classifies a given input and computes posterior probabilities.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="recall.m">recall.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% recall - Performs the Gaussian Mixture Regression for a given input.</span>
+0002 <span class="comment">%   This function estimates the missing values in the input data `X`</span>
+0003 <span class="comment">%   using the Incremental Gaussian Mixture Network (IGMN). The known</span>
+0004 <span class="comment">%   attributes are specified by the `features` parameter, and the</span>
+0005 <span class="comment">%   optional `featureGrid` parameter can be used to compute posterior</span>
+0006 <span class="comment">%   probabilities over a grid.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Inputs:</span>
+0009 <span class="comment">%   net (1, 1) igmn:</span>
+0010 <span class="comment">%       An instance of the IGMN model containing the learned parameters.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%   X (:, :) numeric:</span>
+0013 <span class="comment">%       A numeric matrix where each row represents an input sample with</span>
+0014 <span class="comment">%       known values for some attributes.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   features (1, :) numeric (optional):</span>
+0017 <span class="comment">%       An array of integers specifying the indices of the known attributes</span>
+0018 <span class="comment">%       in `X`. If not provided, the function assumes that the first `M`</span>
+0019 <span class="comment">%       attributes are known, where `M` is the number of columns in `X`.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%   featureGrid (:, :) numeric (optional):</span>
+0022 <span class="comment">%       A numeric matrix representing a grid of values over which the</span>
+0023 <span class="comment">%       posterior probabilities are computed. If not provided, no grid</span>
+0024 <span class="comment">%       computation is performed.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Outputs:</span>
+0027 <span class="comment">%   Y (:, :) numeric:</span>
+0028 <span class="comment">%       A numeric matrix containing the estimated values for the missing</span>
+0029 <span class="comment">%       attributes in `X`.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%   probabilities (:, :) numeric:</span>
+0032 <span class="comment">%       A numeric matrix containing the computed posterior probabilities</span>
+0033 <span class="comment">%       for the given `featureGrid`. If `featureGrid` is not provided,</span>
+0034 <span class="comment">%       this output will be an empty matrix.</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% Notes:</span>
+0037 <span class="comment">%   - The function uses the learned parameters of the IGMN model, such as</span>
+0038 <span class="comment">%     means, covariances, and priors, to perform the regression.</span>
+0039 <span class="comment">%   - If `features` is not specified, the function assumes that the known</span>
+0040 <span class="comment">%     attributes are the first `M` columns of `X`.</span>
+0041 <span class="comment">%   - The `useRankOne` property of the IGMN model determines whether a</span>
+0042 <span class="comment">%     rank-one update is used for covariance computations.</span>
+0043 <span class="comment">%   - The function handles cases where probabilities or posterior</span>
+0044 <span class="comment">%     assignments (`pajs`) result in NaN values by setting them to zero.</span>
+0045 <a name="_sub0" href="#_subfunctions" class="code">function [Y, probabilities] = recall(net, X, features, featureGrid) </a><span class="comment">%#codegen</span>
+0046     arguments
+0047         net (1, 1) <a href="igmn.html" class="code" title="">igmn</a>;
+0048         X (:, :) { <span class="keyword">...</span>
+0049             mustBeNumeric, <span class="keyword">...</span>
+0050             mustBeNonempty <span class="keyword">...</span>
+0051         };
+0052         features (1, :) { <span class="keyword">...</span>
+0053             mustBeNumeric, <span class="keyword">...</span>
+0054             mustBeNonempty, <span class="keyword">...</span>
+0055             mustBeInteger, <span class="keyword">...</span>
+0056             <a href="../igmn/private/mustBeNDimensional.html" class="code" title="function mustBeNDimensional(net, x, y)">mustBeNDimensional</a>(net, X, features) <span class="keyword">...</span>
+0057         } = [(size(X, 2) + 1):net.dimension], <span class="keyword">...</span>
+0058         featureGrid (:, :) { mustBeNumeric } = [];
+0059     <span class="keyword">end</span>
+0060     N = size(X, 1);
+0061     computeGrid = ~isempty(featureGrid);
+0062     <span class="keyword">if</span> computeGrid
+0063         probabilities = zeros(N, size(featureGrid, 1));
+0064     <span class="keyword">else</span>
+0065         probabilities = zeros(N, 0);
+0066     <span class="keyword">end</span>
+0067     F = length(features);
+0068     beta = features;
+0069     alpha = setdiff(1:net.dimension, beta);
+0070     pajs = zeros(N, 1, net.nc);
+0071     xm = zeros(N, F, net.nc);
+0072 
+0073     useRankOne = net.useRankOne;
+0074 
+0075     alphaMeans = net.means(:, alpha);
+0076     betaMeans = net.means(:, beta);
+0077     <span class="keyword">if</span> useRankOne; covs = net.invCovs; <span class="keyword">else</span>; covs = net.covs;<span class="keyword">end</span>
+0078     alphaAlphaCovs = covs(alpha, alpha, :);
+0079     betaAlphaCovs = covs(beta, alpha, :);
+0080     betaBetaCovs = covs(beta, beta, :);
+0081     priors = net.priors;
+0082     
+0083     <span class="keyword">for</span> i = 1:net.nc
+0084         diff = X - alphaMeans(i, :);
+0085         alphaAlphaCov = alphaAlphaCovs(:, :, i);
+0086         betaAlphaCov = betaAlphaCovs(:, :, i);
+0087         betaBetaCov = betaBetaCovs(:, :, i);
+0088         determinant = 1;
+0089         <span class="keyword">if</span> useRankOne
+0090             invBetaAlpha = betaBetaCov \ betaAlphaCov;
+0091             invA = alphaAlphaCov - (betaAlphaCov' * invBetaAlpha);
+0092             determinant = det(betaBetaCov);
+0093             pajs(:, :, i) = <a href="../igmn/private/computeLoglike.html" class="code" title="function [logLike, distance] = computeLoglike(X, cov, data, options) %#codegen">computeLoglike</a>(X, invA, alphaMeans(i, :), <span class="keyword">...</span>
+0094                 useRankOne=true, determinant=determinant) + igmn.minimum;
+0095             xm(:, :, i) = (betaMeans(i, :) - (invBetaAlpha * diff')');  
+0096         <span class="keyword">else</span>
+0097             xm(:, :, i) = betaMeans(i, :) + (betaAlphaCov / alphaAlphaCov * diff')';
+0098             loglike = <a href="../igmn/private/computeLoglike.html" class="code" title="function [logLike, distance] = computeLoglike(X, cov, data, options) %#codegen">computeLoglike</a>(X, alphaAlphaCov, diff);
+0099             pajs(:, :, i) = exp(loglike) * priors(i);
+0100         <span class="keyword">end</span>
+0101         <span class="keyword">if</span> computeGrid
+0102             loglikeGrid = <a href="../igmn/private/computeLoglike.html" class="code" title="function [logLike, distance] = computeLoglike(X, cov, data, options) %#codegen">computeLoglike</a>(featureGrid, betaBetaCov, xm(:, :, i), <span class="keyword">...</span>
+0103                 isProbability=true, useRankOne=useRankOne, determinant=determinant);
+0104             <span class="keyword">if</span> ~useRankOne; loglikeGrid = exp(loglikeGrid); <span class="keyword">end</span>
+0105             probabilities = probabilities + pajs(:, :, i) .* loglikeGrid;
+0106         <span class="keyword">end</span>
+0107     <span class="keyword">end</span>
+0108     pajs = pajs ./ sum(pajs, 3);
+0109     pajs(isnan(pajs)) = 0;
+0110     Y = sum(bsxfun(@times, xm, pajs), 3);
+0111     <span class="keyword">if</span> computeGrid
+0112         probabilities = probabilities ./ sum(probabilities, 2);
+0113         probabilities(isnan(probabilities)) = 0;
+0114     <span class="keyword">end</span>
+0115 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

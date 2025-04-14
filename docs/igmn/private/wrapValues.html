@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of wrapValues</title>
+  <meta name="keywords" content="wrapValues">
+  <meta name="description" content="wrapValues - Restrict values to a specified range.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; wrapValues.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>wrapValues
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>wrapValues - Restrict values to a specified range.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function values = wrapValues(values, options) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> wrapValues - Restrict values to a specified range.
+
+ Syntax:
+   values = wrapValues(values, options)
+
+ Description:
+   This function ensures that the input `values` are constrained within
+   the range specified by `options.minimum` and `options.maximum`. If a
+   value is less than the minimum, it is set to the minimum. If a value
+   is greater than the maximum, it is set to the maximum.
+
+ Inputs:
+   values - A double array containing the values to be constrained.
+   options - A structure with the following fields:
+       minimum - (1x1 double) The minimum allowable value. Defaults to
+                 `igmn.minimum`.
+       maximum - (1x1 double) The maximum allowable value. Defaults to
+                 `igmn.maximum`.
+
+ Outputs:
+   values - A double array with the same size as the input, where all
+            elements are constrained within the specified range.
+
+ Notes:
+   - This function uses MATLAB's `coder.inline('always')` directive to
+     ensure inlining during code generation.
+   - The default values for `options.minimum` and `options.maximum` are
+     taken from the `igmn` class.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="computeProbDensity.html" class="code" title="function net = computeProbDensity(net, x, i) %#codegen">computeProbDensity</a>	computeProbDensity Compute the probability density of a multivariate normal distribution.</li><li><a href="updateComponents.html" class="code" title="function net = updateComponents(net, x) %#codegen">updateComponents</a>	updateComponents Updates the components of the network based on input data.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="wrapValues.m">wrapValues.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% wrapValues - Restrict values to a specified range.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Syntax:</span>
+0004 <span class="comment">%   values = wrapValues(values, options)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Description:</span>
+0007 <span class="comment">%   This function ensures that the input `values` are constrained within</span>
+0008 <span class="comment">%   the range specified by `options.minimum` and `options.maximum`. If a</span>
+0009 <span class="comment">%   value is less than the minimum, it is set to the minimum. If a value</span>
+0010 <span class="comment">%   is greater than the maximum, it is set to the maximum.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Inputs:</span>
+0013 <span class="comment">%   values - A double array containing the values to be constrained.</span>
+0014 <span class="comment">%   options - A structure with the following fields:</span>
+0015 <span class="comment">%       minimum - (1x1 double) The minimum allowable value. Defaults to</span>
+0016 <span class="comment">%                 `igmn.minimum`.</span>
+0017 <span class="comment">%       maximum - (1x1 double) The maximum allowable value. Defaults to</span>
+0018 <span class="comment">%                 `igmn.maximum`.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Outputs:</span>
+0021 <span class="comment">%   values - A double array with the same size as the input, where all</span>
+0022 <span class="comment">%            elements are constrained within the specified range.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Notes:</span>
+0025 <span class="comment">%   - This function uses MATLAB's `coder.inline('always')` directive to</span>
+0026 <span class="comment">%     ensure inlining during code generation.</span>
+0027 <span class="comment">%   - The default values for `options.minimum` and `options.maximum` are</span>
+0028 <span class="comment">%     taken from the `igmn` class.</span>
+0029 <a name="_sub0" href="#_subfunctions" class="code">function values = wrapValues(values, options) </a><span class="comment">%#codegen</span>
+0030     arguments
+0031         values double
+0032         options.minimum (1, 1) double = igmn.minimum
+0033         options.maximum (1, 1) double = igmn.maximum
+0034     <span class="keyword">end</span>
+0035     coder.inline(<span class="string">'always'</span>);
+0036     values = double(max(min(values, options.maximum), options.minimum));
+0037 <span class="keyword">end</span>
+0038</pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

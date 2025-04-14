@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of evaluate</title>
+  <meta name="keywords" content="evaluate">
+  <meta name="description" content="evaluate - Evaluates the performance of an IGMN (Incremental Gaussian Mixture Network) model.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; evaluate.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>evaluate
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>evaluate - Evaluates the performance of an IGMN (Incremental Gaussian Mixture Network) model.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function fit = evaluate(params, problem, hpNames, maxPenalty) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> evaluate - Evaluates the performance of an IGMN (Incremental Gaussian Mixture Network) model.
+ 
+ This function computes the fitness of a trained IGMN model based on the provided
+ problem data and hyperparameters. It supports both classification and regression
+ problems.
+ 
+ Inputs:
+     - params: A vector of hyperparameter values to be used for the IGMN model.
+     - problem: A structure containing the problem data and configuration, including:
+         - trainData: Training dataset.
+         - testData: Testing dataset.
+         - InputVarIndexes: Indexes of input variables in the dataset.
+         - OutputVarIndexes: Indexes of output variables in the dataset.
+         - CompileOptions.IsClassification: Boolean indicating if the problem is a classification task.
+         - DefaultIgmnOptions: Default options for the IGMN model.
+     - hpNames: Cell array of hyperparameter names corresponding to the values in `params`.
+     - maxPenalty: Maximum penalty value for exceeding the maximum number of components.
+ 
+ Outputs:
+     - fit: A scalar value representing the fitness of the model. Lower values indicate better performance.
+ 
+ Details:
+     - For classification problems, the fitness is computed as the number of misclassified
+       samples divided by 2.
+     - For regression problems, the fitness is computed as the root mean squared error (RMSE)
+       between the predicted and target outputs.
+     - If the model does not converge during training, the fitness is set to infinity.
+     - A penalty is applied to the fitness if the number of components in the model exceeds
+       the maximum allowed number of components (`net.maxNc`).
+ 
+ Dependencies:
+     - igmnoptions.from: Creates IGMN options from default options and hyperparameters.
+     - igmn: Initializes an IGMN model.
+     - train: Trains the IGMN model on the training dataset.
+     - classify: Classifies test data using the trained IGMN model (for classification tasks).
+     - predict: Predicts outputs for test data using the trained IGMN model (for regression tasks).
+     - barrierPenalty: Computes a penalty for exceeding the maximum number of components.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="classify.html" class="code" title="function Y = classify(net, X, features)">classify</a>	classify - Classifies a given input using the IGMN model.</li><li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>	predict - Classifies a given input and computes posterior probabilities.</li><li><a href="train.html" class="code" title="function  net = train(net, X) %#codegen">train</a>	train - Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../igmn/private/imode.html" class="code" title="function [x, fval, exitFlag] = imode(problem) %#codegen">imode</a>	imode.m - Perform optimization using the IMODE algorithm.</li><li><a href="../igmn/private/pso.html" class="code" title="function [x, fval, exitFlag] = pso(problem) %#codegen">pso</a>	pso - Particle Swarm Optimization Algorithm</li><li><a href="../igmn/private/psogsa.html" class="code" title="function [x, fval, exitFlag] = psogsa(problem) %#codegen">psogsa</a>	psogsa - Particle Swarm Optimization with Gravitational Search Algorithm (PSOGSA)</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="evaluate.m">evaluate.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% evaluate - Evaluates the performance of an IGMN (Incremental Gaussian Mixture Network) model.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% This function computes the fitness of a trained IGMN model based on the provided</span>
+0004 <span class="comment">% problem data and hyperparameters. It supports both classification and regression</span>
+0005 <span class="comment">% problems.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Inputs:</span>
+0008 <span class="comment">%     - params: A vector of hyperparameter values to be used for the IGMN model.</span>
+0009 <span class="comment">%     - problem: A structure containing the problem data and configuration, including:</span>
+0010 <span class="comment">%         - trainData: Training dataset.</span>
+0011 <span class="comment">%         - testData: Testing dataset.</span>
+0012 <span class="comment">%         - InputVarIndexes: Indexes of input variables in the dataset.</span>
+0013 <span class="comment">%         - OutputVarIndexes: Indexes of output variables in the dataset.</span>
+0014 <span class="comment">%         - CompileOptions.IsClassification: Boolean indicating if the problem is a classification task.</span>
+0015 <span class="comment">%         - DefaultIgmnOptions: Default options for the IGMN model.</span>
+0016 <span class="comment">%     - hpNames: Cell array of hyperparameter names corresponding to the values in `params`.</span>
+0017 <span class="comment">%     - maxPenalty: Maximum penalty value for exceeding the maximum number of components.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Outputs:</span>
+0020 <span class="comment">%     - fit: A scalar value representing the fitness of the model. Lower values indicate better performance.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% Details:</span>
+0023 <span class="comment">%     - For classification problems, the fitness is computed as the number of misclassified</span>
+0024 <span class="comment">%       samples divided by 2.</span>
+0025 <span class="comment">%     - For regression problems, the fitness is computed as the root mean squared error (RMSE)</span>
+0026 <span class="comment">%       between the predicted and target outputs.</span>
+0027 <span class="comment">%     - If the model does not converge during training, the fitness is set to infinity.</span>
+0028 <span class="comment">%     - A penalty is applied to the fitness if the number of components in the model exceeds</span>
+0029 <span class="comment">%       the maximum allowed number of components (`net.maxNc`).</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% Dependencies:</span>
+0032 <span class="comment">%     - igmnoptions.from: Creates IGMN options from default options and hyperparameters.</span>
+0033 <span class="comment">%     - igmn: Initializes an IGMN model.</span>
+0034 <span class="comment">%     - train: Trains the IGMN model on the training dataset.</span>
+0035 <span class="comment">%     - classify: Classifies test data using the trained IGMN model (for classification tasks).</span>
+0036 <span class="comment">%     - predict: Predicts outputs for test data using the trained IGMN model (for regression tasks).</span>
+0037 <span class="comment">%     - barrierPenalty: Computes a penalty for exceeding the maximum number of components.</span>
+0038 <a name="_sub0" href="#_subfunctions" class="code">function fit = evaluate(params, problem, hpNames, maxPenalty) </a><span class="comment">%#codegen</span>
+0039     
+0040     trainData = problem.trainData;
+0041     testData = problem.testData;
+0042     inputVarIndexes = problem.InputVarIndexes;
+0043     outpuVarIndexes = problem.OutputVarIndexes;
+0044     isClassification = problem.CompileOptions.IsClassification;
+0045     targets = testData(:, outpuVarIndexes);
+0046     testData = testData(:, inputVarIndexes);
+0047 
+0048     options = igmnoptions.from(problem.DefaultIgmnOptions, hpNames, num2cell(params));
+0049     
+0050     net = <a href="igmn.html" class="code" title="">igmn</a>(options);
+0051     net = <a href="train.html" class="code" title="function  net = train(net, X) %#codegen">train</a>(net, trainData);
+0052 
+0053     <span class="keyword">if</span> ~net.converged
+0054         fit = inf;
+0055         <span class="keyword">return</span>;
+0056     <span class="keyword">end</span>
+0057 
+0058     <span class="keyword">if</span> isClassification
+0059         outputs = <a href="classify.html" class="code" title="function Y = classify(net, X, features)">classify</a>(net, testData, outpuVarIndexes);
+0060         fit = sum(targets ~= outputs, &quot;all&quot;) / 2;
+0061     <span class="keyword">else</span>
+0062         outputs = <a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>(net, testData, outpuVarIndexes);
+0063         fit = sum(sqrt(mean((targets - outputs) .^ 2)), <span class="string">'all'</span>);
+0064     <span class="keyword">end</span>
+0065 
+0066     <span class="keyword">if</span> net.nc &gt; net.maxNc
+0067         fit = fit + barrierPenalty( <span class="keyword">...</span>
+0068             net.nc, 0,  net.maxNc, maxPenalty, 0.5 * maxPenalty);
+0069     <span class="keyword">end</span>
+0070 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

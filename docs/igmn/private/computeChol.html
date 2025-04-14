@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computeChol</title>
+  <meta name="keywords" content="computeChol">
+  <meta name="description" content="computeChol - Computes the Cholesky decomposition of a covariance matrix.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; computeChol.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>computeChol
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>computeChol - Computes the Cholesky decomposition of a covariance matrix.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [L, diagL, cov] = computeChol(cov) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> computeChol - Computes the Cholesky decomposition of a covariance matrix.
+
+ Syntax:
+   [L, diagL, cov] = computeChol(cov)
+
+ Inputs:
+   cov - A symmetric positive-definite covariance matrix.
+
+ Outputs:
+   L      - Lower triangular matrix from the Cholesky decomposition.
+   diagL  - Diagonal elements of the lower triangular matrix L.
+   cov    - The input covariance matrix, potentially modified if the
+            initial Cholesky decomposition fails.
+
+ Description:
+   This function computes the Cholesky decomposition of the input
+   covariance matrix `cov`. If the decomposition fails (indicated by
+   a non-zero flag `f`), it attempts to recompute the decomposition
+   using the `mchol` function. The diagonal elements of the resulting
+   lower triangular matrix `L` are also returned.
+
+ Notes:
+   - This function is intended for use with symmetric positive-definite
+     matrices. If the input matrix does not meet these criteria, the
+     behavior is undefined.
+   - The `coder.inline('always')` directive is used to suggest inlining
+     for code generation purposes.
+
+ See also:
+   chol, diag, <a href="mchol.html" class="code" title="function [L, G] = mchol(G) %#codegen">mchol</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="mchol.html" class="code" title="function [L, G] = mchol(G) %#codegen">mchol</a>	mchol Perform modified Cholesky decomposition on a symmetric matrix.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="bhattDistance.html" class="code" title="function bhattDist = bhattDistance(meanX, meanY, covX, covY, useRankOne, logDetX, logDetY) %# codegen">bhattDistance</a>	bhattDistance - Computes the Bhattacharyya distance between two distributions.</li><li><a href="computeLoglike.html" class="code" title="function [logLike, distance] = computeLoglike(X, cov, data, options) %#codegen">computeLoglike</a>	computeLoglike - Computes the log-likelihood and distance for given data.</li><li><a href="computeProbDensity.html" class="code" title="function net = computeProbDensity(net, x, i) %#codegen">computeProbDensity</a>	computeProbDensity Compute the probability density of a multivariate normal distribution.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="computeChol.m">computeChol.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% computeChol - Computes the Cholesky decomposition of a covariance matrix.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Syntax:</span>
+0004 <span class="comment">%   [L, diagL, cov] = computeChol(cov)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Inputs:</span>
+0007 <span class="comment">%   cov - A symmetric positive-definite covariance matrix.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Outputs:</span>
+0010 <span class="comment">%   L      - Lower triangular matrix from the Cholesky decomposition.</span>
+0011 <span class="comment">%   diagL  - Diagonal elements of the lower triangular matrix L.</span>
+0012 <span class="comment">%   cov    - The input covariance matrix, potentially modified if the</span>
+0013 <span class="comment">%            initial Cholesky decomposition fails.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Description:</span>
+0016 <span class="comment">%   This function computes the Cholesky decomposition of the input</span>
+0017 <span class="comment">%   covariance matrix `cov`. If the decomposition fails (indicated by</span>
+0018 <span class="comment">%   a non-zero flag `f`), it attempts to recompute the decomposition</span>
+0019 <span class="comment">%   using the `mchol` function. The diagonal elements of the resulting</span>
+0020 <span class="comment">%   lower triangular matrix `L` are also returned.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% Notes:</span>
+0023 <span class="comment">%   - This function is intended for use with symmetric positive-definite</span>
+0024 <span class="comment">%     matrices. If the input matrix does not meet these criteria, the</span>
+0025 <span class="comment">%     behavior is undefined.</span>
+0026 <span class="comment">%   - The `coder.inline('always')` directive is used to suggest inlining</span>
+0027 <span class="comment">%     for code generation purposes.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% See also:</span>
+0030 <span class="comment">%   chol, diag, mchol</span>
+0031 <a name="_sub0" href="#_subfunctions" class="code">function [L, diagL, cov] = computeChol(cov) </a><span class="comment">%#codegen</span>
+0032     coder.inline(<span class="string">'always'</span>);
+0033     [L, f] = chol(cov,  <span class="string">'lower'</span>);
+0034     <span class="keyword">if</span> f ; [L, cov] = <a href="mchol.html" class="code" title="function [L, G] = mchol(G) %#codegen">mchol</a>(cov); <span class="keyword">end</span>
+0035     diagL = diag(L);
+0036 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

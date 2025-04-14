@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of extractHyperarameterNames</title>
+  <meta name="keywords" content="extractHyperarameterNames">
+  <meta name="description" content="extractHyperarameterNames - Extracts the names and indexes of hyperparameters">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">igmn</a> &gt; <a href="index.html">private</a> &gt; extractHyperarameterNames.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn/private&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>extractHyperarameterNames
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>extractHyperarameterNames - Extracts the names and indexes of hyperparameters</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [hpNames, hpIndexes] = extractHyperarameterNames(optOptions) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> extractHyperarameterNames - Extracts the names and indexes of hyperparameters
+                             that are not set to use default values.
+
+ Syntax:
+   [hpNames, hpIndexes] = extractHyperarameterNames(optOptions)
+
+ Inputs:
+   optOptions - A structure containing the following fields:
+       hyperparameters - A cell array of structures, where each structure
+                         represents a hyperparameter and contains a 'name' field.
+       UseDefaultsFor  - A cell array of strings specifying the names of
+                         hyperparameters for which default values should be used.
+
+ Outputs:
+   hpNames   - A cell array of strings containing the names of hyperparameters
+               that are not set to use default values.
+   hpIndexes - A numeric array containing the indexes of hyperparameters
+               that are not set to use default values in the original
+               hyperparameters array.
+
+ Example:
+   optOptions.hyperparameters = {struct('name', 'alpha'), struct('name', 'beta')};
+   optOptions.UseDefaultsFor = {'alpha'};
+   [hpNames, hpIndexes] = extractHyperarameterNames(optOptions);
+   % hpNames = {'beta'}
+   % hpIndexes = [2]
+
+ Notes:
+   - The function assumes that the 'hyperparameters' field in optOptions
+     is a cell array of structures, each containing a 'name' field.
+   - The function excludes hyperparameters listed in the 'UseDefaultsFor'
+     field from the output.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="imode.html" class="code" title="function [x, fval, exitFlag] = imode(problem) %#codegen">imode</a>	imode.m - Perform optimization using the IMODE algorithm.</li><li><a href="pso.html" class="code" title="function [x, fval, exitFlag] = pso(problem) %#codegen">pso</a>	pso - Particle Swarm Optimization Algorithm</li><li><a href="psogsa.html" class="code" title="function [x, fval, exitFlag] = psogsa(problem) %#codegen">psogsa</a>	psogsa - Particle Swarm Optimization with Gravitational Search Algorithm (PSOGSA)</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="extractHyperarameterNames.m">extractHyperarameterNames.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% extractHyperarameterNames - Extracts the names and indexes of hyperparameters</span>
+0002 <span class="comment">%                             that are not set to use default values.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Syntax:</span>
+0005 <span class="comment">%   [hpNames, hpIndexes] = extractHyperarameterNames(optOptions)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Inputs:</span>
+0008 <span class="comment">%   optOptions - A structure containing the following fields:</span>
+0009 <span class="comment">%       hyperparameters - A cell array of structures, where each structure</span>
+0010 <span class="comment">%                         represents a hyperparameter and contains a 'name' field.</span>
+0011 <span class="comment">%       UseDefaultsFor  - A cell array of strings specifying the names of</span>
+0012 <span class="comment">%                         hyperparameters for which default values should be used.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Outputs:</span>
+0015 <span class="comment">%   hpNames   - A cell array of strings containing the names of hyperparameters</span>
+0016 <span class="comment">%               that are not set to use default values.</span>
+0017 <span class="comment">%   hpIndexes - A numeric array containing the indexes of hyperparameters</span>
+0018 <span class="comment">%               that are not set to use default values in the original</span>
+0019 <span class="comment">%               hyperparameters array.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Example:</span>
+0022 <span class="comment">%   optOptions.hyperparameters = {struct('name', 'alpha'), struct('name', 'beta')};</span>
+0023 <span class="comment">%   optOptions.UseDefaultsFor = {'alpha'};</span>
+0024 <span class="comment">%   [hpNames, hpIndexes] = extractHyperarameterNames(optOptions);</span>
+0025 <span class="comment">%   % hpNames = {'beta'}</span>
+0026 <span class="comment">%   % hpIndexes = [2]</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Notes:</span>
+0029 <span class="comment">%   - The function assumes that the 'hyperparameters' field in optOptions</span>
+0030 <span class="comment">%     is a cell array of structures, each containing a 'name' field.</span>
+0031 <span class="comment">%   - The function excludes hyperparameters listed in the 'UseDefaultsFor'</span>
+0032 <span class="comment">%     field from the output.</span>
+0033 <a name="_sub0" href="#_subfunctions" class="code">function [hpNames, hpIndexes] = extractHyperarameterNames(optOptions)</a>
+0034     hyperparameters = optOptions.hyperparameters;
+0035     nhps = length(optOptions.hyperparameters);
+0036     useDefaultsFor = optOptions.UseDefaultsFor;
+0037     N = nhps - length(useDefaultsFor);
+0038     hpNames = repmat({<span class="string">''</span>}, 1, N);
+0039     hpIndexes = zeros(1, N);
+0040     index = 1;
+0041     <span class="keyword">for</span> i = 1:nhps
+0042         hpName  = hyperparameters{i}.name;
+0043         <span class="keyword">if</span> ~any(strcmp(useDefaultsFor, hpName))
+0044             hpIndexes(index) = i;
+0045             hpNames{index} = hpName;
+0046             index = index + 1;
+0047         <span class="keyword">end</span>
+0048     <span class="keyword">end</span>
+0049 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

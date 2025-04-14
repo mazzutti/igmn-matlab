@@ -1,0 +1,219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of stopOptimization</title>
+  <meta name="keywords" content="stopOptimization">
+  <meta name="description" content="stopOptimization - Determines whether to stop the optimization process based on various criteria.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; stopOptimization.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>stopOptimization
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>stopOptimization - Determines whether to stop the optimization process based on various criteria.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function exitFlag = stopOptimization(optOptions, state, bestFvalsWindow) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> stopOptimization - Determines whether to stop the optimization process based on various criteria.
+
+ Syntax:
+   exitFlag = stopOptimization(optOptions, state, bestFvalsWindow)
+
+ Inputs:
+   optOptions      - Structure containing optimization options:
+                     - MaxIter: Maximum number of iterations.
+                     - MaxFunEval: Maximum number of function evaluations.
+                     - MaxTime: Maximum allowed time for optimization.
+                     - StallTimeLimit: Maximum allowed stall time.
+                     - ObjectiveLimit: Objective function value limit.
+                     - StallIterLimit: Number of iterations to check for stagnation.
+                     - TolFunValue: Tolerance for relative change in objective value.
+                     - Verbosity: Level of verbosity for displaying progress.
+                     - DisplayInterval: Interval for displaying progress.
+   state           - Structure containing the current state of the optimization:
+                     - Iteration: Current iteration number.
+                     - FunEval: Number of function evaluations.
+                     - Fvals: Array of function values.
+                     - LastImprovement: Iteration of the last improvement.
+                     - LastImprovementTime: Time of the last improvement.
+                     - StartTime: Start time of the optimization.
+                     - StopFlag: Flag indicating if the optimization should stop.
+   bestFvalsWindow - Array containing the best function values over a sliding window.
+
+ Outputs:
+   exitFlag - Integer flag indicating the reason for stopping:
+              0  - Maximum number of iterations exceeded.
+              -6 - Maximum number of function evaluations exceeded.
+              -5 - Time limit exceeded.
+              -4 - Stall time limit exceeded.
+              -3 - Objective function value limit reached.
+              -1 - Plotting window closed.
+              1  - Relative change in objective value is below tolerance.
+
+ Description:
+   This function evaluates various stopping criteria for an optimization
+   process. It checks for conditions such as exceeding maximum iterations,
+   function evaluations, or time limits, as well as stagnation in the
+   objective function value. If a stopping condition is met, the function
+   returns an appropriate exit flag and optionally displays a message
+   depending on the verbosity level.
+
+ Notes:
+   - The function assumes that the optimization process is iterative and
+     maintains a sliding window of the best function values for stagnation
+     detection.
+   - The function also handles optional display of progress information
+     based on the verbosity level and display interval.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../igmn/private/meanf.html" class="code" title="function m = meanf(x)">meanf</a>	meanf Compute the mean of an array, ignoring NaN values.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../igmn/private/imode.html" class="code" title="function [x, fval, exitFlag] = imode(problem) %#codegen">imode</a>	imode.m - Perform optimization using the IMODE algorithm.</li><li><a href="../igmn/private/pso.html" class="code" title="function [x, fval, exitFlag] = pso(problem) %#codegen">pso</a>	pso - Particle Swarm Optimization Algorithm</li><li><a href="../igmn/private/psogsa.html" class="code" title="function [x, fval, exitFlag] = psogsa(problem) %#codegen">psogsa</a>	psogsa - Particle Swarm Optimization with Gravitational Search Algorithm (PSOGSA)</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="stopOptimization.m">stopOptimization.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% stopOptimization - Determines whether to stop the optimization process based on various criteria.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Syntax:</span>
+0004 <span class="comment">%   exitFlag = stopOptimization(optOptions, state, bestFvalsWindow)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Inputs:</span>
+0007 <span class="comment">%   optOptions      - Structure containing optimization options:</span>
+0008 <span class="comment">%                     - MaxIter: Maximum number of iterations.</span>
+0009 <span class="comment">%                     - MaxFunEval: Maximum number of function evaluations.</span>
+0010 <span class="comment">%                     - MaxTime: Maximum allowed time for optimization.</span>
+0011 <span class="comment">%                     - StallTimeLimit: Maximum allowed stall time.</span>
+0012 <span class="comment">%                     - ObjectiveLimit: Objective function value limit.</span>
+0013 <span class="comment">%                     - StallIterLimit: Number of iterations to check for stagnation.</span>
+0014 <span class="comment">%                     - TolFunValue: Tolerance for relative change in objective value.</span>
+0015 <span class="comment">%                     - Verbosity: Level of verbosity for displaying progress.</span>
+0016 <span class="comment">%                     - DisplayInterval: Interval for displaying progress.</span>
+0017 <span class="comment">%   state           - Structure containing the current state of the optimization:</span>
+0018 <span class="comment">%                     - Iteration: Current iteration number.</span>
+0019 <span class="comment">%                     - FunEval: Number of function evaluations.</span>
+0020 <span class="comment">%                     - Fvals: Array of function values.</span>
+0021 <span class="comment">%                     - LastImprovement: Iteration of the last improvement.</span>
+0022 <span class="comment">%                     - LastImprovementTime: Time of the last improvement.</span>
+0023 <span class="comment">%                     - StartTime: Start time of the optimization.</span>
+0024 <span class="comment">%                     - StopFlag: Flag indicating if the optimization should stop.</span>
+0025 <span class="comment">%   bestFvalsWindow - Array containing the best function values over a sliding window.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Outputs:</span>
+0028 <span class="comment">%   exitFlag - Integer flag indicating the reason for stopping:</span>
+0029 <span class="comment">%              0  - Maximum number of iterations exceeded.</span>
+0030 <span class="comment">%              -6 - Maximum number of function evaluations exceeded.</span>
+0031 <span class="comment">%              -5 - Time limit exceeded.</span>
+0032 <span class="comment">%              -4 - Stall time limit exceeded.</span>
+0033 <span class="comment">%              -3 - Objective function value limit reached.</span>
+0034 <span class="comment">%              -1 - Plotting window closed.</span>
+0035 <span class="comment">%              1  - Relative change in objective value is below tolerance.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% Description:</span>
+0038 <span class="comment">%   This function evaluates various stopping criteria for an optimization</span>
+0039 <span class="comment">%   process. It checks for conditions such as exceeding maximum iterations,</span>
+0040 <span class="comment">%   function evaluations, or time limits, as well as stagnation in the</span>
+0041 <span class="comment">%   objective function value. If a stopping condition is met, the function</span>
+0042 <span class="comment">%   returns an appropriate exit flag and optionally displays a message</span>
+0043 <span class="comment">%   depending on the verbosity level.</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">% Notes:</span>
+0046 <span class="comment">%   - The function assumes that the optimization process is iterative and</span>
+0047 <span class="comment">%     maintains a sliding window of the best function values for stagnation</span>
+0048 <span class="comment">%     detection.</span>
+0049 <span class="comment">%   - The function also handles optional display of progress information</span>
+0050 <span class="comment">%     based on the verbosity level and display interval.</span>
+0051 <a name="_sub0" href="#_subfunctions" class="code">function exitFlag = stopOptimization(optOptions, state, bestFvalsWindow) </a><span class="comment">%#codegen</span>
+0052     iteration = state.Iteration;
+0053     iterationIndex = 1 + mod(iteration-1, optOptions.StallIterLimit);
+0054     bestFval = bestFvalsWindow(iterationIndex);
+0055     <span class="keyword">if</span> optOptions.Verbosity &gt; 1 &amp;&amp; <span class="keyword">...</span>
+0056             mod(iteration, optOptions.DisplayInterval) == 0 &amp;&amp; <span class="keyword">...</span>
+0057             iteration &gt; 0
+0058         FunEval = state.FunEval;
+0059         MeanFval = <a href="../igmn/private/meanf.html" class="code" title="function m = meanf(x)">meanf</a>(state.Fvals);
+0060         StallGen = iteration  - state.LastImprovement;
+0061         bestFvalDisplay = bestFval;
+0062         meanFvalDisplay = MeanFval;
+0063         fprintf(<span class="string">'%5.0f         %7.0f    %12.4g    %12.4g    %5.0f\n'</span>, <span class="keyword">...</span>
+0064             iteration, FunEval, bestFvalDisplay, meanFvalDisplay, StallGen);
+0065         pause(0.000001);
+0066     <span class="keyword">end</span>
+0067     
+0068     <span class="comment">% Compute change in fval and individuals in last 'Window' iterations</span>
+0069     Window = optOptions.StallIterLimit;
+0070     <span class="keyword">if</span> iteration &gt; Window
+0071         <span class="comment">% The smallest fval in the window should be bestFval.</span>
+0072         <span class="comment">% The largest fval in the window should be the oldest one in the</span>
+0073         <span class="comment">% window. This value is at iterationIndex+1 (or 1).</span>
+0074         <span class="keyword">if</span> iterationIndex == Window
+0075             <span class="comment">% The window runs from index 1:iterationIndex</span>
+0076             maxBestFvalsWindow = bestFvalsWindow(1);
+0077         <span class="keyword">else</span>
+0078             <span class="comment">% The window runs from [iterationIndex+1:end, 1:iterationIndex]</span>
+0079             maxBestFvalsWindow = bestFvalsWindow(iterationIndex + 1);
+0080         <span class="keyword">end</span>
+0081         funChange = abs(maxBestFvalsWindow - bestFval) / max(1, abs(bestFval));
+0082     <span class="keyword">else</span>
+0083         funChange = Inf;
+0084     <span class="keyword">end</span>
+0085     
+0086     reasonToStop = <span class="string">''</span>;
+0087     exitFlag = [];
+0088     <span class="keyword">if</span> state.Iteration &gt;= optOptions.MaxIter
+0089         reasonToStop = <span class="string">'number of iterations exceeded OPTIONS.MaxIter'</span>;
+0090         exitFlag = 0;
+0091     <span class="keyword">elseif</span> state.FunEval &gt;= optOptions.MaxFunEval
+0092         reasonToStop = <span class="string">'number of function evaluations exceeded OPTIONS.MaxFunEval'</span>;
+0093         exitFlag = -6;
+0094     <span class="keyword">elseif</span> toc(state.StartTime) &gt; optOptions.MaxTime
+0095         reasonToStop = <span class="string">'time limit exceeded OPTIONS.MaxTime'</span>;
+0096         exitFlag = -5;
+0097     <span class="keyword">elseif</span> (toc(state.StartTime) - state.LastImprovementTime) &gt; optOptions.StallTimeLimit
+0098         reasonToStop = <span class="string">'stall time limit exceeded OPTIONS.StallTimeLimit'</span>;
+0099         exitFlag = -4;
+0100     <span class="keyword">elseif</span> bestFval &lt;= optOptions.ObjectiveLimit
+0101         reasonToStop = <span class="string">'objective limit reached OPTIONS.ObjectiveLimit'</span>;
+0102         exitFlag = -3;
+0103     <span class="keyword">elseif</span> state.StopFlag
+0104         reasonToStop = <span class="string">'plotting window closed OPTIONS.PlotFcns'</span>;
+0105         exitFlag = -1; 
+0106     <span class="keyword">elseif</span> funChange &lt;= optOptions.TolFunValue
+0107         reasonToStop = [<span class="string">'relative change in the objective value over '</span> <span class="keyword">...</span>
+0108             <span class="string">'the last OPTIONS.StallIterLimit iterations is less than OPTIONS.TolFunValue'</span>];
+0109         exitFlag = 1;
+0110     <span class="keyword">end</span>
+0111     
+0112     <span class="keyword">if</span> ~isempty(reasonToStop) &amp;&amp; optOptions.Verbosity &gt; 0
+0113         fprintf(<span class="string">'Optimization ended: %s\n'</span>, reasonToStop);
+0114         <span class="keyword">return</span>
+0115     <span class="keyword">end</span>
+0116     
+0117     <span class="comment">% Print header again</span>
+0118     <span class="keyword">if</span> optOptions.Verbosity &gt; 1 &amp;&amp; rem(iteration, 30 * optOptions.DisplayInterval) == 0 &amp;&amp; iteration &gt; 0
+0119         fprintf(<span class="string">'\n                                 Best            Mean    Stall\n'</span>);
+0120         fprintf(<span class="string">'Iteration     f-count            f(x)            f(x)    Iterations\n'</span>);
+0121     <span class="keyword">end</span>
+0122 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

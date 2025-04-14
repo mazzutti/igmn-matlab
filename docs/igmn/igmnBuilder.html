@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of igmnBuilder</title>
+  <meta name="keywords" content="igmnBuilder">
+  <meta name="description" content="igmnBuilder - Incremental Gaussian Mixture Network Builder.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; igmnBuilder.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>igmnBuilder
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>igmnBuilder - Incremental Gaussian Mixture Network Builder.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function self = igmnBuilder(options) %#codegen </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> igmnBuilder - Incremental Gaussian Mixture Network Builder.
+
+   self = igmnBuilder(options) creates a new instance of an Incremental
+   Gaussian Mixture Network (IGMN) using the specified options.
+
+   Inputs:
+       options - An instance of the igmnoptions class that specifies
+                 the configuration for the IGMN. If not provided, a
+                 default igmnoptions instance is used.
+
+   Outputs:
+       self - A handle to the newly created IGMN instance.
+
+   Example:
+       opts = igmnoptions('MaxComponents', 10, 'LearningRate', 0.1);
+       igmnInstance = igmnBuilder(opts);
+
+   See also: <a href="igmnoptions.html" class="code" title="">igmnoptions</a>, <a href="igmn.html" class="code" title="">igmn</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="igmnoptions.html" class="code" title="">igmnoptions</a>	IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	compile - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li><li><a href="transpile.html" class="code" title="function transpile(options)">transpile</a>	transpile - Transpile MATLAB code to MEX functions using MATLAB Coder.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="igmnBuilder.m">igmnBuilder.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% igmnBuilder - Incremental Gaussian Mixture Network Builder.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%   self = igmnBuilder(options) creates a new instance of an Incremental</span>
+0004 <span class="comment">%   Gaussian Mixture Network (IGMN) using the specified options.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%   Inputs:</span>
+0007 <span class="comment">%       options - An instance of the igmnoptions class that specifies</span>
+0008 <span class="comment">%                 the configuration for the IGMN. If not provided, a</span>
+0009 <span class="comment">%                 default igmnoptions instance is used.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   Outputs:</span>
+0012 <span class="comment">%       self - A handle to the newly created IGMN instance.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%   Example:</span>
+0015 <span class="comment">%       opts = igmnoptions('MaxComponents', 10, 'LearningRate', 0.1);</span>
+0016 <span class="comment">%       igmnInstance = igmnBuilder(opts);</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%   See also: igmnoptions, igmn</span>
+0019 <a name="_sub0" href="#_subfunctions" class="code">function self = igmnBuilder(options) </a><span class="comment">%#codegen</span>
+0020     arguments
+0021         options (1, 1) {mustBeA(options, <span class="string">'igmnoptions'</span>)} = <a href="igmnoptions.html" class="code" title="">igmnoptions</a>();
+0022     <span class="keyword">end</span>
+0023     self = <a href="igmn.html" class="code" title="">igmn</a>(options);
+0024 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

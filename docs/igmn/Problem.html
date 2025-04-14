@@ -1,0 +1,266 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Problem</title>
+  <meta name="keywords" content="Problem">
+  <meta name="description" content="Problem Class">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; Problem.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>Problem
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>Problem Class</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Problem Class
+ 
+ This class defines a problem setup for training and testing an Incremental Gaussian Mixture Network (IGMN) model.
+
+ Properties:
+   - trainData: A matrix containing the data used for training the IGMN model.
+   - testData: A matrix containing the data used for testing the IGMN model.
+   - ExecutionMode: Specifies the execution mode for the IGMN model. Possible values are:
+       - 'script': Runs the code in pure MATLAB (default).
+       - 'mex': Compiles and uses the IGMN and associated code as a Mex configuration/code.
+       - 'native': Compiles and uses the IGMN and associated code as native compiled code.
+   - DoParametersTuning: A logical value indicating whether to perform hyperparameter tuning for the IGMN model.
+       - true: Perform hyperparameter tuning.
+       - false: Use the default IGMN options instead (default).
+   - AllData: An optional matrix containing all available data, including training and testing data.
+       - Default value: [trainData; testData].
+   - InputVarIndexes: Column indexes of trainData and testData to be used as input variables for the IGMN model.
+       - Default value: 1:(size(trainData, 2) - 1).
+   - OutputVarIndexes: Column indexes of trainData and testData to be used as output variables for the IGMN model.
+       - Default value: The last column of trainData/testData.
+   - DefaultIgmnOptions: Default options for the IGMN model, obtained using getDefaultIgmnOptions([trainData; testData]).
+   - CompileOptions: Default compile options, obtained using getDefaultCompileOptions().
+   - OptimizeOptions: Default optimization options, obtained using getDefaultOptimizeOptions().
+
+ Methods:
+   - getDefaultIgmnOptions(data): Static method to generate default IGMN options based on the provided data.
+   - getDefaultCompileOptions(): Static method to generate default compile options.
+   - getDefaultOptimizeOptions(): Static method to generate default optimization options, including hyperparameter definitions.
+   - Problem(trainData, testData, options): Constructor to initialize a Problem instance with the provided training data,
+       testing data, and optional configuration options.
+
+ Constructor Arguments:
+   - trainData: A numeric, non-NaN, non-empty, finite matrix for training data.
+   - testData: A numeric, non-NaN, non-empty, finite matrix for testing data.
+   - options.ExecutionMode: (Optional) Execution mode ('script', 'mex', 'native'). Default is 'script'.
+   - options.DoParametersTuning: (Optional) Logical value for hyperparameter tuning. Default is false.
+   - options.AllData: (Optional) Matrix containing all data. Default is [trainData; testData].
+   - options.InputVarIndexes: (Optional) Column indexes for input variables. Default is 1:(size(trainData, 2) - 1).
+   - options.OutputVarIndexes: (Optional) Column indexes for output variables. Default is the last column.
+   - options.DefaultIgmnOptions: (Optional) Default IGMN options. Default is obtained using getDefaultIgmnOptions().
+   - options.CompileOptions: (Optional) Default compile options. Default is obtained using getDefaultCompileOptions().
+   - options.OptimizeOptions: (Optional) Default optimization options. Default is obtained using getDefaultOptimizeOptions().
+
+ Notes:
+   - The constructor performs additional validations to ensure consistency between trainData, testData, and options.
+   - If the size of options.AllData does not match the combined size of trainData and testData, the default IGMN options
+     are recalculated using options.AllData.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="Hyperparameter.html" class="code" title="">Hyperparameter</a>	Hyperparameter Class</li><li><a href="Problem.html" class="code" title="">Problem</a>	Problem Class</li><li><a href="compileoptions.html" class="code" title="">compileoptions</a>	compileoptions Class</li><li><a href="igmnoptions.html" class="code" title="">igmnoptions</a>	IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.</li><li><a href="optimizeoptions.html" class="code" title="">optimizeoptions</a>	OPTIMIZEOPTIONS Class for configuring optimization options.</li><li><a href="../igmn/private/mustHaveSameNumberOfColumns.html" class="code" title="function mustHaveSameNumberOfColumns(x, y)">mustHaveSameNumberOfColumns</a>	mustHaveSameNumberOfColumns - Validates that two input arrays have the same number of columns.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="Problem.html" class="code" title="">Problem</a>	Problem Class</li><li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	compile - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function options = getDefaultIgmnOptions(data)</a></li><li><a href="#_sub2" class="code">function options = getDefaultCompileOptions()</a></li><li><a href="#_sub3" class="code">function options = getDefaultOptimizeOptions()</a></li><li><a href="#_sub4" class="code">function self = Problem(trainData, testData, options)</a></li></ul>
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="Problem.m">Problem.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Problem Class</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% This class defines a problem setup for training and testing an Incremental Gaussian Mixture Network (IGMN) model.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Properties:</span>
+0006 <span class="comment">%   - trainData: A matrix containing the data used for training the IGMN model.</span>
+0007 <span class="comment">%   - testData: A matrix containing the data used for testing the IGMN model.</span>
+0008 <span class="comment">%   - ExecutionMode: Specifies the execution mode for the IGMN model. Possible values are:</span>
+0009 <span class="comment">%       - 'script': Runs the code in pure MATLAB (default).</span>
+0010 <span class="comment">%       - 'mex': Compiles and uses the IGMN and associated code as a Mex configuration/code.</span>
+0011 <span class="comment">%       - 'native': Compiles and uses the IGMN and associated code as native compiled code.</span>
+0012 <span class="comment">%   - DoParametersTuning: A logical value indicating whether to perform hyperparameter tuning for the IGMN model.</span>
+0013 <span class="comment">%       - true: Perform hyperparameter tuning.</span>
+0014 <span class="comment">%       - false: Use the default IGMN options instead (default).</span>
+0015 <span class="comment">%   - AllData: An optional matrix containing all available data, including training and testing data.</span>
+0016 <span class="comment">%       - Default value: [trainData; testData].</span>
+0017 <span class="comment">%   - InputVarIndexes: Column indexes of trainData and testData to be used as input variables for the IGMN model.</span>
+0018 <span class="comment">%       - Default value: 1:(size(trainData, 2) - 1).</span>
+0019 <span class="comment">%   - OutputVarIndexes: Column indexes of trainData and testData to be used as output variables for the IGMN model.</span>
+0020 <span class="comment">%       - Default value: The last column of trainData/testData.</span>
+0021 <span class="comment">%   - DefaultIgmnOptions: Default options for the IGMN model, obtained using getDefaultIgmnOptions([trainData; testData]).</span>
+0022 <span class="comment">%   - CompileOptions: Default compile options, obtained using getDefaultCompileOptions().</span>
+0023 <span class="comment">%   - OptimizeOptions: Default optimization options, obtained using getDefaultOptimizeOptions().</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% Methods:</span>
+0026 <span class="comment">%   - getDefaultIgmnOptions(data): Static method to generate default IGMN options based on the provided data.</span>
+0027 <span class="comment">%   - getDefaultCompileOptions(): Static method to generate default compile options.</span>
+0028 <span class="comment">%   - getDefaultOptimizeOptions(): Static method to generate default optimization options, including hyperparameter definitions.</span>
+0029 <span class="comment">%   - Problem(trainData, testData, options): Constructor to initialize a Problem instance with the provided training data,</span>
+0030 <span class="comment">%       testing data, and optional configuration options.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% Constructor Arguments:</span>
+0033 <span class="comment">%   - trainData: A numeric, non-NaN, non-empty, finite matrix for training data.</span>
+0034 <span class="comment">%   - testData: A numeric, non-NaN, non-empty, finite matrix for testing data.</span>
+0035 <span class="comment">%   - options.ExecutionMode: (Optional) Execution mode ('script', 'mex', 'native'). Default is 'script'.</span>
+0036 <span class="comment">%   - options.DoParametersTuning: (Optional) Logical value for hyperparameter tuning. Default is false.</span>
+0037 <span class="comment">%   - options.AllData: (Optional) Matrix containing all data. Default is [trainData; testData].</span>
+0038 <span class="comment">%   - options.InputVarIndexes: (Optional) Column indexes for input variables. Default is 1:(size(trainData, 2) - 1).</span>
+0039 <span class="comment">%   - options.OutputVarIndexes: (Optional) Column indexes for output variables. Default is the last column.</span>
+0040 <span class="comment">%   - options.DefaultIgmnOptions: (Optional) Default IGMN options. Default is obtained using getDefaultIgmnOptions().</span>
+0041 <span class="comment">%   - options.CompileOptions: (Optional) Default compile options. Default is obtained using getDefaultCompileOptions().</span>
+0042 <span class="comment">%   - options.OptimizeOptions: (Optional) Default optimization options. Default is obtained using getDefaultOptimizeOptions().</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">% Notes:</span>
+0045 <span class="comment">%   - The constructor performs additional validations to ensure consistency between trainData, testData, and options.</span>
+0046 <span class="comment">%   - If the size of options.AllData does not match the combined size of trainData and testData, the default IGMN options</span>
+0047 <span class="comment">%     are recalculated using options.AllData.</span>
+0048 classdef <a href="Problem.html" class="code" title="">Problem</a>
+0049     
+0050     properties
+0051         trainData
+0052         testData
+0053         ExecutionMode
+0054         DoParametersTuning
+0055         AllData
+0056         InputVarIndexes
+0057         OutputVarIndexes
+0058         DefaultIgmnOptions
+0059         CompileOptions
+0060         OptimizeOptions
+0061     <span class="keyword">end</span>
+0062 
+0063     methods(Static)
+0064         <a name="_sub0" href="#_subfunctions" class="code">function options = getDefaultIgmnOptions(data)</a>
+0065             options = <a href="igmnoptions.html" class="code" title="">igmnoptions</a>([min(data); max(data)]);
+0066         <span class="keyword">end</span>
+0067 
+0068         <a name="_sub1" href="#_subfunctions" class="code">function options = getDefaultCompileOptions()</a>
+0069             options = <a href="compileoptions.html" class="code" title="">compileoptions</a>();
+0070         <span class="keyword">end</span>
+0071 
+0072         <a name="_sub2" href="#_subfunctions" class="code">function options = getDefaultOptimizeOptions()</a>
+0073             hyperparameters = { 
+0074                 <a href="Hyperparameter.html" class="code" title="">Hyperparameter</a>(igmn.defaultTau, <span class="string">'Tau'</span>, <span class="string">'lb'</span>, 1e-15, <span class="string">'ub'</span>, 1 - 1e-15), <span class="keyword">...</span>
+0075                 <a href="Hyperparameter.html" class="code" title="">Hyperparameter</a>(igmn.defaultDelta, <span class="string">'Delta'</span>, <span class="string">'lb'</span>, 1e-15, <span class="string">'ub'</span>, 1 - 1e-15), <span class="keyword">...</span>
+0076                 <a href="Hyperparameter.html" class="code" title="">Hyperparameter</a>(igmn.defaultGamma, <span class="string">'Gamma'</span>, <span class="string">'lb'</span>, 0.5, <span class="string">'ub'</span>, 1), <span class="keyword">...</span>
+0077                 <a href="Hyperparameter.html" class="code" title="">Hyperparameter</a>(igmn.defaultPhi, <span class="string">'Phi'</span>, <span class="string">'lb'</span>, 0.01, <span class="string">'ub'</span>, 1), <span class="keyword">...</span>
+0078                 <a href="Hyperparameter.html" class="code" title="">Hyperparameter</a>(igmn.defaultSPMin, <span class="string">'SPMin'</span>, <span class="string">'isdiscrete'</span>, true, <span class="string">'lb'</span>, 3, <span class="string">'ub'</span>, 6), <span class="keyword">...</span>
+0079                 <a href="Hyperparameter.html" class="code" title="">Hyperparameter</a>(igmn.defaultVMin, <span class="string">'VMin'</span>, <span class="string">'isdiscrete'</span>, true, <span class="string">'lb'</span>, 4, <span class="string">'ub'</span>, 20), <span class="keyword">...</span>
+0080                 <a href="Hyperparameter.html" class="code" title="">Hyperparameter</a>(igmn.defaultRegValue, <span class="string">'RegValue'</span>, <span class="string">'lb'</span>, 0, <span class="string">'ub'</span>, 1e-4) <span class="keyword">...</span>
+0081                 <a href="Hyperparameter.html" class="code" title="">Hyperparameter</a>(igmn.defaultMaxNc, <span class="string">'MaxNc'</span>, <span class="string">'isdiscrete'</span>, true, <span class="string">'lb'</span>, 3, <span class="string">'ub'</span>, 1000) <span class="keyword">...</span>
+0082                 <a href="Hyperparameter.html" class="code" title="">Hyperparameter</a>(igmn.defaultUseRankOne, <span class="string">'UseRankOne'</span>, <span class="string">'isdiscrete'</span>, true, <span class="string">'lb'</span>, 0, <span class="string">'ub'</span>, 1) <span class="keyword">...</span>
+0083             };
+0084             options = <a href="optimizeoptions.html" class="code" title="">optimizeoptions</a>(hyperparameters);
+0085         <span class="keyword">end</span>
+0086     <span class="keyword">end</span>
+0087     
+0088     methods
+0089         <a name="_sub3" href="#_subfunctions" class="code">function self = Problem(trainData, testData, options)</a>
+0090             <span class="comment">%   trainData:                  A matrix with the data to be used to train the igmn model.</span>
+0091             <span class="comment">%   testData:                   A matrix with the data to be used to test the igmn model.</span>
+0092             <span class="comment">%   options.ExecutionMode:      The execution mode</span>
+0093             <span class="comment">%                               - 'script' runs the code in pure Matlab (default).</span>
+0094             <span class="comment">%                               - 'mex' compiles and uses the igmn and associated code as a Mex config/code.</span>
+0095             <span class="comment">%                               - 'native' compiles and uses the igmn and associated code as native compiled code.</span>
+0096             <span class="comment">%   options.DoParametersTuning: Do the igmn hyperparameters tuning when true. When false, use</span>
+0097             <span class="comment">%                               false, options.DefaultIgmnOptions will be used instead. The default</span>
+0098             <span class="comment">%                               value is false.</span>
+0099             <span class="comment">%   options.AllData:            An optional matrix containing all data available, including the</span>
+0100             <span class="comment">%                               training and testing data. The default value is [trainData; testData].</span>
+0101             <span class="comment">%   options.InputVarIndexes:    Column indexes to be considered as indexes of trainData and testData</span>
+0102             <span class="comment">%                               to be used as input variables for the igmn generated model. The default</span>
+0103             <span class="comment">%                               value is 1:(size(trainData, 2) - 1).</span>
+0104             <span class="comment">%   options.OutputVarIndexes:   Column indexes to be considered as indexes of trainData and testData</span>
+0105             <span class="comment">%                               to be used as output variables for the igmn generated model. The default</span>
+0106             <span class="comment">%                               value is the last column of trainData/testData.</span>
+0107             <span class="comment">%   options.DefaultIgmnOptions: The default igmn options as getDefaultIgmnOptions([trainData; testData]),</span>
+0108             <span class="comment">%                               if not explicitily provided.</span>
+0109             <span class="comment">%   options.CompileOptions:     The default compile options as getDefaultCompileOptions(), if not</span>
+0110             <span class="comment">%                               explicitily provided.</span>
+0111             <span class="comment">%   options.OptimizeOptions:    The default optimize options as getDefaultOptimizeOptions(), if not</span>
+0112             <span class="comment">%                               explicitily provided.</span>
+0113             arguments
+0114                 trainData (:, :) double { <span class="keyword">...</span>
+0115                     mustBeNumeric, <span class="keyword">...</span>
+0116                     mustBeNonNan, <span class="keyword">...</span>
+0117                     mustBeNonempty, <span class="keyword">...</span>
+0118                     mustBeFinite <span class="keyword">...</span>
+0119                 },
+0120                 testData (:, :) double { <span class="keyword">...</span>
+0121                     mustBeNumeric, <span class="keyword">...</span>
+0122                     mustBeNonNan, <span class="keyword">...</span>
+0123                     mustBeNonempty, <span class="keyword">...</span>
+0124                     mustBeFinite <span class="keyword">...</span>
+0125                 },
+0126                 options.ExecutionMode (1, :) char { <span class="keyword">...</span>
+0127                     mustBeMember(options.ExecutionMode, {<span class="string">'script'</span>, <span class="string">'mex'</span>, <span class="string">'native'</span>}) <span class="keyword">...</span>
+0128                 }  = <span class="string">'script'</span>,
+0129                 options.DoParametersTuning (1, 1) logical = false,
+0130                 options.AllData (:, :) double { <span class="keyword">...</span>
+0131                     mustBeNumeric, <span class="keyword">...</span>
+0132                     mustBeNonNan, <span class="keyword">...</span>
+0133                     mustBeFinite <span class="keyword">...</span>
+0134                 } = [trainData; testData],
+0135                 options.InputVarIndexes (1, :) double { <span class="keyword">...</span>
+0136                     mustBeInteger, <span class="keyword">...</span>
+0137                     mustBeGreaterThan(options.InputVarIndexes, 0) <span class="keyword">...</span>
+0138                 } = 1:(size(trainData, 2) - 1),
+0139                 options.OutputVarIndexes (1, :) double { <span class="keyword">...</span>
+0140                     mustBeInteger, <span class="keyword">...</span>
+0141                     mustBeGreaterThan(options.OutputVarIndexes, 0) <span class="keyword">...</span>
+0142                 } = size(trainData, 2),
+0143                 options.DefaultIgmnOptions (1, 1) <a href="igmnoptions.html" class="code" title="">igmnoptions</a> = Problem.getDefaultIgmnOptions([trainData; testData]),
+0144                 options.CompileOptions (1, 1) <a href="compileoptions.html" class="code" title="">compileoptions</a> = Problem.getDefaultCompileOptions(),
+0145                 options.OptimizeOptions (1, 1) <a href="optimizeoptions.html" class="code" title="">optimizeoptions</a> = Problem.getDefaultOptimizeOptions(),
+0146             <span class="keyword">end</span>
+0147 
+0148             <span class="comment">% Extra validations</span>
+0149             <a href="../igmn/private/mustHaveSameNumberOfColumns.html" class="code" title="function mustHaveSameNumberOfColumns(x, y)">mustHaveSameNumberOfColumns</a>(trainData, testData);
+0150             <a href="../igmn/private/mustHaveSameNumberOfColumns.html" class="code" title="function mustHaveSameNumberOfColumns(x, y)">mustHaveSameNumberOfColumns</a>(trainData, [options.InputVarIndexes, options.OutputVarIndexes]);
+0151             <a href="../igmn/private/mustHaveSameNumberOfColumns.html" class="code" title="function mustHaveSameNumberOfColumns(x, y)">mustHaveSameNumberOfColumns</a>(trainData, options.AllData);
+0152 
+0153             <span class="keyword">if</span> size(options.AllData, 1) ~= (size(trainData, 1) + size(testData, 1))
+0154                 options.DefaultIgmnOptions = Problem.getDefaultIgmnOptions(options.AllData);
+0155             <span class="keyword">end</span>
+0156 
+0157             self.trainData = trainData;
+0158             self.testData = testData;
+0159             self.ExecutionMode = options.ExecutionMode;
+0160             self.DoParametersTuning = options.DoParametersTuning;
+0161             self.AllData = options.AllData;
+0162             self.InputVarIndexes = options.InputVarIndexes;
+0163             self.OutputVarIndexes = options.OutputVarIndexes;
+0164             self.DefaultIgmnOptions = options.DefaultIgmnOptions;
+0165             self.CompileOptions = options.CompileOptions;
+0166             self.OptimizeOptions = options.OptimizeOptions;
+0167         <span class="keyword">end</span>
+0168     <span class="keyword">end</span>
+0169 <span class="keyword">end</span>
+0170</pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>

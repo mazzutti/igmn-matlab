@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of callPlotFcns</title>
+  <meta name="keywords" content="callPlotFcns">
+  <meta name="description" content="callPlotFcns - A function to manage and execute plotting functions during">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">igmn</a> &gt; callPlotFcns.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for igmn&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>callPlotFcns
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>callPlotFcns - A function to manage and execute plotting functions during</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function stop = callPlotFcns(optimValues, flag) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> callPlotFcns - A function to manage and execute plotting functions during 
+ optimization processes.
+ 
+ This function is designed to handle the initialization and updating of 
+ plotting functions provided in the `optimValues.plotFcns` field during 
+ optimization. It creates a figure window with subplots for each plotting 
+ function and updates the plots as the optimization progresses.
+ 
+ Inputs:
+     optimValues - A structure containing information about the current 
+                   state of the optimization. It must include the following fields:
+                   - plotFcns: A cell array or single function handle of 
+                     plotting functions to be executed.
+                   - algorithm: A string specifying the name of the optimization 
+                     algorithm.
+     flag        - A string indicating the current stage of the optimization. 
+                   Possible values are:
+                   - 'init': Initialization stage, where the figure and subplots 
+                     are created.
+                   - Other values: Update stage, where the plots are updated.
+ 
+ Outputs:
+     stop        - A logical value indicating whether the optimization should 
+                   stop. Returns `true` if the figure is closed, otherwise `false`.
+ 
+ Persistent Variables:
+     Figure      - A handle to the figure window used for plotting.
+     Axes        - An array of subplot axes handles.
+ 
+ Usage:
+     This function is typically called within an optimization loop to 
+     initialize and update plots dynamically. It supports multiple plotting 
+     functions and arranges them in a grid layout.
+ 
+ Notes:
+     - The function uses persistent variables to maintain the figure and axes 
+       handles across calls.
+     - If the figure is closed by the user, the function sets `stop` to `true` 
+       to signal the optimization process to terminate.
+     - The subplot layout is determined dynamically based on the number of 
+       plotting functions.
+ 
+ Example:
+     % Define plotting functions
+     optimValues.plotFcns = {@plotFcn1, @plotFcn2};
+     optimValues.algorithm = 'ExampleAlgorithm';
+ 
+     % Call the function during optimization
+     stop = callPlotFcns(optimValues, 'init');
+     while ~stop
+         % Update optimValues as needed
+         stop = callPlotFcns(optimValues, 'update');
+     end</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../igmn/private/imode.html" class="code" title="function [x, fval, exitFlag] = imode(problem) %#codegen">imode</a>	imode.m - Perform optimization using the IMODE algorithm.</li><li><a href="../igmn/private/pso.html" class="code" title="function [x, fval, exitFlag] = pso(problem) %#codegen">pso</a>	pso - Particle Swarm Optimization Algorithm</li><li><a href="../igmn/private/psogsa.html" class="code" title="function [x, fval, exitFlag] = psogsa(problem) %#codegen">psogsa</a>	psogsa - Particle Swarm Optimization with Gravitational Search Algorithm (PSOGSA)</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="callPlotFcns.m">callPlotFcns.m</a></p>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% callPlotFcns - A function to manage and execute plotting functions during</span>
+0002 <span class="comment">% optimization processes.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% This function is designed to handle the initialization and updating of</span>
+0005 <span class="comment">% plotting functions provided in the `optimValues.plotFcns` field during</span>
+0006 <span class="comment">% optimization. It creates a figure window with subplots for each plotting</span>
+0007 <span class="comment">% function and updates the plots as the optimization progresses.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Inputs:</span>
+0010 <span class="comment">%     optimValues - A structure containing information about the current</span>
+0011 <span class="comment">%                   state of the optimization. It must include the following fields:</span>
+0012 <span class="comment">%                   - plotFcns: A cell array or single function handle of</span>
+0013 <span class="comment">%                     plotting functions to be executed.</span>
+0014 <span class="comment">%                   - algorithm: A string specifying the name of the optimization</span>
+0015 <span class="comment">%                     algorithm.</span>
+0016 <span class="comment">%     flag        - A string indicating the current stage of the optimization.</span>
+0017 <span class="comment">%                   Possible values are:</span>
+0018 <span class="comment">%                   - 'init': Initialization stage, where the figure and subplots</span>
+0019 <span class="comment">%                     are created.</span>
+0020 <span class="comment">%                   - Other values: Update stage, where the plots are updated.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% Outputs:</span>
+0023 <span class="comment">%     stop        - A logical value indicating whether the optimization should</span>
+0024 <span class="comment">%                   stop. Returns `true` if the figure is closed, otherwise `false`.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Persistent Variables:</span>
+0027 <span class="comment">%     Figure      - A handle to the figure window used for plotting.</span>
+0028 <span class="comment">%     Axes        - An array of subplot axes handles.</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% Usage:</span>
+0031 <span class="comment">%     This function is typically called within an optimization loop to</span>
+0032 <span class="comment">%     initialize and update plots dynamically. It supports multiple plotting</span>
+0033 <span class="comment">%     functions and arranges them in a grid layout.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% Notes:</span>
+0036 <span class="comment">%     - The function uses persistent variables to maintain the figure and axes</span>
+0037 <span class="comment">%       handles across calls.</span>
+0038 <span class="comment">%     - If the figure is closed by the user, the function sets `stop` to `true`</span>
+0039 <span class="comment">%       to signal the optimization process to terminate.</span>
+0040 <span class="comment">%     - The subplot layout is determined dynamically based on the number of</span>
+0041 <span class="comment">%       plotting functions.</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">% Example:</span>
+0044 <span class="comment">%     % Define plotting functions</span>
+0045 <span class="comment">%     optimValues.plotFcns = {@plotFcn1, @plotFcn2};</span>
+0046 <span class="comment">%     optimValues.algorithm = 'ExampleAlgorithm';</span>
+0047 <span class="comment">%</span>
+0048 <span class="comment">%     % Call the function during optimization</span>
+0049 <span class="comment">%     stop = callPlotFcns(optimValues, 'init');</span>
+0050 <span class="comment">%     while ~stop</span>
+0051 <span class="comment">%         % Update optimValues as needed</span>
+0052 <span class="comment">%         stop = callPlotFcns(optimValues, 'update');</span>
+0053 <span class="comment">%     end</span>
+0054 <a name="_sub0" href="#_subfunctions" class="code">function stop = callPlotFcns(optimValues, flag)</a>
+0055     
+0056     <span class="keyword">persistent</span> Figure
+0057     <span class="keyword">persistent</span> Axes
+0058 
+0059     set(0, <span class="string">'DefaultAxesFontSize'</span>, 10);
+0060     
+0061     N = length(optimValues.plotFcns);
+0062 
+0063     algorithm = optimValues.algorithm;
+0064 
+0065     <span class="keyword">if</span> strcmpi(flag, <span class="string">'init'</span>)
+0066         Figure = figure(<span class="keyword">...</span>
+0067             <span class="string">'NumberTitle'</span>, <span class="string">'off'</span>, <span class="keyword">...</span>
+0068             <span class="string">'Name'</span>, sprintf(<span class="string">'IGMN %s Optimization'</span>, algorithm), <span class="keyword">...</span>
+0069             <span class="string">'NextPlot'</span>, <span class="string">'replacechildren'</span>);
+0070         pos = zeros(1, 4);
+0071         pos(:) = get(Figure, <span class="string">'Position'</span>);
+0072         pos(1) = pos(1) - pos(3)/2;
+0073         pos(3) = pos(3) * N;
+0074         set(Figure, <span class="string">'Position'</span>, pos);
+0075         Axes = zeros(N);
+0076     <span class="keyword">end</span>
+0077     stop = false;
+0078     
+0079     <span class="keyword">if</span> ~isempty(Figure)  &amp;&amp; ishandle(Figure)
+0080         set(0, <span class="string">'CurrentFigure'</span>, Figure);
+0081         
+0082         <span class="comment">% Find a good size for subplot array</span>
+0083         rows = floor(sqrt(N));
+0084         cols = ceil(N / rows);
+0085 
+0086         <span class="comment">% Cycle through plotting functions</span>
+0087         <span class="keyword">for</span> i = 1:N
+0088             <span class="keyword">if</span> strcmpi(flag, <span class="string">'init'</span>) 
+0089                 index = subplot(rows, cols, i, <span class="string">'Parent'</span>, Figure);
+0090                 Axes(i) = index;
+0091                 set(gca, <span class="string">'NextPlot'</span>, <span class="string">'replacechildren'</span>)
+0092             <span class="keyword">else</span>
+0093                 subplot(Axes(i))
+0094             <span class="keyword">end</span> <span class="comment">% if strcmpi</span>
+0095             <span class="keyword">if</span> iscell(optimValues.plotFcns)
+0096                 feval(optimValues.plotFcns{i}, optimValues, flag);
+0097             <span class="keyword">else</span>
+0098                 feval(optimValues.plotFcns, optimValues, flag);
+0099             <span class="keyword">end</span>
+0100         <span class="keyword">end</span> <span class="comment">% for i</span>
+0101     <span class="keyword">else</span>
+0102         stop = true;
+0103         Figure = [];
+0104         Axes = [];
+0105     <span class="keyword">end</span>
+0106     drawnow;
+0107 <span class="keyword">end</span>
+0108 
+0109 
+0110</pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+</body>
+</html>
