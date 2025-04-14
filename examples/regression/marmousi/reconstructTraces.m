@@ -1,4 +1,4 @@
-% RECONSTRUCTTRACES Reconstructs and visualizes seismic traces using a neural network.
+% reconstructTraces - Reconstructs and visualizes seismic traces using a neural network.
 %
 %   reconstructTraces(net, data, traceSizes, inputVars, outputVars, outvarNames, predict)
 %

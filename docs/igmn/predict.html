@@ -4,7 +4,7 @@
 <head>
   <title>Description of predict</title>
   <meta name="keywords" content="predict">
-  <meta name="description" content="PREDICT Classifies a given input and computes posterior probabilities.">
+  <meta name="description" content="predict - Classifies a given input and computes posterior probabilities.">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,15 +21,15 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>PREDICT Classifies a given input and computes posterior probabilities.</strong></div>
+<div class="box"><strong>predict - Classifies a given input and computes posterior probabilities.</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> PREDICT Classifies a given input and computes posterior probabilities.
+<div class="fragment"><pre class="comment"> predict - Classifies a given input and computes posterior probabilities.
  
-   [Y, probabilities] = PREDICT(net, X, features, discretizationSize, featureRanges)
+   [Y, probabilities] = predict(net, X, features, discretizationSize, featureRanges)
    classifies the input data and returns the predicted labels along with
    the computed posterior probabilities.
 
@@ -64,18 +64,19 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="recall.html" class="code" title="function [Y, probabilities] = recall(net, X, features, featureGrid) %#codegen">recall</a>	RECALL Performs the Gaussian Mixture Regression for a given input.</li></ul>
+<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="../igmn/private/discretizeFeaturesRange.html" class="code" title="function domain = discretizeFeaturesRange(intervals, numPoints)">discretizeFeaturesRange</a>	discretizeFeaturesRange Discretizes feature ranges into specified intervals</li><li><a href="../igmn/private/mustBeNDimensional.html" class="code" title="function mustBeNDimensional(net, x, y)">mustBeNDimensional</a>	mustBeNDimensional - Validate that input dimensions match the network's dimension</li><li><a href="recall.html" class="code" title="function [Y, probabilities] = recall(net, X, features, featureGrid) %#codegen">recall</a>	recall - Performs the Gaussian Mixture Regression for a given input.</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="classify.html" class="code" title="function Y = classify(net, X, features)">classify</a>	CLASSIFY Classifies a given input using the IGMN model.</li><li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	COMPILE - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li><li><a href="evaluate.html" class="code" title="">evaluate</a>	{</li><li><a href="transpile.html" class="code" title="function transpile(options)">transpile</a>	TRANSPILE Transpile MATLAB code to MEX functions using MATLAB Coder.</li></ul>
+<li><a href="classify.html" class="code" title="function Y = classify(net, X, features)">classify</a>	classify - Classifies a given input using the IGMN model.</li><li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	compile - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li><li><a href="evaluate.html" class="code" title="function fit = evaluate(params, problem, hpNames, maxPenalty) %#codegen">evaluate</a>	evaluate - Evaluates the performance of an IGMN (Incremental Gaussian Mixture Network) model.</li><li><a href="transpile.html" class="code" title="function transpile(options)">transpile</a>	transpile - Transpile MATLAB code to MEX functions using MATLAB Coder.</li></ul>
 <!-- crossreference -->
 
 
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="predict.m">predict.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% PREDICT Classifies a given input and computes posterior probabilities.</span>
+<div class="fragment"><pre>0001 <span class="comment">% predict - Classifies a given input and computes posterior probabilities.</span>
 0002 <span class="comment">%</span>
-0003 <span class="comment">%   [Y, probabilities] = PREDICT(net, X, features, discretizationSize, featureRanges)</span>
+0003 <span class="comment">%   [Y, probabilities] = predict(net, X, features, discretizationSize, featureRanges)</span>
 0004 <span class="comment">%   classifies the input data and returns the predicted labels along with</span>
 0005 <span class="comment">%   the computed posterior probabilities.</span>
 0006 <span class="comment">%</span>
@@ -117,7 +118,7 @@ This function is called by:
 0042             mustBeNumeric, <span class="keyword">...</span>
 0043             mustBeNonempty, <span class="keyword">...</span>
 0044             mustBeInteger, <span class="keyword">...</span>
-0045             mustBeNDimensional(net, X, features) <span class="keyword">...</span>
+0045             <a href="../igmn/private/mustBeNDimensional.html" class="code" title="function mustBeNDimensional(net, x, y)">mustBeNDimensional</a>(net, X, features) <span class="keyword">...</span>
 0046         } = [(size(X, 2) + 1):net.dimension],<span class="keyword">...</span>
 0047         discretizationSize (1, 1) { <span class="keyword">...</span>
 0048             mustBeNumeric, <span class="keyword">...</span>
@@ -126,7 +127,7 @@ This function is called by:
 0051         featureRanges { <span class="keyword">...</span>
 0052             mustBeNumeric, <span class="keyword">...</span>
 0053             mustBeNonempty, <span class="keyword">...</span>
-0054             mustBeNDimensional(net, X, featureRanges) <span class="keyword">...</span>
+0054             <a href="../igmn/private/mustBeNDimensional.html" class="code" title="function mustBeNDimensional(net, x, y)">mustBeNDimensional</a>(net, X, featureRanges) <span class="keyword">...</span>
 0055         } = net.range(:, features);
 0056     <span class="keyword">end</span>
 0057     F = length(features);
@@ -136,7 +137,7 @@ This function is called by:
 0061     probabilities = zeros(N, discretizationSize ^ F);
 0062     featureGrid = zeros(discretizationSize ^ F, F);
 0063     <span class="keyword">if</span> discretizationSize
-0064         domain = discretizeFeaturesRange(featureRanges, discretizationSize);
+0064         domain = <a href="../igmn/private/discretizeFeaturesRange.html" class="code" title="function domain = discretizeFeaturesRange(intervals, numPoints)">discretizeFeaturesRange</a>(featureRanges, discretizationSize);
 0065         cellGrid = cell(1, F);
 0066         [cellGrid{:}] = ndgrid(domain{:});
 0067         featureGrid = zeros(discretizationSize ^ F, F);
@@ -148,6 +149,6 @@ This function is called by:
 0073     <span class="keyword">end</span>
 0074 <span class="keyword">end</span>
 0075</pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

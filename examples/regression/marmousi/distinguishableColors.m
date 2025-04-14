@@ -1,4 +1,4 @@
-% DISTINGUISHABLE_COLORS: Generate a set of maximally perceptually distinct colors
+% distinguishableColors - Generate a set of maximally perceptually distinct colors
 %
 % This function generates a set of colors that are distinguishable by 
 % reference to the "Lab" color space, which closely matches human color 

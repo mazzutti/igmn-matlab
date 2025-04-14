@@ -1,4 +1,3 @@
-%{
 % plotAIForPaper - Plots an Acoustic Impedance (AI) image with annotations for 
 %                  training and testing traces, and optionally exports the plot.
 %
@@ -36,7 +35,6 @@
 %   - The y-axis labels and x-axis labels are commented out but can be 
 %     customized as needed.
 %   - The background color for exported files is set to a specific RGB value.
-%}
 function plotAIForPaper(AI, trainTraces, testTrace, initDepth, exportFileName)
     set(0, 'DefaultAxesFontSize', 38);
     f = figure('units','normalized', 'outerposition', [0 0 1 1.4]);

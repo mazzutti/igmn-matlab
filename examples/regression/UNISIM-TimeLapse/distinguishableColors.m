@@ -1,5 +1,4 @@
-function colors = distinguishableColors(n_colors, bg,func)
-% DISTINGUISHABLE_COLORS: pick colors that are maximally perceptually distinct
+% distinguishableColors: pick colors that are maximally perceptually distinct
 %
 % When plotting a set of lines, you may want to distinguish them by color.
 % By default, Matlab chooses a small set of colors and cycles among them,
@@ -54,6 +53,8 @@ function colors = distinguishableColors(n_colors, bg,func)
 %   func = @(x) colorspace('RGB->Lab',x);
 %   c = distinguishable_colors(25,'w',func);
 % Copyright 2010-2011 by Timothy E. Holy
+function colors = distinguishableColors(n_colors, bg,func)
+
   % Parse the inputs
   if (nargin < 2)
     bg = [1 1 1];  % default white background

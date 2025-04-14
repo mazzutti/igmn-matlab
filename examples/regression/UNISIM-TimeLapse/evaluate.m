@@ -1,76 +1,74 @@
-%{
-EVALUATE Function Documentation
-===============================
-
-Description:
-------------
-The `evaluate` function computes the fitness of a set of parameters for a 
-given problem using an Incremental Gaussian Mixture Network (IGMN). It 
-supports kriging-based optimization and includes penalties for exceeding 
-network constraints.
-
-Inputs:
--------
-- params: 
-    A vector of hyperparameters to be evaluated.
-- problem: 
-    A structure containing the problem definition, including training and 
-    testing data, input/output variable indexes, and optimization options.
-- hpNames: 
-    A cell array of hyperparameter names corresponding to `params`.
-- maxPenalty: 
-    A scalar value representing the maximum penalty applied when constraints 
-    are violated.
-
-Outputs:
---------
-- fit: 
-    A scalar value representing the fitness of the evaluated parameters. 
-    Lower values indicate better fitness.
-
-Global Variables:
------------------
-- useKriging: 
-    A flag indicating whether kriging-based optimization is enabled.
-- inKrigingMode: 
-    A flag indicating whether the function is currently in kriging mode.
-- krigingStartIteration: 
-    The iteration at which kriging mode should start.
-- iterationCount: 
-    A counter for the number of iterations performed.
-
-Key Steps:
-----------
-1. Extract training and testing data from the `problem` structure.
-2. Configure IGMN options using the provided hyperparameters.
-3. Train the IGMN model on the training data.
-4. Predict outputs for the testing data using the trained model.
-5. If kriging is enabled and in kriging mode:
-    - Perform non-parametric transformations on the outputs.
-6. Compute the root mean square error (RMSE) for each output variable.
-7. Combine the RMSE values into a weighted fitness score.
-8. Apply a penalty if the number of components in the network exceeds the 
-   maximum allowed.
-
-Notes:
-------
-- The function assumes that the `igmn`, `train`, `predict`, and 
-  `uniformToNonParametric` functions are available in the MATLAB path.
-- The weights for combining RMSE values are hardcoded as `[1 4 4]` and 
-  normalized to sum to 1.
-- The function uses a barrier penalty to discourage exceeding the maximum 
-  number of components in the network.
-
-Dependencies:
--------------
-- igmnoptions.from
-- igmn
-- train
-- predict
-- uniformToNonParametric
-- normcdf
-- barrierPenalty
-%}
+% evaluate Function Documentation
+% ===============================
+% 
+% Description:
+% ------------
+% The `evaluate` function computes the fitness of a set of parameters for a 
+% given problem using an Incremental Gaussian Mixture Network (IGMN). It 
+% supports kriging-based optimization and includes penalties for exceeding 
+% network constraints.
+% 
+% Inputs:
+% -------
+% - params: 
+%     A vector of hyperparameters to be evaluated.
+% - problem: 
+%     A structure containing the problem definition, including training and 
+%     testing data, input/output variable indexes, and optimization options.
+% - hpNames: 
+%     A cell array of hyperparameter names corresponding to `params`.
+% - maxPenalty: 
+%     A scalar value representing the maximum penalty applied when constraints 
+%     are violated.
+% 
+% Outputs:
+% --------
+% - fit: 
+%     A scalar value representing the fitness of the evaluated parameters. 
+%     Lower values indicate better fitness.
+% 
+% Global Variables:
+% -----------------
+% - useKriging: 
+%     A flag indicating whether kriging-based optimization is enabled.
+% - inKrigingMode: 
+%     A flag indicating whether the function is currently in kriging mode.
+% - krigingStartIteration: 
+%     The iteration at which kriging mode should start.
+% - iterationCount: 
+%     A counter for the number of iterations performed.
+% 
+% Key Steps:
+% ----------
+% 1. Extract training and testing data from the `problem` structure.
+% 2. Configure IGMN options using the provided hyperparameters.
+% 3. Train the IGMN model on the training data.
+% 4. Predict outputs for the testing data using the trained model.
+% 5. If kriging is enabled and in kriging mode:
+%     - Perform non-parametric transformations on the outputs.
+% 6. Compute the root mean square error (RMSE) for each output variable.
+% 7. Combine the RMSE values into a weighted fitness score.
+% 8. Apply a penalty if the number of components in the network exceeds the 
+%    maximum allowed.
+% 
+% Notes:
+% ------
+% - The function assumes that the `igmn`, `train`, `predict`, and 
+%   `uniformToNonParametric` functions are available in the MATLAB path.
+% - The weights for combining RMSE values are hardcoded as `[1 4 4]` and 
+%   normalized to sum to 1.
+% - The function uses a barrier penalty to discourage exceeding the maximum 
+%   number of components in the network.
+% 
+% Dependencies:
+% -------------
+% - igmnoptions.from
+% - igmn
+% - train
+% - predict
+% - uniformToNonParametric
+% - normcdf
+% - barrierPenalty
 function fit = evaluate(params, problem, hpNames, maxPenalty) %#codegen
 
     global useKriging inKrigingMode krigingStartIteration iterationCount %#ok<*GVMIS>

@@ -4,7 +4,7 @@
 <head>
   <title>Description of transpile</title>
   <meta name="keywords" content="transpile">
-  <meta name="description" content="TRANSPILE Transpile MATLAB code to MEX functions using MATLAB Coder.">
+  <meta name="description" content="transpile - Transpile MATLAB code to MEX functions using MATLAB Coder.">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>TRANSPILE Transpile MATLAB code to MEX functions using MATLAB Coder.</strong></div>
+<div class="box"><strong>transpile - Transpile MATLAB code to MEX functions using MATLAB Coder.</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function transpile(options) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> TRANSPILE Transpile MATLAB code to MEX functions using MATLAB Coder.
+<div class="fragment"><pre class="comment"> transpile - Transpile MATLAB code to MEX functions using MATLAB Coder.
 
    transpile(options) generates MEX functions for various entry points
    ('predict', 'classify', 'train', 'igmnBuilder', and optionally 'optimize')
@@ -93,16 +93,17 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="classify.html" class="code" title="function Y = classify(net, X, features)">classify</a>	CLASSIFY Classifies a given input using the IGMN model.</li><li><a href="compileoptions.html" class="code" title="">compileoptions</a>	COMPILEOPTIONS Class</li><li><a href="igmnBuilder.html" class="code" title="function self = igmnBuilder(options) %#codegen">igmnBuilder</a>	IGMNBUILDER Incremental Gaussian Mixture Network Builder.</li><li><a href="optimize.html" class="code" title="">optimize</a>	{</li><li><a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>	PREDICT Classifies a given input and computes posterior probabilities.</li><li><a href="train.html" class="code" title="function  net = train(net, X) %#codegen">train</a>	TRAIN Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.</li></ul>
+<li><a href="classify.html" class="code" title="function Y = classify(net, X, features)">classify</a>	classify - Classifies a given input using the IGMN model.</li><li><a href="compileoptions.html" class="code" title="">compileoptions</a>	compileoptions Class</li><li><a href="igmnBuilder.html" class="code" title="function self = igmnBuilder(options) %#codegen">igmnBuilder</a>	igmnBuilder - Incremental Gaussian Mixture Network Builder.</li><li><a href="optimize.html" class="code" title="function options = optimize(problem) %#codegen">optimize</a>	optimize - Optimizes the parameters of a given problem using a specified algorithm.</li><li><a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>	predict - Classifies a given input and computes posterior probabilities.</li><li><a href="train.html" class="code" title="function  net = train(net, X) %#codegen">train</a>	train - Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 </ul>
 <!-- crossreference -->
 
 
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="transpile.m">transpile.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% TRANSPILE Transpile MATLAB code to MEX functions using MATLAB Coder.</span>
+<div class="fragment"><pre>0001 <span class="comment">% transpile - Transpile MATLAB code to MEX functions using MATLAB Coder.</span>
 0002 <span class="comment">%</span>
 0003 <span class="comment">%   transpile(options) generates MEX functions for various entry points</span>
 0004 <span class="comment">%   ('predict', 'classify', 'train', 'igmnBuilder', and optionally 'optimize')</span>
@@ -430,11 +431,11 @@ This function is called by:
 0326           
 0327         <span class="comment">%% Invoke MATLAB Coder.</span>
 0328         <span class="keyword">if</span> ~exist(<span class="string">'optimize_mex'</span>, <span class="string">'file'</span>) || enableRecompile
-0329              codegen -config cfg <a href="optimize.html" class="code" title="">optimize</a> -args ARGS{1}
+0329              codegen -config cfg <a href="optimize.html" class="code" title="function options = optimize(problem) %#codegen">optimize</a> -args ARGS{1}
 0330         <span class="keyword">end</span>
 0331     <span class="keyword">end</span>
 0332 <span class="keyword">end</span>
 0333</pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

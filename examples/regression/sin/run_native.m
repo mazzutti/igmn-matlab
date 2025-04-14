@@ -1,4 +1,4 @@
-% RUN_NATIVE Executes a regression example using the IGMN algorithm.
+% run_native - Executes a regression example using the IGMN algorithm.
 %
 % This function demonstrates the use of the Incremental Gaussian Mixture
 % Network (IGMN) for regression on a sine wave dataset. It includes

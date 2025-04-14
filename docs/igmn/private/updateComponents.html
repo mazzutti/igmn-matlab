@@ -4,7 +4,7 @@
 <head>
   <title>Description of updateComponents</title>
   <meta name="keywords" content="updateComponents">
-  <meta name="description" content="UPDATECOMPONENTS Updates the components of the network based on input data.">
+  <meta name="description" content="updateComponents Updates the components of the network based on input data.">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="box"><strong>UPDATECOMPONENTS Updates the components of the network based on input data.</strong></div>
+<div class="box"><strong>updateComponents Updates the components of the network based on input data.</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
 <div class="box"><strong>function net = updateComponents(net, x) %#codegen </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> UPDATECOMPONENTS Updates the components of the network based on input data.
+<div class="fragment"><pre class="comment"> updateComponents Updates the components of the network based on input data.
 
    net = updateComponents(net, x)
 
@@ -77,13 +77,14 @@ This function calls:
 <li><a href="wrapValues.html" class="code" title="function values = wrapValues(values, options) %#codegen">wrapValues</a>	wrapValues - Restrict values to a specified range.</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../../matlabicon.gif)">
-</ul>
+<li><a href="../../igmn/learn.html" class="code" title="function net = learn(net, x) %#codegen">learn</a>	learn - Learns a single training sample and updates the network.</li></ul>
 <!-- crossreference -->
 
 
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="updateComponents.m">updateComponents.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% UPDATECOMPONENTS Updates the components of the network based on input data.</span>
+<div class="fragment"><pre>0001 <span class="comment">% updateComponents Updates the components of the network based on input data.</span>
 0002 <span class="comment">%</span>
 0003 <span class="comment">%   net = updateComponents(net, x)</span>
 0004 <span class="comment">%</span>
@@ -164,6 +165,6 @@ This function is called by:
 0079     net.means = reshape(means, net.dimension, net.nc)';
 0080     net.priors = bsxfun(@rdivide, net.sp, sum(net.sp, 2));
 0081 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

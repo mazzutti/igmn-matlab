@@ -1,5 +1,4 @@
-% SEISMIC INVERSION
-% Computes the posterior distribution of elastic properties according to 
+% SeismicInversion - Computes the posterior distribution of elastic properties according to 
 % the Bayesian linearized AVO inversion (Buland and Omre, 2003).
 %
 % INPUT:

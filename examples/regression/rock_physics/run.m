@@ -1,74 +1,72 @@
-%{
+% This script performs synthetic well data generation, configuration, and 
+% inversion using Incremental Gaussian Mixture Networks (IGMN). It includes 
+% steps for data preprocessing, problem configuration, hyperparameter 
+% optimization, training, and prediction. The script also provides options 
+% for visualization of results and comparison with alternative inversion 
+% methods.
+% 
+% Main Sections:
+% 1. Workspace Initialization:
+%     - Clears the workspace, closes all figures, and resets the random seed.
+% 
+% 2. Dependency Management:
+%     - Adds required external dependencies to the MATLAB path.
+% 
+% 3. Configuration:
+%     - Sets simulation parameters, discretization size, and visualization options.
+% 
+% 4. Synthetic Well Data Generation:
+%     - Generates synthetic well data for training and testing.
+% 
+% 5. Problem Configuration:
+%     - Defines input/output variables, normalization options, and problem-specific 
+%       settings for IGMN optimization.
+% 
+% 6. Compilation:
+%     - Compiles the IGMN-related functions for execution in 'mex' or 'native' mode.
+% 
+% 7. Hyperparameter Optimization:
+%     - Tunes IGMN hyperparameters to improve performance (optional).
+% 
+% 8. Training and Prediction:
+%     - Trains the IGMN model on the training data and performs predictions on the test data.
+% 
+% 9. Visualization:
+%     - Plots the results, including predicted outputs, confidence intervals, and 
+%       domain probabilities.
+% 
+% 10. Comparison:
+%      - Provides an optional comparison with RockPhysicsKDEInversion.
+% 
+% Key Variables:
+% - `nSim`: Number of simulations.
+% - `discretizationSize`: Size of discretization for output probabilities.
+% - `useFacies`: Boolean flag to include facies in the analysis.
+% - `normalize`: Boolean flag to normalize data.
+% - `inputVars`: Indices of input variables.
+% - `outputVars`: Indices of output variables.
+% - `problem`: Struct containing problem configuration and optimization options.
+% 
+% Functions Used:
+% - `genPseudoWell`: Generates synthetic well data.
+% - `normalizeData`: Normalizes data to a specified range.
+% - `Problem`: Configures the IGMN problem.
+% - `compile`: Compiles the IGMN functions for execution.
+% - `optimize`: Optimizes IGMN hyperparameters.
+% - `igmnBuilder_mex`: Builds the IGMN model.
+% - `train_mex`: Trains the IGMN model.
+% - `predict_mex`: Predicts outputs using the trained IGMN model.
+% - `plotResults`: Visualizes the results of the inversion.
+% 
+% Dependencies:
+% - IGMN library.
+% - Seislab 3.02.
+% - GeoStatRockPhysics/SeReM.
+% 
+% Note:
+% - Ensure all dependencies are correctly added to the MATLAB path before running the script.
+% - Modify the file paths and configurations as needed for your specific use case.
 
-This script performs synthetic well data generation, configuration, and 
-inversion using Incremental Gaussian Mixture Networks (IGMN). It includes 
-steps for data preprocessing, problem configuration, hyperparameter 
-optimization, training, and prediction. The script also provides options 
-for visualization of results and comparison with alternative inversion 
-methods.
-
-Main Sections:
-1. Workspace Initialization:
-    - Clears the workspace, closes all figures, and resets the random seed.
-
-2. Dependency Management:
-    - Adds required external dependencies to the MATLAB path.
-
-3. Configuration:
-    - Sets simulation parameters, discretization size, and visualization options.
-
-4. Synthetic Well Data Generation:
-    - Generates synthetic well data for training and testing.
-
-5. Problem Configuration:
-    - Defines input/output variables, normalization options, and problem-specific 
-      settings for IGMN optimization.
-
-6. Compilation:
-    - Compiles the IGMN-related functions for execution in 'mex' or 'native' mode.
-
-7. Hyperparameter Optimization:
-    - Tunes IGMN hyperparameters to improve performance (optional).
-
-8. Training and Prediction:
-    - Trains the IGMN model on the training data and performs predictions on the test data.
-
-9. Visualization:
-    - Plots the results, including predicted outputs, confidence intervals, and 
-      domain probabilities.
-
-10. Comparison:
-     - Provides an optional comparison with RockPhysicsKDEInversion.
-
-Key Variables:
-- `nSim`: Number of simulations.
-- `discretizationSize`: Size of discretization for output probabilities.
-- `useFacies`: Boolean flag to include facies in the analysis.
-- `normalize`: Boolean flag to normalize data.
-- `inputVars`: Indices of input variables.
-- `outputVars`: Indices of output variables.
-- `problem`: Struct containing problem configuration and optimization options.
-
-Functions Used:
-- `genPseudoWell`: Generates synthetic well data.
-- `normalizeData`: Normalizes data to a specified range.
-- `Problem`: Configures the IGMN problem.
-- `compile`: Compiles the IGMN functions for execution.
-- `optimize`: Optimizes IGMN hyperparameters.
-- `igmnBuilder_mex`: Builds the IGMN model.
-- `train_mex`: Trains the IGMN model.
-- `predict_mex`: Predicts outputs using the trained IGMN model.
-- `plotResults`: Visualizes the results of the inversion.
-
-Dependencies:
-- IGMN library.
-- Seislab 3.02.
-- GeoStatRockPhysics/SeReM.
-
-Note:
-- Ensure all dependencies are correctly added to the MATLAB path before running the script.
-- Modify the file paths and configurations as needed for your specific use case.
-%}
 % Cleanning up the workspace
 dbstop if error
 clear all; %#ok<CLALL> 

@@ -4,7 +4,7 @@
 <head>
   <title>Description of computeProbDensities</title>
   <meta name="keywords" content="computeProbDensities">
-  <meta name="description" content="COMPUTEPROBDENSITIES Compute log probability densities for IGMN components.">
+  <meta name="description" content="computeProbDensities Compute log probability densities for IGMN components.">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="box"><strong>COMPUTEPROBDENSITIES Compute log probability densities for IGMN components.</strong></div>
+<div class="box"><strong>computeProbDensities Compute log probability densities for IGMN components.</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
 <div class="box"><strong>function net = computeProbDensities(net, x) %#codegen </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> COMPUTEPROBDENSITIES Compute log probability densities for IGMN components.
+<div class="fragment"><pre class="comment"> computeProbDensities Compute log probability densities for IGMN components.
 
    net = computeProbDensities(net, x) computes the log probability density
    of the multivariate normal distribution for each component of the 
@@ -53,16 +53,17 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../../matlabicon.gif)">
-<li><a href="computeProbDensity.html" class="code" title="function net = computeProbDensity(net, x, i) %#codegen">computeProbDensity</a>	COMPUTEPROBDENSITY Compute the probability density of a multivariate normal distribution.</li></ul>
+<li><a href="computeProbDensity.html" class="code" title="function net = computeProbDensity(net, x, i) %#codegen">computeProbDensity</a>	computeProbDensity Compute the probability density of a multivariate normal distribution.</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../../matlabicon.gif)">
-</ul>
+<li><a href="../../igmn/learn.html" class="code" title="function net = learn(net, x) %#codegen">learn</a>	learn - Learns a single training sample and updates the network.</li></ul>
 <!-- crossreference -->
 
 
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="computeProbDensities.m">computeProbDensities.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% COMPUTEPROBDENSITIES Compute log probability densities for IGMN components.</span>
+<div class="fragment"><pre>0001 <span class="comment">% computeProbDensities Compute log probability densities for IGMN components.</span>
 0002 <span class="comment">%</span>
 0003 <span class="comment">%   net = computeProbDensities(net, x) computes the log probability density</span>
 0004 <span class="comment">%   of the multivariate normal distribution for each component of the</span>
@@ -88,6 +89,6 @@ This function is called by:
 0024         net = <a href="computeProbDensity.html" class="code" title="function net = computeProbDensity(net, x, i) %#codegen">computeProbDensity</a>(net, x, i);
 0025     <span class="keyword">end</span>
 0026 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

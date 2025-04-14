@@ -1,53 +1,50 @@
-%{
-
-This script performs regression analysis on seismic data using the IGMN (Incremental Gaussian Mixture Network) algorithm. 
-It predicts Vp (P-wave velocity) values based on seismic traces and visualizes the results.
-
-Main Steps:
-1. Initialization:
-    - Sets up debugging, clears workspace, and adds necessary paths.
-    - Loads colormap data for visualization.
-
-2. Data Preparation:
-    - Reads seismic and Vp data from SEG-Y files.
-    - Randomly selects a subset of traces for training and testing.
-    - Normalizes the data using `mapminmax`.
-
-3. Data Segmentation:
-    - Prepares data windows for training and testing using a sliding window approach.
-    - Generates combinations of training and testing data indices.
-
-4. Model Training and Prediction:
-    - Configures IGMN parameters (`tau`, `delta`, `spMin`, `vMin`).
-    - Trains the IGMN model on the training data.
-    - Predicts Vp values for the test data.
-
-5. Visualization:
-    - Creates a figure to compare actual Vp, predicted Vp, and seismic traces.
-    - Plots mean predictions, standard deviations, and seismic data for each trace.
-    - Displays regression plots to evaluate model performance.
-
-Key Variables:
-- `totalTraces`: Total number of traces in the dataset.
-- `numberOfTraces`: Number of traces selected for training/testing.
-- `ws`: Window size for data segmentation.
-- `options`: Configuration parameters for the IGMN model.
-- `regressions`: Stores regression results for visualization.
-
-Dependencies:
-- `read_segy_file`: Function to read SEG-Y files.
-- `mapminmax`: Function for data normalization.
-- `prepareData`: Custom function to prepare data windows.
-- `igmn`: IGMN model implementation.
-- `plotregression`: Function to visualize regression results.
-
-Output:
-- Figures showing the comparison of actual and predicted Vp values, along with seismic traces.
-- Regression plots to assess the model's predictive performance.
-
-Note:
-Ensure that the required dependencies (`igmn`, `Seislab`, etc.) are correctly added to the MATLAB path before running the script.
-%}
+% This script performs regression analysis on seismic data using the IGMN (Incremental Gaussian Mixture Network) algorithm. 
+% It predicts Vp (P-wave velocity) values based on seismic traces and visualizes the results.
+% 
+% Main Steps:
+% 1. Initialization:
+%     - Sets up debugging, clears workspace, and adds necessary paths.
+%     - Loads colormap data for visualization.
+% 
+% 2. Data Preparation:
+%     - Reads seismic and Vp data from SEG-Y files.
+%     - Randomly selects a subset of traces for training and testing.
+%     - Normalizes the data using `mapminmax`.
+% 
+% 3. Data Segmentation:
+%     - Prepares data windows for training and testing using a sliding window approach.
+%     - Generates combinations of training and testing data indices.
+% 
+% 4. Model Training and Prediction:
+%     - Configures IGMN parameters (`tau`, `delta`, `spMin`, `vMin`).
+%     - Trains the IGMN model on the training data.
+%     - Predicts Vp values for the test data.
+% 
+% 5. Visualization:
+%     - Creates a figure to compare actual Vp, predicted Vp, and seismic traces.
+%     - Plots mean predictions, standard deviations, and seismic data for each trace.
+%     - Displays regression plots to evaluate model performance.
+% 
+% Key Variables:
+% - `totalTraces`: Total number of traces in the dataset.
+% - `numberOfTraces`: Number of traces selected for training/testing.
+% - `ws`: Window size for data segmentation.
+% - `options`: Configuration parameters for the IGMN model.
+% - `regressions`: Stores regression results for visualization.
+% 
+% Dependencies:
+% - `read_segy_file`: Function to read SEG-Y files.
+% - `mapminmax`: Function for data normalization.
+% - `prepareData`: Custom function to prepare data windows.
+% - `igmn`: IGMN model implementation.
+% - `plotregression`: Function to visualize regression results.
+% 
+% Output:
+% - Figures showing the comparison of actual and predicted Vp values, along with seismic traces.
+% - Regression plots to assess the model's predictive performance.
+% 
+% Note:
+% Ensure that the required dependencies (`igmn`, `Seislab`, etc.) are correctly added to the MATLAB path before running the script.
 dbstop if error
 clear all; %#ok<CLALL> 
 close all;

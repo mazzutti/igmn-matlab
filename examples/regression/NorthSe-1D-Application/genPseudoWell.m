@@ -1,3 +1,47 @@
+% genPseudoWell - Generates synthetic pseudo-well data for regression analysis.
+%
+% Syntax:
+%   [modelData, wellData] = genPseudoWell(nSim, showPlots, useFacies, exportPlots)
+%
+% Inputs:
+%   nSim       - Array specifying the number of simulations for each facies.
+%   showPlots  - Logical flag to indicate whether to display plots (true/false).
+%   useFacies  - Logical flag to include facies information in the output (true/false).
+%   exportPlots - Logical flag to export generated plots as PDF files (true/false).
+%
+% Outputs:
+%   modelData  - Matrix containing the generated model data. If `useFacies` is true,
+%                facies information is included as the first column.
+%   wellData   - Matrix containing the original well data, including depth, facies,
+%                and petrophysical properties (Vp, Vs, Rho, Phi, Clay, Sw).
+%
+% Description:
+%   This function generates synthetic pseudo-well data by sampling petrophysical
+%   properties and applying a rock-physics model. It supports visualization of
+%   the generated data through scatter plots and histograms, and optionally
+%   exports the plots as PDF files. The function also allows for Monte Carlo
+%   sampling of the joint distribution of petrophysical properties for different
+%   facies.
+%
+% Example:
+%   % Generate pseudo-well data with 100 simulations per facies, display plots,
+%   % include facies information, and export plots as PDFs.
+%   nSim = [100, 100, 100];
+%   showPlots = true;
+%   useFacies = true;
+%   exportPlots = true;
+%   [modelData, wellData] = genPseudoWell(nSim, showPlots, useFacies, exportPlots);
+%
+% Notes:
+%   - The function requires the input data file 'data/data4.mat' to be present
+%     in the specified path.
+%   - The function uses a linearized rock-physics model to compute elastic
+%     properties (Vp, Vs, Rho) from petrophysical properties (Phi, Clay, Sw).
+%   - The generated plots include scatter plots and histograms for visualizing
+%     the relationships between petrophysical and elastic properties.
+%
+% See also:
+%   mvnrnd, regress, clusterdata, exportgraphics
 function [modelData, wellData] = genPseudoWell(nSim, showPlots, useFacies, exportPlots)
 
     % Synthetic data configs

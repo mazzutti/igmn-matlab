@@ -79,16 +79,17 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="Hyperparameter.html" class="code" title="">Hyperparameter</a>	Hyperparameter Class</li><li><a href="Problem.html" class="code" title="">Problem</a>	Problem Class</li><li><a href="compileoptions.html" class="code" title="">compileoptions</a>	COMPILEOPTIONS Class</li><li><a href="igmnoptions.html" class="code" title="">igmnoptions</a>	IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.</li><li><a href="optimizeoptions.html" class="code" title="">optimizeoptions</a>	OPTIMIZEOPTIONS Class for configuring optimization options.</li></ul>
+<li><a href="Hyperparameter.html" class="code" title="">Hyperparameter</a>	Hyperparameter Class</li><li><a href="Problem.html" class="code" title="">Problem</a>	Problem Class</li><li><a href="compileoptions.html" class="code" title="">compileoptions</a>	compileoptions Class</li><li><a href="igmnoptions.html" class="code" title="">igmnoptions</a>	IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.</li><li><a href="optimizeoptions.html" class="code" title="">optimizeoptions</a>	OPTIMIZEOPTIONS Class for configuring optimization options.</li><li><a href="../igmn/private/mustHaveSameNumberOfColumns.html" class="code" title="function mustHaveSameNumberOfColumns(x, y)">mustHaveSameNumberOfColumns</a>	mustHaveSameNumberOfColumns - Validates that two input arrays have the same number of columns.</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="Problem.html" class="code" title="">Problem</a>	Problem Class</li><li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	COMPILE - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li></ul>
+<li><a href="Problem.html" class="code" title="">Problem</a>	Problem Class</li><li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	compile - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li></ul>
 <!-- crossreference -->
 
 <h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <ul style="list-style-image:url(../matlabicon.gif)">
 <li><a href="#_sub1" class="code">function options = getDefaultIgmnOptions(data)</a></li><li><a href="#_sub2" class="code">function options = getDefaultCompileOptions()</a></li><li><a href="#_sub3" class="code">function options = getDefaultOptimizeOptions()</a></li><li><a href="#_sub4" class="code">function self = Problem(trainData, testData, options)</a></li></ul>
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="Problem.m">Problem.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <span class="comment">% Problem Class</span>
 0002 <span class="comment">%</span>
@@ -238,9 +239,9 @@ This function is called by:
 0146             <span class="keyword">end</span>
 0147 
 0148             <span class="comment">% Extra validations</span>
-0149             mustHaveSameNumberOfColumns(trainData, testData);
-0150             mustHaveSameNumberOfColumns(trainData, [options.InputVarIndexes, options.OutputVarIndexes]);
-0151             mustHaveSameNumberOfColumns(trainData, options.AllData);
+0149             <a href="../igmn/private/mustHaveSameNumberOfColumns.html" class="code" title="function mustHaveSameNumberOfColumns(x, y)">mustHaveSameNumberOfColumns</a>(trainData, testData);
+0150             <a href="../igmn/private/mustHaveSameNumberOfColumns.html" class="code" title="function mustHaveSameNumberOfColumns(x, y)">mustHaveSameNumberOfColumns</a>(trainData, [options.InputVarIndexes, options.OutputVarIndexes]);
+0151             <a href="../igmn/private/mustHaveSameNumberOfColumns.html" class="code" title="function mustHaveSameNumberOfColumns(x, y)">mustHaveSameNumberOfColumns</a>(trainData, options.AllData);
 0152 
 0153             <span class="keyword">if</span> size(options.AllData, 1) ~= (size(trainData, 1) + size(testData, 1))
 0154                 options.DefaultIgmnOptions = Problem.getDefaultIgmnOptions(options.AllData);
@@ -260,6 +261,6 @@ This function is called by:
 0168     <span class="keyword">end</span>
 0169 <span class="keyword">end</span>
 0170</pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

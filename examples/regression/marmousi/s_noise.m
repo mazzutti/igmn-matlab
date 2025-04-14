@@ -1,4 +1,3 @@
-function seismic=s_noise(seismic,varargin)
 % Function computes zero-mean noise with the same structure as the input data set
 % Depending on the option chosen the output is either the noise or the input
 % data with the noise added.
@@ -41,6 +40,8 @@ function seismic=s_noise(seismic,varargin)
 % if ~istype(seismic,'seismic')  
 %    error(' First input argument must be a seismic dataset.')
 % end
+
+function seismic=s_noise(seismic,varargin)
 
 %       Set defaults for input parameters
 param.amplitude='median';

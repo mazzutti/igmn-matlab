@@ -1,58 +1,55 @@
-%{
-
-This script performs optimization and regression analysis for seismic data 
-and Vp (P-wave velocity) prediction using the IGMN (Incremental Gaussian Mixture Network) model. 
-The script includes data preprocessing, parameter optimization, and visualization of results.
-
-Main Steps:
-1. Initialization:
-    - Sets up debugging, clears workspace, and adds necessary paths.
-    - Loads colormap data for visualization.
-
-2. Data Preparation:
-    - Reads seismic and Vp data from SEG-Y files.
-    - Randomly selects a subset of traces for training and testing.
-    - Normalizes the data using `mapminmax`.
-
-3. Parameter Optimization:
-    - Defines lower and upper bounds for optimization parameters.
-    - Calls the `optimize` function to find the best parameters for the IGMN model.
-
-4. Regression and Prediction:
-    - Configures the IGMN model with optimized parameters.
-    - Trains the model on training data and predicts Vp on test data.
-    - Computes mean and standard deviation of predictions for visualization.
-
-5. Visualization:
-    - Plots seismic data, true Vp, predicted Vp, and prediction variance for each trace.
-    - Displays regression analysis results using `plotregression`.
-
-Key Variables:
-- `totalTraces`: Total number of traces in the dataset.
-- `numberOfTraces`: Number of traces used for training and testing.
-- `section`: Range of data samples to be used.
-- `lb`, `ub`: Lower and upper bounds for optimization parameters.
-- `bestParams`: Optimized parameters for the IGMN model.
-- `ws`: Window size for the IGMN model.
-- `options`: Configuration options for the IGMN model.
-- `regressions`: Cell array storing regression data for visualization.
-
-Dependencies:
-- `read_segy_file`: Function to read SEG-Y files.
-- `mapminmax`: Function for data normalization.
-- `optimize`: Function to perform parameter optimization.
-- `igmn`: Class implementing the Incremental Gaussian Mixture Network.
-- `plotregression`: Function to visualize regression results.
-
-Outputs:
-- Figures showing seismic data, true Vp, predicted Vp, and prediction variance.
-- Regression analysis plot comparing true and predicted Vp values.
-
-Note:
-- Ensure that the required SEG-Y files (`Vp.segy` and `SYNTHETIC.segy`) and 
-  supporting functions are available in the specified paths.
-- Adjust the `section` and `numberOfTraces` variables as needed for different datasets.
-%}
+% This script performs optimization and regression analysis for seismic data 
+% and Vp (P-wave velocity) prediction using the IGMN (Incremental Gaussian Mixture Network) model. 
+% The script includes data preprocessing, parameter optimization, and visualization of results.
+% 
+% Main Steps:
+% 1. Initialization:
+%     - Sets up debugging, clears workspace, and adds necessary paths.
+%     - Loads colormap data for visualization.
+% 
+% 2. Data Preparation:
+%     - Reads seismic and Vp data from SEG-Y files.
+%     - Randomly selects a subset of traces for training and testing.
+%     - Normalizes the data using `mapminmax`.
+% 
+% 3. Parameter Optimization:
+%     - Defines lower and upper bounds for optimization parameters.
+%     - Calls the `optimize` function to find the best parameters for the IGMN model.
+% 
+% 4. Regression and Prediction:
+%     - Configures the IGMN model with optimized parameters.
+%     - Trains the model on training data and predicts Vp on test data.
+%     - Computes mean and standard deviation of predictions for visualization.
+% 
+% 5. Visualization:
+%     - Plots seismic data, true Vp, predicted Vp, and prediction variance for each trace.
+%     - Displays regression analysis results using `plotregression`.
+% 
+% Key Variables:
+% - `totalTraces`: Total number of traces in the dataset.
+% - `numberOfTraces`: Number of traces used for training and testing.
+% - `section`: Range of data samples to be used.
+% - `lb`, `ub`: Lower and upper bounds for optimization parameters.
+% - `bestParams`: Optimized parameters for the IGMN model.
+% - `ws`: Window size for the IGMN model.
+% - `options`: Configuration options for the IGMN model.
+% - `regressions`: Cell array storing regression data for visualization.
+% 
+% Dependencies:
+% - `read_segy_file`: Function to read SEG-Y files.
+% - `mapminmax`: Function for data normalization.
+% - `optimize`: Function to perform parameter optimization.
+% - `igmn`: Class implementing the Incremental Gaussian Mixture Network.
+% - `plotregression`: Function to visualize regression results.
+% 
+% Outputs:
+% - Figures showing seismic data, true Vp, predicted Vp, and prediction variance.
+% - Regression analysis plot comparing true and predicted Vp values.
+% 
+% Note:
+% - Ensure that the required SEG-Y files (`Vp.segy` and `SYNTHETIC.segy`) and 
+%   supporting functions are available in the specified paths.
+% - Adjust the `section` and `numberOfTraces` variables as needed for different datasets.
 dbstop if error
 clear all; %#ok<CLALL> 
 close all;

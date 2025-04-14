@@ -99,7 +99,7 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="optimizeoptions.html" class="code" title="">optimizeoptions</a>	OPTIMIZEOPTIONS Class for configuring optimization options.</li></ul>
+<li><a href="optimizeoptions.html" class="code" title="">optimizeoptions</a>	OPTIMIZEOPTIONS Class for configuring optimization options.</li><li><a href="../igmn/private/mustBeACellArrayOf.html" class="code" title="function mustBeACellArrayOf(cellArray, className)">mustBeACellArrayOf</a>	mustBeACellArrayOf - Validate that input is a cell array of a specific class</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 <li><a href="Problem.html" class="code" title="">Problem</a>	Problem Class</li><li><a href="optimizeoptions.html" class="code" title="">optimizeoptions</a>	OPTIMIZEOPTIONS Class for configuring optimization options.</li></ul>
@@ -108,7 +108,8 @@ This function is called by:
 <h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <ul style="list-style-image:url(../matlabicon.gif)">
 <li><a href="#_sub1" class="code">function PopulationSpan = initialPopulationSpan(populationSpan, hyperparameters)</a></li><li><a href="#_sub2" class="code">function self = optimizeoptions(hyperparameters, options)</a></li></ul>
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="optimizeoptions.m">optimizeoptions.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <span class="comment">% OPTIMIZEOPTIONS Class for configuring optimization options.</span>
 0002 <span class="comment">%</span>
@@ -295,13 +296,13 @@ This function is called by:
 0183             <span class="comment">%   options.GravitationalConstant  The gravitational constant. The default value is 1.</span>
 0184             arguments
 0185                 hyperparameters (1,:) { <span class="keyword">...</span>
-0186                     mustBeACellArrayOf(hyperparameters, <span class="string">'Hyperparameter'</span>) <span class="keyword">...</span>
+0186                     <a href="../igmn/private/mustBeACellArrayOf.html" class="code" title="function mustBeACellArrayOf(cellArray, className)">mustBeACellArrayOf</a>(hyperparameters, <span class="string">'Hyperparameter'</span>) <span class="keyword">...</span>
 0187                 } = [],
 0188                 options.Algorithm (1, :) char { <span class="keyword">...</span>
 0189                     mustBeMember(options.Algorithm, {<span class="string">'pso'</span>, <span class="string">'psogsa'</span>, <span class="string">'imode'</span>}) <span class="keyword">...</span>
 0190                 }  = <span class="string">'pso'</span>,
 0191                 options.UseDefaultsFor (1,:) { <span class="keyword">...</span>
-0192                     mustBeACellArrayOf(options.UseDefaultsFor, <span class="string">'char'</span>) <span class="keyword">...</span>
+0192                     <a href="../igmn/private/mustBeACellArrayOf.html" class="code" title="function mustBeACellArrayOf(cellArray, className)">mustBeACellArrayOf</a>(options.UseDefaultsFor, <span class="string">'char'</span>) <span class="keyword">...</span>
 0193                 } = {},
 0194                 options.InitialPopulation (:, :) double { <span class="keyword">...</span>
 0195                     mustBeNumeric, <span class="keyword">...</span>
@@ -397,6 +398,6 @@ This function is called by:
 0285         <span class="keyword">end</span>
 0286     <span class="keyword">end</span>
 0287 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

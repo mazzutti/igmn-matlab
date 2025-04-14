@@ -1,4 +1,3 @@
-
 % This script configures and invokes MATLAB Coder to generate C++ code 
 % from the MATLAB function `run_native`. The generated code is intended 
 % to be compiled as a library with specific settings for namespace, 

@@ -1,49 +1,47 @@
-%{
+% This script performs regression analysis using the Incremental Gaussian Mixture Network (IGMN) 
+% and compares its performance with Ensemble Smoother with Multiple Data Assimilation (ES-MDA). 
+% The script includes data preparation, model training, optimization, and visualization of results.
+% 
+% Key functionalities:
+% 1. Data Preparation:
+%     - Generates synthetic data or loads pre-existing data.
+%     - Configures training and testing datasets with specified trace numbers and noise levels.
+% 
+% 2. Model Configuration:
+%     - Defines input and output variables for the regression problem.
+%     - Configures hyperparameters and optimization settings for the IGMN model.
+% 
+% 3. Model Training and Optimization:
+%     - Compiles the IGMN model for execution in 'mex' or 'native' mode.
+%     - Tunes model parameters or loads pre-tuned parameters.
+%     - Trains the IGMN model on the training dataset.
+% 
+% 4. Visualization:
+%     - Plots results, including predictions, uncertainties, and comparisons with ES-MDA.
+%     - Exports visualizations to PDF files for further analysis.
+% 
+% 5. Statistical Analysis:
+%     - Computes and visualizes variance and uncertainty metrics for different noise levels.
+%     - Normalizes and compares the performance of IGMN and ES-MDA.
+% 
+% Global Variables:
+% - traceSizes: Stores the sizes of seismic traces.
+% - testTraces: Contains indices of test traces.
+% - targets: Stores target values for regression.
+% 
+% Dependencies:
+% - Requires external libraries: 'igmn', 'GeoStatRockPhysics/SeReM', and 'Seislab 3.02'.
+% - Uses custom functions such as `prepareData`, `optimize`, `igmnBuilder_mex`, `train_mex`, 
+%   `predict_mex`, `plotResults`, `plotStds`, and `runSeReM`.
+% 
+% Execution Modes:
+% - 'mex': Executes compiled MATLAB code for improved performance.
+% - 'native': Executes MATLAB code without compilation.
+% 
+% Note:
+% - Ensure all required dependencies and data files are available in the specified paths.
+% - Modify hyperparameter bounds and optimization settings as needed for specific use cases.
 
-This script performs regression analysis using the Incremental Gaussian Mixture Network (IGMN) 
-and compares its performance with Ensemble Smoother with Multiple Data Assimilation (ES-MDA). 
-The script includes data preparation, model training, optimization, and visualization of results.
-
-Key functionalities:
-1. Data Preparation:
-    - Generates synthetic data or loads pre-existing data.
-    - Configures training and testing datasets with specified trace numbers and noise levels.
-
-2. Model Configuration:
-    - Defines input and output variables for the regression problem.
-    - Configures hyperparameters and optimization settings for the IGMN model.
-
-3. Model Training and Optimization:
-    - Compiles the IGMN model for execution in 'mex' or 'native' mode.
-    - Tunes model parameters or loads pre-tuned parameters.
-    - Trains the IGMN model on the training dataset.
-
-4. Visualization:
-    - Plots results, including predictions, uncertainties, and comparisons with ES-MDA.
-    - Exports visualizations to PDF files for further analysis.
-
-5. Statistical Analysis:
-    - Computes and visualizes variance and uncertainty metrics for different noise levels.
-    - Normalizes and compares the performance of IGMN and ES-MDA.
-
-Global Variables:
-- traceSizes: Stores the sizes of seismic traces.
-- testTraces: Contains indices of test traces.
-- targets: Stores target values for regression.
-
-Dependencies:
-- Requires external libraries: 'igmn', 'GeoStatRockPhysics/SeReM', and 'Seislab 3.02'.
-- Uses custom functions such as `prepareData`, `optimize`, `igmnBuilder_mex`, `train_mex`, 
-  `predict_mex`, `plotResults`, `plotStds`, and `runSeReM`.
-
-Execution Modes:
-- 'mex': Executes compiled MATLAB code for improved performance.
-- 'native': Executes MATLAB code without compilation.
-
-Note:
-- Ensure all required dependencies and data files are available in the specified paths.
-- Modify hyperparameter bounds and optimization settings as needed for specific use cases.
-%}
 %#ok<*UNRCH>
 %#ok<*CLALL> 
 

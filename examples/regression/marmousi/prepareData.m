@@ -1,42 +1,40 @@
-%{
-prepareData - Prepares training and testing data for regression tasks using Marmousi II data.
-
-Syntax:
-    [trainData, testData, allData, traceSizes, targets, noisyTestData] = prepareData(genSynthData, trainTraces, testTraces, initDeth, waveSize, noiseMultipliers, plotData)
-
-Inputs:
-    genSynthData      - Logical flag indicating whether to generate synthetic data (true) or load preprocessed data (false).
-    trainTraces       - Array of indices specifying the training traces.
-    testTraces        - Array of indices specifying the testing traces.
-    initDeth          - Initial depth index for data extraction.
-    waveSize          - Size of the wavelet window for data segmentation.
-    noiseMultipliers  - Array of noise multipliers for generating noisy test data.
-    plotData          - Logical flag indicating whether to plot the data (currently commented out).
-
-Outputs:
-    trainData         - Matrix containing the prepared training data.
-    testData          - Matrix containing the prepared testing data.
-    allData           - 3D matrix containing all synthetic or loaded data.
-    traceSizes        - Array containing the sizes of each trace.
-    targets           - Array of target values for the test data.
-    noisyTestData     - Cell array containing noisy versions of the test data.
-
-Description:
-    This function prepares the data for regression tasks by either generating synthetic data from the Marmousi II model or loading preprocessed data. It processes the data into training and testing sets, optionally adds noise to the test data, and organizes the data into a format suitable for machine learning models.
-
-    The function also includes commented-out code for plotting the data, which can be enabled for visualization purposes.
-
-Dependencies:
-    - read_segy_file: Reads SEGY files to extract traces from the Marmousi II model.
-    - genSyntheticData: Generates synthetic data based on input traces and parameters.
-    - genBaggingData: Prepares bagged training and testing data from the input data.
-
-Example:
-    [trainData, testData, allData, traceSizes, targets, noisyTestData] = prepareData(true, [1, 2, 3], [4, 5], 10, 64, [0.1, 0.2], false);
-
-See Also:
-    genSyntheticData, genBaggingData
-%}
+% prepareData - Prepares training and testing data for regression tasks using Marmousi II data.
+% 
+% Syntax:
+%     [trainData, testData, allData, traceSizes, targets, noisyTestData] = prepareData(genSynthData, trainTraces, testTraces, initDeth, waveSize, noiseMultipliers, plotData)
+% 
+% Inputs:
+%     genSynthData      - Logical flag indicating whether to generate synthetic data (true) or load preprocessed data (false).
+%     trainTraces       - Array of indices specifying the training traces.
+%     testTraces        - Array of indices specifying the testing traces.
+%     initDeth          - Initial depth index for data extraction.
+%     waveSize          - Size of the wavelet window for data segmentation.
+%     noiseMultipliers  - Array of noise multipliers for generating noisy test data.
+%     plotData          - Logical flag indicating whether to plot the data (currently commented out).
+% 
+% Outputs:
+%     trainData         - Matrix containing the prepared training data.
+%     testData          - Matrix containing the prepared testing data.
+%     allData           - 3D matrix containing all synthetic or loaded data.
+%     traceSizes        - Array containing the sizes of each trace.
+%     targets           - Array of target values for the test data.
+%     noisyTestData     - Cell array containing noisy versions of the test data.
+% 
+% Description:
+%     This function prepares the data for regression tasks by either generating synthetic data from the Marmousi II model or loading preprocessed data. It processes the data into training and testing sets, optionally adds noise to the test data, and organizes the data into a format suitable for machine learning models.
+% 
+%     The function also includes commented-out code for plotting the data, which can be enabled for visualization purposes.
+% 
+% Dependencies:
+%     - read_segy_file: Reads SEGY files to extract traces from the Marmousi II model.
+%     - genSyntheticData: Generates synthetic data based on input traces and parameters.
+%     - genBaggingData: Prepares bagged training and testing data from the input data.
+% 
+% Example:
+%     [trainData, testData, allData, traceSizes, targets, noisyTestData] = prepareData(true, [1, 2, 3], [4, 5], 10, 64, [0.1, 0.2], false);
+% 
+% See Also:
+%     genSyntheticData, genBaggingData
 function [trainData, testData, allData, traceSizes, ... 
     targets, noisyTestData] = prepareData(genSynthData, ...
     trainTraces, testTraces, initDeth, waveSize, noiseMultipliers, plotData)

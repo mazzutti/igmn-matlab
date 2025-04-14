@@ -4,7 +4,7 @@
 <head>
   <title>Description of computePosteriors</title>
   <meta name="keywords" content="computePosteriors">
-  <meta name="description" content="COMPUTEPOSTERIORS Compute the posterior probabilities for each IGMN component.">
+  <meta name="description" content="computePosteriors Compute the posterior probabilities for each IGMN component.">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="box"><strong>COMPUTEPOSTERIORS Compute the posterior probabilities for each IGMN component.</strong></div>
+<div class="box"><strong>computePosteriors Compute the posterior probabilities for each IGMN component.</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
 <div class="box"><strong>function net = computePosteriors(net) %#codegen </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> COMPUTEPOSTERIORS Compute the posterior probabilities for each IGMN component.
+<div class="fragment"><pre class="comment"> computePosteriors Compute the posterior probabilities for each IGMN component.
 
    net = computePosteriors(net)
 
@@ -65,13 +65,14 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../../matlabicon.gif)">
-</ul>
+<li><a href="../../igmn/learn.html" class="code" title="function net = learn(net, x) %#codegen">learn</a>	learn - Learns a single training sample and updates the network.</li></ul>
 <!-- crossreference -->
 
 
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="computePosteriors.m">computePosteriors.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% COMPUTEPOSTERIORS Compute the posterior probabilities for each IGMN component.</span>
+<div class="fragment"><pre>0001 <span class="comment">% computePosteriors Compute the posterior probabilities for each IGMN component.</span>
 0002 <span class="comment">%</span>
 0003 <span class="comment">%   net = computePosteriors(net)</span>
 0004 <span class="comment">%</span>
@@ -114,6 +115,6 @@ This function is called by:
 0041         net.posteriors = bsxfun(@rdivide, logDensity, sum(logDensity, 2));
 0042     <span class="keyword">end</span>
 0043 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

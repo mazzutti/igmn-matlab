@@ -1,11 +1,10 @@
-%{
 % uniformToNonParametric - Transforms uniform data into non-parametric data
 % based on conditional distributions.
-
+%
 % Syntax:
 %   [nonParametricData] = uniformToNonParametric(conditioningData, sortedData, ...
 %       dataFiltered, grid_size, nonParametricData, outputVars, infinitesimal)
-
+%
 % Inputs:
 %   conditioningData - Matrix containing the conditioning data points.
 %   sortedData       - Matrix of sorted data used for marginal distributions.
@@ -14,26 +13,25 @@
 %   nonParametricData - Pre-allocated matrix to store the resulting non-parametric data.
 %   outputVars       - Array of indices specifying the output variables to process.
 %   infinitesimal    - Vector of infinitesimal values to avoid interpolation issues.
-
+%
 % Outputs:
 %   nonParametricData - Matrix containing the transformed non-parametric data.
-
+%
 % Description:
 %   This function performs a transformation of uniform data into non-parametric
 %   data using conditional distributions. For each point in the grid, it computes
 %   the inverse cumulative distribution for the specified output variables. The
 %   function uses parallel processing (parfor) to improve performance. It also
 %   filters the data around the sampled value based on the grid size.
-
+%
 % Notes:
 %   - The function uses global variable `numCores` to determine the number of
 %     cores available for parallel processing.
 %   - The 'spline' interpolation method is used for smooth interpolation, and
 %     extrapolation is enabled.
-
+%
 % See also:
 %   interp1, parfor
-%}
 function [ nonParametricData ] = ...
     uniformToNonParametric(conditioningData, sortedData, ...
         dataFiltered, grid_size, nonParametricData, outputVars, infinitesimal) %#codegen

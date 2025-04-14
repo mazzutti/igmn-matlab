@@ -80,16 +80,17 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="igmnoptions.html" class="code" title="">igmnoptions</a>	IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.</li></ul>
+<li><a href="igmnoptions.html" class="code" title="">igmnoptions</a>	IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.</li><li><a href="../igmn/private/mustBeACellArrayOf.html" class="code" title="function mustBeACellArrayOf(cellArray, className)">mustBeACellArrayOf</a>	mustBeACellArrayOf - Validate that input is a cell array of a specific class</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="Problem.html" class="code" title="">Problem</a>	Problem Class</li><li><a href="igmnBuilder.html" class="code" title="function self = igmnBuilder(options) %#codegen">igmnBuilder</a>	IGMNBUILDER Incremental Gaussian Mixture Network Builder.</li><li><a href="igmnoptions.html" class="code" title="">igmnoptions</a>	IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.</li></ul>
+<li><a href="Problem.html" class="code" title="">Problem</a>	Problem Class</li><li><a href="igmnBuilder.html" class="code" title="function self = igmnBuilder(options) %#codegen">igmnBuilder</a>	igmnBuilder - Incremental Gaussian Mixture Network Builder.</li><li><a href="igmnoptions.html" class="code" title="">igmnoptions</a>	IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.</li></ul>
 <!-- crossreference -->
 
 <h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <ul style="list-style-image:url(../matlabicon.gif)">
 <li><a href="#_sub1" class="code">function value = extractValue(propName, options, names, values)</a></li><li><a href="#_sub2" class="code">function copy = from(options, names, values)</a></li><li><a href="#_sub3" class="code">function self = igmnoptions(range, options)</a></li><li><a href="#_sub4" class="code">function mustBeSortedInAscendingOrder(range)</a></li></ul>
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="igmnoptions.m">igmnoptions.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <span class="comment">% IGMNOPTIONS Class for configuring Incremental Gaussian Mixture Network (IGMN) options.</span>
 0002 <span class="comment">%</span>
@@ -169,8 +170,8 @@ This function is called by:
 0076         <a name="_sub1" href="#_subfunctions" class="code">function copy = from(options, names, values)</a>
 0077             arguments
 0078                 options (1, 1) <a href="igmnoptions.html" class="code" title="">igmnoptions</a>,
-0079                 names (1, :) { mustBeACellArrayOf(names, <span class="string">'char'</span>) } = {},
-0080                 values (1, :) {  mustBeACellArrayOf(values, <span class="string">'double'</span>) } = {}
+0079                 names (1, :) { <a href="../igmn/private/mustBeACellArrayOf.html" class="code" title="function mustBeACellArrayOf(cellArray, className)">mustBeACellArrayOf</a>(names, <span class="string">'char'</span>) } = {},
+0080                 values (1, :) {  <a href="../igmn/private/mustBeACellArrayOf.html" class="code" title="function mustBeACellArrayOf(cellArray, className)">mustBeACellArrayOf</a>(values, <span class="string">'double'</span>) } = {}
 0081             <span class="keyword">end</span>
 0082             assert(size(names, 2) == size(values, 2));
 0083             copy = <a href="igmnoptions.html" class="code" title="">igmnoptions</a>(options.range, <span class="keyword">...</span>
@@ -285,6 +286,6 @@ This function is called by:
 0192     <span class="keyword">end</span>
 0193 <span class="keyword">end</span>
 0194</pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

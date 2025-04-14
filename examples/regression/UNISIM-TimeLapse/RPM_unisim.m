@@ -1,39 +1,37 @@
-%{
-RPM_unisim - Rock Physics Model for Unisim Data
-
-This function calculates the P-wave velocity (Vp), S-wave velocity (Vs), 
-and density (Rho) of a rock sample based on porosity (Phi), water saturation (sw), 
-and critical porosity (criticalporo) using a rock physics model.
-
-Inputs:
-    Phi          - Porosity array (fractional values, e.g., 0.0 to 0.4).
-                   Values less than 0 are set to their absolute values.
-                   Values greater than 0.4 are capped at 0.4.
-    sw           - Water saturation array (fractional values, e.g., 0.0 to 1.0).
-                   Values less than 0 are set to their absolute values.
-                   Values greater than 1.0 are capped at 1.0.
-    criticalporo - Critical porosity value (scalar).
-
-Outputs:
-    Vp  - P-wave velocity (m/s), reshaped to match the input size of Phi.
-    Vs  - S-wave velocity (m/s), reshaped to match the input size of Phi.
-    Rho - Density (g/cm³), reshaped to match the input size of Phi.
-
-Notes:
-    - The function internally uses the MatrixFluidModel, DensityModel, 
-      and SoftsandModel to compute the outputs.
-    - The velocities (Vp and Vs) are converted from km/s to m/s.
-    - The outputs are reshaped to match the original dimensions of the input Phi.
-
-Dependencies:
-    - MatrixFluidModel: Computes matrix and fluid properties.
-    - DensityModel: Computes the density of the rock.
-    - SoftsandModel: Computes the velocities using the soft sand model.
-
-Example:
-    [Vp, Vs, Rho] = RPM_unisim(Phi, sw, criticalporo);
-
-%}
+% RPM_unisim - Rock Physics Model for Unisim Data
+% 
+% This function calculates the P-wave velocity (Vp), S-wave velocity (Vs), 
+% and density (Rho) of a rock sample based on porosity (Phi), water saturation (sw), 
+% and critical porosity (criticalporo) using a rock physics model.
+% 
+% Inputs:
+%     Phi          - Porosity array (fractional values, e.g., 0.0 to 0.4).
+%                    Values less than 0 are set to their absolute values.
+%                    Values greater than 0.4 are capped at 0.4.
+%     sw           - Water saturation array (fractional values, e.g., 0.0 to 1.0).
+%                    Values less than 0 are set to their absolute values.
+%                    Values greater than 1.0 are capped at 1.0.
+%     criticalporo - Critical porosity value (scalar).
+% 
+% Outputs:
+%     Vp  - P-wave velocity (m/s), reshaped to match the input size of Phi.
+%     Vs  - S-wave velocity (m/s), reshaped to match the input size of Phi.
+%     Rho - Density (g/cm³), reshaped to match the input size of Phi.
+% 
+% Notes:
+%     - The function internally uses the MatrixFluidModel, DensityModel, 
+%       and SoftsandModel to compute the outputs.
+%     - The velocities (Vp and Vs) are converted from km/s to m/s.
+%     - The outputs are reshaped to match the original dimensions of the input Phi.
+% 
+% Dependencies:
+%     - MatrixFluidModel: Computes matrix and fluid properties.
+%     - DensityModel: Computes the density of the rock.
+%     - SoftsandModel: Computes the velocities using the soft sand model.
+% 
+% Example:
+%     [Vp, Vs, Rho] = RPM_unisim(Phi, sw, criticalporo);
+% 
 function [Vp, Vs, Rho] = RPM_unisim(Phi, sw, criticalporo)
 
 SIZE = size(Phi);

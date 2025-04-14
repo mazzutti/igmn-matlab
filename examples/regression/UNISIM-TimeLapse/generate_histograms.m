@@ -1,4 +1,3 @@
-%{
 % generate_histograms - Generates a grid of histograms and 2D histogram plots for a given dataset.
 %
 % Syntax:
@@ -42,7 +41,6 @@
 %
 % See also:
 %   tight_subplot, histogram, histogram2, gmdistribution, contour
-%}
 function f = generate_histograms(logs, names, coloraxis, variableRanges, means, covs, priors, minMaxProportion)
     plot_size_x = size(logs, 2);
     set(0, 'DefaultAxesFontSize', 22, 'defaultTextInterpreter', 'latex');

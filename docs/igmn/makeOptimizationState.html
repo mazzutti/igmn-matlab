@@ -87,14 +87,15 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-</ul>
+<li><a href="../igmn/private/createUniformPopulation.html" class="code" title="function population = createUniformPopulation(problemStruct, hpIndexes) %#codegen">createUniformPopulation</a>	createUniformPopulation - Generates a uniform population of individuals for optimization.</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-</ul>
+<li><a href="../igmn/private/imode.html" class="code" title="function [x, fval, exitFlag] = imode(problem) %#codegen">imode</a>	imode.m - Perform optimization using the IMODE algorithm.</li><li><a href="../igmn/private/pso.html" class="code" title="function [x, fval, exitFlag] = pso(problem) %#codegen">pso</a>	pso - Particle Swarm Optimization Algorithm</li><li><a href="../igmn/private/psogsa.html" class="code" title="function [x, fval, exitFlag] = psogsa(problem) %#codegen">psogsa</a>	psogsa - Particle Swarm Optimization with Gravitational Search Algorithm (PSOGSA)</li></ul>
 <!-- crossreference -->
 
 
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="makeOptimizationState.m">makeOptimizationState.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <span class="comment">% makeOptimizationState - Initializes the optimization state structure for an optimization algorithm.</span>
 0002 <span class="comment">%</span>
@@ -217,7 +218,7 @@ This function is called by:
 0119             <span class="string">'rngstate'</span>, [], <span class="keyword">...</span>
 0120             <span class="string">'options'</span>, optOptions<span class="keyword">...</span>
 0121         );
-0122         state.Positions = createUniformPopulation(problemStruct, hpIndexes);
+0122         state.Positions = <a href="../igmn/private/createUniformPopulation.html" class="code" title="function population = createUniformPopulation(problemStruct, hpIndexes) %#codegen">createUniformPopulation</a>(problemStruct, hpIndexes);
 0123     <span class="keyword">else</span> <span class="comment">% the initial population was passed in!</span>
 0124         state.Positions = optOptions.InitialPopulation;
 0125     <span class="keyword">end</span>
@@ -253,6 +254,6 @@ This function is called by:
 0155 <span class="keyword">end</span> <span class="comment">% function makeState</span>
 0156 
 0157</pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

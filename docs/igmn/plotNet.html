@@ -4,7 +4,7 @@
 <head>
   <title>Description of plotNet</title>
   <meta name="keywords" content="plotNet">
-  <meta name="description" content="PLOTNET Plots 2D and 3D Gaussian distributions from a network">
+  <meta name="description" content="plotNet - Plots 2D and 3D Gaussian distributions from a network">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,54 +21,54 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>PLOTNET Plots 2D and 3D Gaussian distributions from a network</strong></div>
+<div class="box"><strong>plotNet - Plots 2D and 3D Gaussian distributions from a network</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function [h] = plotNet(net, varargin) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> PLOTNET Plots 2D and 3D Gaussian distributions from a network
+<div class="fragment"><pre class="comment"> plotNet - Plots 2D and 3D Gaussian distributions from a network
 
-   H = PLOTNET(NET) plots the Gaussian distributions specified by 
-   NET.means and NET.covs. The distributions are visualized as ellipses 
+   h = plotNet(net) plots the Gaussian distributions specified by 
+   net.means and net.covs. The distributions are visualized as ellipses 
    (in 2D) or ellipsoids (in 3D). By default, the distributions are 
    plotted in the current axes. H is the graphics handle to the plotted 
    ellipse or ellipsoid.
 
-   H = PLOTNET(NET, 'sd', SD) uses SD as the standard deviation along 
-   the major and minor axes (larger SD =&gt; larger ellipse). By default, 
-   SD = 1. Note: 
-     * For 2D distributions, SD=1.0 and SD=2.0 cover ~39% and ~86% of 
+   h = plotNet(net, 'sd', sd) uses sd as the standard deviation along 
+   the major and minor axes (larger sd =&gt; larger ellipse). By default, 
+   sd = 1. Note: 
+     * For 2D distributions, sd=1.0 and sd=2.0 cover ~39% and ~86% of 
        the total probability mass, respectively. 
-     * For 3D distributions, SD=1.0 and SD=2.0 cover ~19% and ~73% of 
+     * For 3D distributions, sd=1.0 and sd=2.0 cover ~19% and ~73% of 
        the total probability mass, respectively.
 
-   H = PLOTNET(NET, 'sd', SD, 'npts', NPTS) plots the ellipse or 
-   ellipsoid with a resolution of NPTS. Ellipsoids are generated on an 
-   NPTS x NPTS mesh (see SPHERE for more details). By default, 
-   NPTS = 50 for ellipses, and 20 for ellipsoids.
+   h = plotNet(NET, 'sd', sd, 'npts', npts) plots the ellipse or 
+   ellipsoid with a resolution of npts. Ellipsoids are generated on an 
+   npts x npts mesh (see SPHERE for more details). By default, 
+   npts = 50 for ellipses, and 20 for ellipsoids.
 
-   H = PLOTNET(NET, 'sd', SD, 'npts', NPTS, 'ax', AX) adds the plot to 
-   the axes specified by the axis handle AX. If AX is not provided, a 
+   h = plotNet(net, 'sd', sd, 'npts', npts, 'ax', ax) adds the plot to 
+   the axes specified by the axis handle ax. If ax is not provided, a 
    new figure and axes are created.
 
    INPUTS:
-       NET   - A structure containing the Gaussian network parameters:
+       net   - A structure containing the Gaussian network parameters:
                * NET.means: Mean vectors of the Gaussian components.
                * NET.covs: Covariance matrices of the Gaussian components.
                * NET.invCovs: Inverse covariance matrices (if applicable).
                * NET.nc: Number of Gaussian components.
                * NET.useRankOne: Boolean indicating whether to use rank-one 
                  covariance approximation.
-       SD    - (Optional) Standard deviation for scaling the ellipses or 
+       sd    - (Optional) Standard deviation for scaling the ellipses or 
                ellipsoids. Default is 1.
-       NPTS  - (Optional) Number of points for plotting resolution. Default 
+       npts  - (Optional) Number of points for plotting resolution. Default 
                is 50 for 2D and 20 for 3D.
-       AX    - (Optional) Axes handle for plotting. If not provided, a new 
+       ax    - (Optional) Axes handle for plotting. If not provided, a new 
                figure and axes are created.
 
    OUTPUTS:
-       H     - Graphics handle to the plotted ellipse or ellipsoid. If no 
+       h     - Graphics handle to the plotted ellipse or ellipsoid. If no 
                output is specified, the handle is not returned.
 
    EXAMPLES:
@@ -86,7 +86,7 @@
        net.useRankOne = false;
        plotNet(net, 'sd', 2, 'npts', 30);
 
-   See also SPHERE.</pre></div>
+   See also sphere.</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -101,50 +101,51 @@ This function is called by:
 <h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <ul style="list-style-image:url(../matlabicon.gif)">
 <li><a href="#_sub1" class="code">function h = show2d(mean, cov, sd, npts, ax)</a></li><li><a href="#_sub2" class="code">function h = show3d(mean, cov, sd, npts, ax)</a></li></ul>
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="plotNet.m">plotNet.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% PLOTNET Plots 2D and 3D Gaussian distributions from a network</span>
+<div class="fragment"><pre>0001 <span class="comment">% plotNet - Plots 2D and 3D Gaussian distributions from a network</span>
 0002 <span class="comment">%</span>
-0003 <span class="comment">%   H = PLOTNET(NET) plots the Gaussian distributions specified by</span>
-0004 <span class="comment">%   NET.means and NET.covs. The distributions are visualized as ellipses</span>
+0003 <span class="comment">%   h = plotNet(net) plots the Gaussian distributions specified by</span>
+0004 <span class="comment">%   net.means and net.covs. The distributions are visualized as ellipses</span>
 0005 <span class="comment">%   (in 2D) or ellipsoids (in 3D). By default, the distributions are</span>
 0006 <span class="comment">%   plotted in the current axes. H is the graphics handle to the plotted</span>
 0007 <span class="comment">%   ellipse or ellipsoid.</span>
 0008 <span class="comment">%</span>
-0009 <span class="comment">%   H = PLOTNET(NET, 'sd', SD) uses SD as the standard deviation along</span>
-0010 <span class="comment">%   the major and minor axes (larger SD =&gt; larger ellipse). By default,</span>
-0011 <span class="comment">%   SD = 1. Note:</span>
-0012 <span class="comment">%     * For 2D distributions, SD=1.0 and SD=2.0 cover ~39% and ~86% of</span>
+0009 <span class="comment">%   h = plotNet(net, 'sd', sd) uses sd as the standard deviation along</span>
+0010 <span class="comment">%   the major and minor axes (larger sd =&gt; larger ellipse). By default,</span>
+0011 <span class="comment">%   sd = 1. Note:</span>
+0012 <span class="comment">%     * For 2D distributions, sd=1.0 and sd=2.0 cover ~39% and ~86% of</span>
 0013 <span class="comment">%       the total probability mass, respectively.</span>
-0014 <span class="comment">%     * For 3D distributions, SD=1.0 and SD=2.0 cover ~19% and ~73% of</span>
+0014 <span class="comment">%     * For 3D distributions, sd=1.0 and sd=2.0 cover ~19% and ~73% of</span>
 0015 <span class="comment">%       the total probability mass, respectively.</span>
 0016 <span class="comment">%</span>
-0017 <span class="comment">%   H = PLOTNET(NET, 'sd', SD, 'npts', NPTS) plots the ellipse or</span>
-0018 <span class="comment">%   ellipsoid with a resolution of NPTS. Ellipsoids are generated on an</span>
-0019 <span class="comment">%   NPTS x NPTS mesh (see SPHERE for more details). By default,</span>
-0020 <span class="comment">%   NPTS = 50 for ellipses, and 20 for ellipsoids.</span>
+0017 <span class="comment">%   h = plotNet(NET, 'sd', sd, 'npts', npts) plots the ellipse or</span>
+0018 <span class="comment">%   ellipsoid with a resolution of npts. Ellipsoids are generated on an</span>
+0019 <span class="comment">%   npts x npts mesh (see SPHERE for more details). By default,</span>
+0020 <span class="comment">%   npts = 50 for ellipses, and 20 for ellipsoids.</span>
 0021 <span class="comment">%</span>
-0022 <span class="comment">%   H = PLOTNET(NET, 'sd', SD, 'npts', NPTS, 'ax', AX) adds the plot to</span>
-0023 <span class="comment">%   the axes specified by the axis handle AX. If AX is not provided, a</span>
+0022 <span class="comment">%   h = plotNet(net, 'sd', sd, 'npts', npts, 'ax', ax) adds the plot to</span>
+0023 <span class="comment">%   the axes specified by the axis handle ax. If ax is not provided, a</span>
 0024 <span class="comment">%   new figure and axes are created.</span>
 0025 <span class="comment">%</span>
 0026 <span class="comment">%   INPUTS:</span>
-0027 <span class="comment">%       NET   - A structure containing the Gaussian network parameters:</span>
+0027 <span class="comment">%       net   - A structure containing the Gaussian network parameters:</span>
 0028 <span class="comment">%               * NET.means: Mean vectors of the Gaussian components.</span>
 0029 <span class="comment">%               * NET.covs: Covariance matrices of the Gaussian components.</span>
 0030 <span class="comment">%               * NET.invCovs: Inverse covariance matrices (if applicable).</span>
 0031 <span class="comment">%               * NET.nc: Number of Gaussian components.</span>
 0032 <span class="comment">%               * NET.useRankOne: Boolean indicating whether to use rank-one</span>
 0033 <span class="comment">%                 covariance approximation.</span>
-0034 <span class="comment">%       SD    - (Optional) Standard deviation for scaling the ellipses or</span>
+0034 <span class="comment">%       sd    - (Optional) Standard deviation for scaling the ellipses or</span>
 0035 <span class="comment">%               ellipsoids. Default is 1.</span>
-0036 <span class="comment">%       NPTS  - (Optional) Number of points for plotting resolution. Default</span>
+0036 <span class="comment">%       npts  - (Optional) Number of points for plotting resolution. Default</span>
 0037 <span class="comment">%               is 50 for 2D and 20 for 3D.</span>
-0038 <span class="comment">%       AX    - (Optional) Axes handle for plotting. If not provided, a new</span>
+0038 <span class="comment">%       ax    - (Optional) Axes handle for plotting. If not provided, a new</span>
 0039 <span class="comment">%               figure and axes are created.</span>
 0040 <span class="comment">%</span>
 0041 <span class="comment">%   OUTPUTS:</span>
-0042 <span class="comment">%       H     - Graphics handle to the plotted ellipse or ellipsoid. If no</span>
+0042 <span class="comment">%       h     - Graphics handle to the plotted ellipse or ellipsoid. If no</span>
 0043 <span class="comment">%               output is specified, the handle is not returned.</span>
 0044 <span class="comment">%</span>
 0045 <span class="comment">%   EXAMPLES:</span>
@@ -162,7 +163,7 @@ This function is called by:
 0057 <span class="comment">%       net.useRankOne = false;</span>
 0058 <span class="comment">%       plotNet(net, 'sd', 2, 'npts', 30);</span>
 0059 <span class="comment">%</span>
-0060 <span class="comment">%   See also SPHERE.</span>
+0060 <span class="comment">%   See also sphere.</span>
 0061 <a name="_sub0" href="#_subfunctions" class="code">function [h] = plotNet(net, varargin)</a>
 0062     parser = inputParser;
 0063     
@@ -286,6 +287,6 @@ This function is called by:
 0181     zp = reshape(bp(3, :), size(z));
 0182     h = surf(ax, xp, yp, zp);    
 0183 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

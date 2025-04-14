@@ -4,7 +4,7 @@
 <head>
   <title>Description of mustBeNDimensional</title>
   <meta name="keywords" content="mustBeNDimensional">
-  <meta name="description" content="MUSTBENDIMENSIONAL Validate that input dimensions match the network's dimension">
+  <meta name="description" content="mustBeNDimensional - Validate that input dimensions match the network's dimension">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="box"><strong>MUSTBENDIMENSIONAL Validate that input dimensions match the network's dimension</strong></div>
+<div class="box"><strong>mustBeNDimensional - Validate that input dimensions match the network's dimension</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
 <div class="box"><strong>function mustBeNDimensional(net, x, y) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> MUSTBENDIMENSIONAL Validate that input dimensions match the network's dimension
+<div class="fragment"><pre class="comment"> mustBeNDimensional - Validate that input dimensions match the network's dimension
 
    mustBeNDimensional(net, x, y) checks if the combined dimensions of 
    inputs `x` and `y` match the expected dimension specified in the 
@@ -57,13 +57,14 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../../matlabicon.gif)">
-</ul>
+<li><a href="../../igmn/classify.html" class="code" title="function Y = classify(net, X, features)">classify</a>	classify - Classifies a given input using the IGMN model.</li><li><a href="../../igmn/clusterize.html" class="code" title="function idx = clusterize(net, X) %#codegen">clusterize</a>	crusterize - Computes the index of the component with the largest likelihood</li><li><a href="../../igmn/learn.html" class="code" title="function net = learn(net, x) %#codegen">learn</a>	learn - Learns a single training sample and updates the network.</li><li><a href="../../igmn/predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>	predict - Classifies a given input and computes posterior probabilities.</li><li><a href="../../igmn/recall.html" class="code" title="function [Y, probabilities] = recall(net, X, features, featureGrid) %#codegen">recall</a>	recall - Performs the Gaussian Mixture Regression for a given input.</li></ul>
 <!-- crossreference -->
 
 
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="mustBeNDimensional.m">mustBeNDimensional.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% MUSTBENDIMENSIONAL Validate that input dimensions match the network's dimension</span>
+<div class="fragment"><pre>0001 <span class="comment">% mustBeNDimensional - Validate that input dimensions match the network's dimension</span>
 0002 <span class="comment">%</span>
 0003 <span class="comment">%   mustBeNDimensional(net, x, y) checks if the combined dimensions of</span>
 0004 <span class="comment">%   inputs `x` and `y` match the expected dimension specified in the</span>
@@ -99,6 +100,6 @@ This function is called by:
 0034         throwAsCaller(MException(eidType,msgType))
 0035     <span class="keyword">end</span>
 0036 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

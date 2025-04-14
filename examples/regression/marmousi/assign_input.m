@@ -1,4 +1,3 @@
-function param=assign_input(param,arguments,fcn)
 % Input argument "arguments" is a cell array; each cell contains a cell array 
 % whose first entry is a string representing a keyword; the other entries 
 % represent parameters.
@@ -25,7 +24,8 @@ function param=assign_input(param,arguments,fcn)
 % param    input structure updated with values in "arguments"
 %
 % UPDATE HISTORY
-%
+function param=assign_input(param,arguments,fcn)
+
 
 global PARAMETERS4FUNCTION S4M
 

@@ -1,4 +1,4 @@
-% ADDSEISMICNOISE Adds seismic noise to input data.
+% addSeismicNoise Adds seismic noise to input data.
 %
 %   noiseData = addSeismicNoise(data, theta, noise, waveSize, traces, 
 %                               traceSizes, starts, noiseMultiplier)

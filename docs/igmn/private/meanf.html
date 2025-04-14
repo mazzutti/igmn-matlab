@@ -4,7 +4,7 @@
 <head>
   <title>Description of meanf</title>
   <meta name="keywords" content="meanf">
-  <meta name="description" content="MEANF Compute the mean of an array, ignoring NaN values.">
+  <meta name="description" content="meanf Compute the mean of an array, ignoring NaN values.">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,15 +21,15 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="box"><strong>MEANF Compute the mean of an array, ignoring NaN values.</strong></div>
+<div class="box"><strong>meanf Compute the mean of an array, ignoring NaN values.</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
 <div class="box"><strong>function m = meanf(x) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> MEANF Compute the mean of an array, ignoring NaN values.
+<div class="fragment"><pre class="comment"> meanf Compute the mean of an array, ignoring NaN values.
 
-   M = MEANF(X) calculates the mean of the input array X, ignoring any
+   M = meanf(X) calculates the mean of the input array X, ignoring any
    NaN values. If all elements in X are NaN, the function returns NaN.
 
    Input:
@@ -56,15 +56,16 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../../matlabicon.gif)">
-<li><a href="imode.html" class="code" title="">imode</a>	{</li><li><a href="pso.html" class="code" title="function [x, fval, exitFlag] = pso(problem) %#codegen">pso</a>	PSO - Particle Swarm Optimization Algorithm</li><li><a href="psogsa.html" class="code" title="">psogsa</a>	{</li></ul>
+<li><a href="imode.html" class="code" title="function [x, fval, exitFlag] = imode(problem) %#codegen">imode</a>	imode.m - Perform optimization using the IMODE algorithm.</li><li><a href="pso.html" class="code" title="function [x, fval, exitFlag] = pso(problem) %#codegen">pso</a>	pso - Particle Swarm Optimization Algorithm</li><li><a href="psogsa.html" class="code" title="function [x, fval, exitFlag] = psogsa(problem) %#codegen">psogsa</a>	psogsa - Particle Swarm Optimization with Gravitational Search Algorithm (PSOGSA)</li><li><a href="../../igmn/stopOptimization.html" class="code" title="function exitFlag = stopOptimization(optOptions, state, bestFvalsWindow) %#codegen">stopOptimization</a>	stopOptimization - Determines whether to stop the optimization process based on various criteria.</li></ul>
 <!-- crossreference -->
 
 
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="meanf.m">meanf.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% MEANF Compute the mean of an array, ignoring NaN values.</span>
+<div class="fragment"><pre>0001 <span class="comment">% meanf Compute the mean of an array, ignoring NaN values.</span>
 0002 <span class="comment">%</span>
-0003 <span class="comment">%   M = MEANF(X) calculates the mean of the input array X, ignoring any</span>
+0003 <span class="comment">%   M = meanf(X) calculates the mean of the input array X, ignoring any</span>
 0004 <span class="comment">%   NaN values. If all elements in X are NaN, the function returns NaN.</span>
 0005 <span class="comment">%</span>
 0006 <span class="comment">%   Input:</span>
@@ -94,6 +95,6 @@ This function is called by:
 0030         m = sum(x(tfValid), &quot;all&quot;) ./ n;
 0031     <span class="keyword">end</span>
 0032 <span class="keyword">end</span> <span class="comment">%</span></pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

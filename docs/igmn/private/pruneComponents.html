@@ -4,7 +4,7 @@
 <head>
   <title>Description of pruneComponents</title>
   <meta name="keywords" content="pruneComponents">
-  <meta name="description" content="PRUNECOMPONENTS Remove spurious components from the network.">
+  <meta name="description" content="pruneComponents Remove spurious components from the network.">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="box"><strong>PRUNECOMPONENTS Remove spurious components from the network.</strong></div>
+<div class="box"><strong>pruneComponents Remove spurious components from the network.</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
 <div class="box"><strong>function net = pruneComponents(net) %#codegen </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> PRUNECOMPONENTS Remove spurious components from the network.
+<div class="fragment"><pre class="comment"> pruneComponents Remove spurious components from the network.
 
    net = pruneComponents(net) removes components from the network `net`
    that are considered spurious based on specific criteria. The function
@@ -74,13 +74,14 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../../matlabicon.gif)">
-</ul>
+<li><a href="../../igmn/learn.html" class="code" title="function net = learn(net, x) %#codegen">learn</a>	learn - Learns a single training sample and updates the network.</li></ul>
 <!-- crossreference -->
 
 
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="pruneComponents.m">pruneComponents.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% PRUNECOMPONENTS Remove spurious components from the network.</span>
+<div class="fragment"><pre>0001 <span class="comment">% pruneComponents Remove spurious components from the network.</span>
 0002 <span class="comment">%</span>
 0003 <span class="comment">%   net = pruneComponents(net) removes components from the network `net`</span>
 0004 <span class="comment">%   that are considered spurious based on specific criteria. The function</span>
@@ -148,6 +149,6 @@ This function is called by:
 0066         net.vs(indexes) = 0; net.spu(indexes) = 0;
 0067     <span class="keyword">end</span>
 0068 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

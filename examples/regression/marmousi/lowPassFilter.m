@@ -1,4 +1,4 @@
-% LOWPASSFILTER Applies a low-pass FIR filter to a given signal.
+% lowPassFilter - Applies a low-pass FIR filter to a given signal.
 %
 % Syntax:
 %   [filteredSignal, h] = lowPassFilter(signal, Ts, Ncoef, cutFreq)

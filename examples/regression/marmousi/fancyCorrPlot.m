@@ -1,4 +1,4 @@
-% FANCYCORRPLOT Generates a fancy correlation plot with labeled scatter points.
+% fancyCorrPlot Generates a fancy correlation plot with labeled scatter points.
 %
 %   fancyCorrPlot(R, labels) creates a scatter plot visualizing the 
 %   correlation matrix R with annotations and labels. The plot includes 

@@ -4,7 +4,7 @@
 <head>
   <title>Description of imode</title>
   <meta name="keywords" content="imode">
-  <meta name="description" content="{">
+  <meta name="description" content="imode.m - Perform optimization using the IMODE algorithm.">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,353 +21,413 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="box"><strong>{</strong></div>
+<div class="box"><strong>imode.m - Perform optimization using the IMODE algorithm.</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="box"><strong>This is a script file. </strong></div>
+<div class="box"><strong>function [x, fval, exitFlag] = imode(problem) %#codegen </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre class="comment">{</pre></div>
+<div class="fragment"><pre class="comment"> imode.m - Perform optimization using the IMODE algorithm.
+
+ This script contains the implementation of the IMODE (Improved Multi-Operator Differential Evolution) 
+ algorithm for optimization. It includes the main function `imode` and its core implementation 
+ `imodecore`, along with helper functions for updating positions and managing the optimization state.
+
+ FUNCTIONS:
+ 1. imode(problem)
+    - Main entry point for the IMODE optimization algorithm.
+    - Parameters:
+      - problem: A structure containing the optimization problem definition and options.
+    - Returns:
+      - x: The best solution found.
+      - fval: The objective function value at the best solution.
+      - exitFlag: A flag indicating the reason for termination.
+
+ 2. imodecore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes)
+    - Core implementation of the IMODE algorithm.
+    - Parameters:
+      - nhps: Number of hyperparameters.
+      - lbRow: Lower bounds for hyperparameters.
+      - ubRow: Upper bounds for hyperparameters.
+      - problem: The optimization problem structure.
+      - hpNames: Names of hyperparameters.
+      - hpIndexes: Indexes of hyperparameters.
+    - Returns:
+      - x: The best solution found.
+      - fval: The objective function value at the best solution.
+      - exitFlag: A flag indicating the reason for termination.
+
+ 3. updatePositions(state, lbRow, ubRow, pIdx, numIndividuals, nhps, hyperparameters, hpIndexes, F, OP, CR)
+    - Updates the positions of individuals in the population.
+    - Parameters:
+      - state: Current state of the optimization process.
+      - lbRow: Lower bounds for hyperparameters.
+      - ubRow: Upper bounds for hyperparameters.
+      - pIdx: Indexes of the current population.
+      - numIndividuals: Number of individuals in the population.
+      - nhps: Number of hyperparameters.
+      - hyperparameters: Hyperparameter definitions.
+      - hpIndexes: Indexes of hyperparameters.
+      - F: Scaling factors for mutation.
+      - OP: Operators for generating offspring.
+      - CR: Crossover probabilities.
+    - Returns:
+      - newPositions: Updated positions of individuals.
+
+ NOTES:
+ - The IMODE algorithm uses a combination of mutation, crossover, and selection operators to evolve 
+   a population of candidate solutions.
+ - The algorithm supports parallel computation for evaluating the objective function.
+ - Stopping criteria include maximum function evaluations, stall iterations, and user-defined conditions.
+ - The implementation includes support for plotting and monitoring the optimization process.
+
+ USAGE:
+ - Define the optimization problem and options in the `problem` structure.
+ - Call the `imode` function with the problem structure to perform optimization.
+ - The best solution and its objective function value are returned upon completion.
+
+ DEPENDENCIES:
+ - This implementation relies on several helper functions, such as `extractHyperarameterNames`, 
+   `extractBounds`, `validateOptimizationOptions`, `initialPopulationCheck`, `evaluate`, 
+   `makeOptimizationState`, `stopOptimization`, and `roundDiscreteHyperparameters`.</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../../matlabicon.gif)">
-<li><a href="extractBounds.html" class="code" title="function [lbRow, ubRow, nhps] = extractBounds(hyperparameters, hpIndexes) %#codegen">extractBounds</a>	extractBounds - Extracts the lower and upper bounds of hyperparameters.</li><li><a href="extractHyperarameterNames.html" class="code" title="function [hpNames, hpIndexes] = extractHyperarameterNames(optOptions)">extractHyperarameterNames</a>	extractHyperarameterNames - Extracts the names and indexes of hyperparameters</li><li><a href="imode.html" class="code" title="">imode</a>	{</li><li><a href="initialPopulationCheck.html" class="code" title="function options = initialPopulationCheck(options) %#codegen">initialPopulationCheck</a>	initialPopulationCheck - Validates and adjusts the initial population for optimization.</li><li><a href="meanf.html" class="code" title="function m = meanf(x)">meanf</a>	MEANF Compute the mean of an array, ignoring NaN values.</li><li><a href="roundDiscreteHyperparameters.html" class="code" title="function population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes) %#codegen">roundDiscreteHyperparameters</a>	roundDiscreteHyperparameters - Rounds discrete hyperparameters in a population matrix.</li><li><a href="validateOptimizationOptions.html" class="code" title="">validateOptimizationOptions</a>	{</li></ul>
+<li><a href="../../igmn/callPlotFcns.html" class="code" title="function stop = callPlotFcns(optimValues, flag)">callPlotFcns</a>	callPlotFcns - A function to manage and execute plotting functions during</li><li><a href="../../igmn/evaluate.html" class="code" title="function fit = evaluate(params, problem, hpNames, maxPenalty) %#codegen">evaluate</a>	evaluate - Evaluates the performance of an IGMN (Incremental Gaussian Mixture Network) model.</li><li><a href="../../igmn/makeOptimizationState.html" class="code" title="function state = makeOptimizationState(nhps, lbMatrix, ubMatrix, optOptions, objFun, hpIndexes) %#codegen">makeOptimizationState</a>	makeOptimizationState - Initializes the optimization state structure for an optimization algorithm.</li><li><a href="extractBounds.html" class="code" title="function [lbRow, ubRow, nhps] = extractBounds(hyperparameters, hpIndexes) %#codegen">extractBounds</a>	extractBounds - Extracts the lower and upper bounds of hyperparameters.</li><li><a href="extractHyperarameterNames.html" class="code" title="function [hpNames, hpIndexes] = extractHyperarameterNames(optOptions)">extractHyperarameterNames</a>	extractHyperarameterNames - Extracts the names and indexes of hyperparameters</li><li><a href="initialPopulationCheck.html" class="code" title="function options = initialPopulationCheck(options) %#codegen">initialPopulationCheck</a>	initialPopulationCheck - Validates and adjusts the initial population for optimization.</li><li><a href="meanf.html" class="code" title="function m = meanf(x)">meanf</a>	meanf Compute the mean of an array, ignoring NaN values.</li><li><a href="roundDiscreteHyperparameters.html" class="code" title="function population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes) %#codegen">roundDiscreteHyperparameters</a>	roundDiscreteHyperparameters - Rounds discrete hyperparameters in a population matrix.</li><li><a href="validateOptimizationOptions.html" class="code" title="function options = validateOptimizationOptions(options, nhps, varIndexes) %#codegen">validateOptimizationOptions</a>	validateOptimizationOptions - Validates and adjusts optimization options for a given problem.</li><li><a href="../../igmn/stopOptimization.html" class="code" title="function exitFlag = stopOptimization(optOptions, state, bestFvalsWindow) %#codegen">stopOptimization</a>	stopOptimization - Determines whether to stop the optimization process based on various criteria.</li><li><a href="../../igmn/updateState.html" class="code" title="function state = updateState(state, numIndividuals, pIdx) %#codegen">updateState</a>	updateState - Updates the state of the optimization process.</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../../matlabicon.gif)">
-<li><a href="imode.html" class="code" title="">imode</a>	{</li></ul>
+<li><a href="../../igmn/optimize.html" class="code" title="function options = optimize(problem) %#codegen">optimize</a>	optimize - Optimizes the parameters of a given problem using a specified algorithm.</li></ul>
 <!-- crossreference -->
 
 <h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
 <ul style="list-style-image:url(../../matlabicon.gif)">
-<li><a href="#_sub1" class="code">function [x, fval, exitFlag] = imode(problem)</a></li><li><a href="#_sub2" class="code">function [x,fval,exitFlag] = imodecore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes)</a></li><li><a href="#_sub3" class="code">function optimValues = i_updateOptimValues</a></li><li><a href="#_sub4" class="code">function newPositions = updatePositions(</a></li></ul>
-
+<li><a href="#_sub1" class="code">function [x,fval,exitFlag] = imodecore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes)</a></li><li><a href="#_sub2" class="code">function optimValues = i_updateOptimValues</a></li><li><a href="#_sub3" class="code">function newPositions = updatePositions(</a></li></ul>
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="imode.m">imode.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">%{</span>
-0002 imode.m - Perform optimization using the IMODE algorithm.
-0003 
-0004 This script contains the implementation of the IMODE (Improved Multi-Operator Differential Evolution) 
-0005 algorithm <span class="keyword">for</span> optimization. It includes the main <span class="keyword">function</span> `imode` and its core implementation 
-0006 `imodecore`, along with helper functions <span class="keyword">for</span> updating positions and managing the optimization state.
-0007 
-0008 FUNCTIONS:
-0009 1. <a href="imode.html" class="code" title="">imode</a>(problem)
-0010     - Main entry point <span class="keyword">for</span> the IMODE optimization algorithm.
-0011     - Parameters:
-0012       - problem: A structure containing the optimization problem definition and options.
-0013     - Returns:
-0014       - x: The best solution found.
-0015       - fval: The objective <span class="keyword">function</span> value at the best solution.
-0016       - exitFlag: A flag indicating the reason <span class="keyword">for</span> termination.
-0017 
-0018 2. <a href="#_sub2" class="code" title="subfunction [x,fval,exitFlag] = imodecore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes)">imodecore</a>(nhps, lbRow, ubRow, problem, hpNames, hpIndexes)
-0019     - Core implementation of the IMODE algorithm.
-0020     - Parameters:
-0021       - nhps: Number of hyperparameters.
-0022       - lbRow: Lower bounds <span class="keyword">for</span> hyperparameters.
-0023       - ubRow: Upper bounds <span class="keyword">for</span> hyperparameters.
-0024       - problem: The optimization problem structure.
-0025       - hpNames: Names of hyperparameters.
-0026       - hpIndexes: Indexes of hyperparameters.
-0027     - Returns:
-0028       - x: The best solution found.
-0029       - fval: The objective <span class="keyword">function</span> value at the best solution.
-0030       - exitFlag: A flag indicating the reason <span class="keyword">for</span> termination.
-0031 
-0032 3. <a href="#_sub4" class="code" title="subfunction newPositions = updatePositions( ">updatePositions</a>(state, lbRow, ubRow, pIdx, numIndividuals, nhps, hyperparameters, hpIndexes, F, OP, CR)
-0033     - Updates the positions of individuals in the population.
-0034     - Parameters:
-0035       - state: Current state of the optimization process.
-0036       - lbRow: Lower bounds <span class="keyword">for</span> hyperparameters.
-0037       - ubRow: Upper bounds <span class="keyword">for</span> hyperparameters.
-0038       - pIdx: Indexes of the current population.
-0039       - numIndividuals: Number of individuals in the population.
-0040       - nhps: Number of hyperparameters.
-0041       - hyperparameters: Hyperparameter definitions.
-0042       - hpIndexes: Indexes of hyperparameters.
-0043       - F: Scaling factors <span class="keyword">for</span> mutation.
-0044       - OP: Operators <span class="keyword">for</span> generating offspring.
-0045       - CR: Crossover probabilities.
-0046     - Returns:
-0047       - newPositions: Updated positions of individuals.
-0048 
-0049 NOTES:
-0050 - The IMODE algorithm uses a combination of mutation, crossover, and selection operators to evolve 
-0051   a population of candidate solutions.
-0052 - The algorithm supports parallel computation <span class="keyword">for</span> evaluating the objective function.
-0053 - Stopping criteria include maximum <span class="keyword">function</span> evaluations, stall iterations, and user-defined conditions.
-0054 - The implementation includes support <span class="keyword">for</span> plotting and monitoring the optimization process.
-0055 
-0056 USAGE:
-0057 - Define the optimization problem and options in the `problem` structure.
-0058 - Call the `imode` <span class="keyword">function</span> with the problem structure to perform optimization.
-0059 - The best solution and its objective <span class="keyword">function</span> value are returned upon completion.
-0060 
-0061 DEPENDENCIES:
-0062 - This implementation relies on several helper functions, such as `extractHyperarameterNames`, 
-0063   `extractBounds`, `validateOptimizationOptions`, `initialPopulationCheck`, `evaluate`, 
-0064   `makeOptimizationState`, `stopOptimization`, and `roundDiscreteHyperparameters`.
+<div class="fragment"><pre>0001 <span class="comment">% imode.m - Perform optimization using the IMODE algorithm.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% This script contains the implementation of the IMODE (Improved Multi-Operator Differential Evolution)</span>
+0004 <span class="comment">% algorithm for optimization. It includes the main function `imode` and its core implementation</span>
+0005 <span class="comment">% `imodecore`, along with helper functions for updating positions and managing the optimization state.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% FUNCTIONS:</span>
+0008 <span class="comment">% 1. imode(problem)</span>
+0009 <span class="comment">%    - Main entry point for the IMODE optimization algorithm.</span>
+0010 <span class="comment">%    - Parameters:</span>
+0011 <span class="comment">%      - problem: A structure containing the optimization problem definition and options.</span>
+0012 <span class="comment">%    - Returns:</span>
+0013 <span class="comment">%      - x: The best solution found.</span>
+0014 <span class="comment">%      - fval: The objective function value at the best solution.</span>
+0015 <span class="comment">%      - exitFlag: A flag indicating the reason for termination.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% 2. imodecore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes)</span>
+0018 <span class="comment">%    - Core implementation of the IMODE algorithm.</span>
+0019 <span class="comment">%    - Parameters:</span>
+0020 <span class="comment">%      - nhps: Number of hyperparameters.</span>
+0021 <span class="comment">%      - lbRow: Lower bounds for hyperparameters.</span>
+0022 <span class="comment">%      - ubRow: Upper bounds for hyperparameters.</span>
+0023 <span class="comment">%      - problem: The optimization problem structure.</span>
+0024 <span class="comment">%      - hpNames: Names of hyperparameters.</span>
+0025 <span class="comment">%      - hpIndexes: Indexes of hyperparameters.</span>
+0026 <span class="comment">%    - Returns:</span>
+0027 <span class="comment">%      - x: The best solution found.</span>
+0028 <span class="comment">%      - fval: The objective function value at the best solution.</span>
+0029 <span class="comment">%      - exitFlag: A flag indicating the reason for termination.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% 3. updatePositions(state, lbRow, ubRow, pIdx, numIndividuals, nhps, hyperparameters, hpIndexes, F, OP, CR)</span>
+0032 <span class="comment">%    - Updates the positions of individuals in the population.</span>
+0033 <span class="comment">%    - Parameters:</span>
+0034 <span class="comment">%      - state: Current state of the optimization process.</span>
+0035 <span class="comment">%      - lbRow: Lower bounds for hyperparameters.</span>
+0036 <span class="comment">%      - ubRow: Upper bounds for hyperparameters.</span>
+0037 <span class="comment">%      - pIdx: Indexes of the current population.</span>
+0038 <span class="comment">%      - numIndividuals: Number of individuals in the population.</span>
+0039 <span class="comment">%      - nhps: Number of hyperparameters.</span>
+0040 <span class="comment">%      - hyperparameters: Hyperparameter definitions.</span>
+0041 <span class="comment">%      - hpIndexes: Indexes of hyperparameters.</span>
+0042 <span class="comment">%      - F: Scaling factors for mutation.</span>
+0043 <span class="comment">%      - OP: Operators for generating offspring.</span>
+0044 <span class="comment">%      - CR: Crossover probabilities.</span>
+0045 <span class="comment">%    - Returns:</span>
+0046 <span class="comment">%      - newPositions: Updated positions of individuals.</span>
+0047 <span class="comment">%</span>
+0048 <span class="comment">% NOTES:</span>
+0049 <span class="comment">% - The IMODE algorithm uses a combination of mutation, crossover, and selection operators to evolve</span>
+0050 <span class="comment">%   a population of candidate solutions.</span>
+0051 <span class="comment">% - The algorithm supports parallel computation for evaluating the objective function.</span>
+0052 <span class="comment">% - Stopping criteria include maximum function evaluations, stall iterations, and user-defined conditions.</span>
+0053 <span class="comment">% - The implementation includes support for plotting and monitoring the optimization process.</span>
+0054 <span class="comment">%</span>
+0055 <span class="comment">% USAGE:</span>
+0056 <span class="comment">% - Define the optimization problem and options in the `problem` structure.</span>
+0057 <span class="comment">% - Call the `imode` function with the problem structure to perform optimization.</span>
+0058 <span class="comment">% - The best solution and its objective function value are returned upon completion.</span>
+0059 <span class="comment">%</span>
+0060 <span class="comment">% DEPENDENCIES:</span>
+0061 <span class="comment">% - This implementation relies on several helper functions, such as `extractHyperarameterNames`,</span>
+0062 <span class="comment">%   `extractBounds`, `validateOptimizationOptions`, `initialPopulationCheck`, `evaluate`,</span>
+0063 <span class="comment">%   `makeOptimizationState`, `stopOptimization`, and `roundDiscreteHyperparameters`.</span>
+0064 <a name="_sub0" href="#_subfunctions" class="code">function [x, fval, exitFlag] = imode(problem) </a><span class="comment">%#codegen</span>
 0065 
-0066 <span class="comment">%}</span>
-0067 <a name="_sub0" href="#_subfunctions" class="code">function [x, fval, exitFlag] = imode(problem) </a><span class="comment">%#codegen</span>
+0066     optOptions = problem.OptimizeOptions;
+0067     [hpNames, hpIndexes] = <a href="extractHyperarameterNames.html" class="code" title="function [hpNames, hpIndexes] = extractHyperarameterNames(optOptions)">extractHyperarameterNames</a>(optOptions);
 0068 
-0069     optOptions = problem.OptimizeOptions;
-0070     [hpNames, hpIndexes] = <a href="extractHyperarameterNames.html" class="code" title="function [hpNames, hpIndexes] = extractHyperarameterNames(optOptions)">extractHyperarameterNames</a>(optOptions);
-0071 
-0072     [lbRow , ubRow, nhps] =  <a href="extractBounds.html" class="code" title="function [lbRow, ubRow, nhps] = extractBounds(hyperparameters, hpIndexes) %#codegen">extractBounds</a>(optOptions.hyperparameters, hpIndexes); 
-0073     
-0074     optOptions = <a href="validateOptimizationOptions.html" class="code" title="">validateOptimizationOptions</a>(optOptions, nhps, hpIndexes);
-0075     
-0076     <span class="comment">% Perform check on initial population, fvals, and range</span>
-0077     problem.OptimizeOptions = <a href="initialPopulationCheck.html" class="code" title="function options = initialPopulationCheck(options) %#codegen">initialPopulationCheck</a>(optOptions);
-0078 
-0079     <span class="comment">% Start the core algorithm</span>
-0080     [x, fval, exitFlag] = <a href="#_sub2" class="code" title="subfunction [x,fval,exitFlag] = imodecore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes)">imodecore</a>(nhps, lbRow, ubRow, problem, hpNames, hpIndexes);
-0081 <span class="keyword">end</span>
+0069     [lbRow , ubRow, nhps] =  <a href="extractBounds.html" class="code" title="function [lbRow, ubRow, nhps] = extractBounds(hyperparameters, hpIndexes) %#codegen">extractBounds</a>(optOptions.hyperparameters, hpIndexes); 
+0070     
+0071     optOptions = <a href="validateOptimizationOptions.html" class="code" title="function options = validateOptimizationOptions(options, nhps, varIndexes) %#codegen">validateOptimizationOptions</a>(optOptions, nhps, hpIndexes);
+0072     
+0073     <span class="comment">% Perform check on initial population, fvals, and range</span>
+0074     problem.OptimizeOptions = <a href="initialPopulationCheck.html" class="code" title="function options = initialPopulationCheck(options) %#codegen">initialPopulationCheck</a>(optOptions);
+0075 
+0076     <span class="comment">% Start the core algorithm</span>
+0077     [x, fval, exitFlag] = <a href="#_sub1" class="code" title="subfunction [x,fval,exitFlag] = imodecore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes)">imodecore</a>(nhps, lbRow, ubRow, problem, hpNames, hpIndexes);
+0078 <span class="keyword">end</span>
+0079 
+0080 <a name="_sub1" href="#_subfunctions" class="code">function [x,fval,exitFlag] = imodecore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes)</a>
+0081     coder.extrinsic(<span class="string">'callPlotFcns'</span>);
 0082 
-0083 <a name="_sub1" href="#_subfunctions" class="code">function [x,fval,exitFlag] = imodecore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes)</a>
-0084     coder.extrinsic(<span class="string">'callPlotFcns'</span>);
-0085 
-0086     optOptions = problem.OptimizeOptions;
-0087 
-0088     exitFlag = [];
-0089     coder.varsize(<span class="string">'exitFlag'</span>);
-0090    
-0091     <span class="comment">% Get algorithmic options</span>
-0092     minN = optOptions.MinPopulationSize;
-0093     aRate = optOptions.PopulationArquiveRate;
-0094     hyperparameters = optOptions.hyperparameters;
-0095     numIndividuals = optOptions.PopulationSize;
-0096     lbMatrix = repmat(lbRow, numIndividuals, 1);
-0097     ubMatrix = repmat(ubRow, numIndividuals, 1);
-0098 
-0099     range = problem.DefaultIgmnOptions.range;
-0100     outVarIndexes = problem.OutputVarIndexes;
-0101     maxPenalty = 0.125 * mean( <span class="keyword">...</span>
-0102         range(2, outVarIndexes) - range(1, outVarIndexes), <span class="string">'all'</span>);
-0103     
-0104     objFun = @(params) evaluate(params, problem, hpNames, maxPenalty);
+0083     optOptions = problem.OptimizeOptions;
+0084 
+0085     exitFlag = [];
+0086     coder.varsize(<span class="string">'exitFlag'</span>);
+0087    
+0088     <span class="comment">% Get algorithmic options</span>
+0089     minN = optOptions.MinPopulationSize;
+0090     aRate = optOptions.PopulationArquiveRate;
+0091     hyperparameters = optOptions.hyperparameters;
+0092     numIndividuals = optOptions.PopulationSize;
+0093     lbMatrix = repmat(lbRow, numIndividuals, 1);
+0094     ubMatrix = repmat(ubRow, numIndividuals, 1);
+0095 
+0096     range = problem.DefaultIgmnOptions.range;
+0097     outVarIndexes = problem.OutputVarIndexes;
+0098     maxPenalty = 0.125 * mean( <span class="keyword">...</span>
+0099         range(2, outVarIndexes) - range(1, outVarIndexes), <span class="string">'all'</span>);
+0100     
+0101     objFun = @(params) <a href="../../igmn/evaluate.html" class="code" title="function fit = evaluate(params, problem, hpNames, maxPenalty) %#codegen">evaluate</a>(params, problem, hpNames, maxPenalty);
+0102 
+0103     state = <a href="../../igmn/makeOptimizationState.html" class="code" title="function state = makeOptimizationState(nhps, lbMatrix, ubMatrix, optOptions, objFun, hpIndexes) %#codegen">makeOptimizationState</a>(nhps, lbMatrix, ubMatrix, optOptions, objFun, hpIndexes);
+0104     bestFvals = min(state.Fvals, [], &quot;all&quot;);
 0105 
-0106     state = makeOptimizationState(nhps, lbMatrix, ubMatrix, optOptions, objFun, hpIndexes);
-0107     bestFvals = min(state.Fvals, [], &quot;all&quot;);
-0108 
-0109     <span class="comment">% Create a vector to store the last StallIterLimit bestFvals.</span>
-0110     <span class="comment">% bestFvalsWindow is a circular buffer, so that the value from the i'th</span>
-0111     <span class="comment">% iteration is stored in element with index mod(i-1,StallIterLimit)+1.</span>
-0112     bestFvalsWindow = nan(optOptions.StallIterLimit, 1);
-0113 
-0114     <span class="comment">% Allow plot functions to perform any initialization tasks</span>
-0115     <span class="keyword">if</span> isempty(optOptions.PlotFcns)
-0116         haveplotfcn = false;
-0117     <span class="keyword">else</span>
-0118         <span class="keyword">if</span> coder.target(<span class="string">'MATLAB'</span>) || coder.target(<span class="string">'MEX'</span>)
-0119             haveplotfcn = true;
-0120             state.StopFlag = callPlotFcns(<a href="#_sub3" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'init'</span>);
-0121             <span class="comment">% check to see if any stopping criteria have been met</span>
-0122             exitFlag = stopOptimization(optOptions, state, bestFvalsWindow);
-0123         <span class="keyword">else</span>
-0124             haveplotfcn = false;
-0125         <span class="keyword">end</span>
-0126     <span class="keyword">end</span>
-0127 
-0128     <span class="comment">% Setup display header</span>
-0129     <span class="keyword">if</span>  optOptions.Verbosity &gt; 1
-0130         bestFvalDisplay = bestFvals;
-0131         meanFvalDisplay = mean(state.Fvals, <span class="string">'all'</span>);
-0132         fprintf(<span class="string">'\n                                 Best            Mean    Stall\n'</span>);
-0133         fprintf(  <span class="string">'Iteration     f-count            f(x)            f(x)    Iterations\n'</span>);
-0134         fprintf(<span class="string">'%5.0f         %7.0f    %12.4g    %12.4g    %5.0f\n'</span>, <span class="keyword">...</span>
-0135             0, state.FunEval, bestFvalDisplay, meanFvalDisplay, 0);
-0136         pause(0.000001);
-0137     <span class="keyword">end</span>
+0106     <span class="comment">% Create a vector to store the last StallIterLimit bestFvals.</span>
+0107     <span class="comment">% bestFvalsWindow is a circular buffer, so that the value from the i'th</span>
+0108     <span class="comment">% iteration is stored in element with index mod(i-1,StallIterLimit)+1.</span>
+0109     bestFvalsWindow = nan(optOptions.StallIterLimit, 1);
+0110 
+0111     <span class="comment">% Allow plot functions to perform any initialization tasks</span>
+0112     <span class="keyword">if</span> isempty(optOptions.PlotFcns)
+0113         haveplotfcn = false;
+0114     <span class="keyword">else</span>
+0115         <span class="keyword">if</span> coder.target(<span class="string">'MATLAB'</span>) || coder.target(<span class="string">'MEX'</span>)
+0116             haveplotfcn = true;
+0117             state.StopFlag = <a href="../../igmn/callPlotFcns.html" class="code" title="function stop = callPlotFcns(optimValues, flag)">callPlotFcns</a>(<a href="#_sub2" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'init'</span>);
+0118             <span class="comment">% check to see if any stopping criteria have been met</span>
+0119             exitFlag = <a href="../../igmn/stopOptimization.html" class="code" title="function exitFlag = stopOptimization(optOptions, state, bestFvalsWindow) %#codegen">stopOptimization</a>(optOptions, state, bestFvalsWindow);
+0120         <span class="keyword">else</span>
+0121             haveplotfcn = false;
+0122         <span class="keyword">end</span>
+0123     <span class="keyword">end</span>
+0124 
+0125     <span class="comment">% Setup display header</span>
+0126     <span class="keyword">if</span>  optOptions.Verbosity &gt; 1
+0127         bestFvalDisplay = bestFvals;
+0128         meanFvalDisplay = mean(state.Fvals, <span class="string">'all'</span>);
+0129         fprintf(<span class="string">'\n                                 Best            Mean    Stall\n'</span>);
+0130         fprintf(  <span class="string">'Iteration     f-count            f(x)            f(x)    Iterations\n'</span>);
+0131         fprintf(<span class="string">'%5.0f         %7.0f    %12.4g    %12.4g    %5.0f\n'</span>, <span class="keyword">...</span>
+0132             0, state.FunEval, bestFvalDisplay, meanFvalDisplay, 0);
+0133         pause(0.000001);
+0134     <span class="keyword">end</span>
+0135 
+0136     <span class="comment">%% Optimization</span>
+0137     <span class="keyword">while</span> isempty(exitFlag)
 0138 
-0139     <span class="comment">%% Optimization</span>
-0140     <span class="keyword">while</span> isempty(exitFlag)
-0141 
-0142         state.Iteration = state.Iteration + 1;
-0143 
-0144         <span class="comment">% Reduce the population size</span>
-0145         numIndividuals = ceil((minN - optOptions.PopulationSize) <span class="keyword">...</span>
-0146             * state.FunEval / optOptions.MaxFunEval) + optOptions.PopulationSize;
-0147         pIdx = 1:numIndividuals;
-0148 
-0149         [~, rank] = sort(state.Fvals);
-0150         indexes = (1:numIndividuals)';
-0151         state.Positions = state.Positions(rank(indexes), :);
-0152         state.Fvals = state.Fvals(rank(indexes), :);
-0153         state.Archive = state.Archive(randperm(<span class="keyword">end</span>, min(<span class="keyword">end</span>, ceil(aRate * numIndividuals))), :);
-0154         CR = randn(numIndividuals, 1) .* sqrt(0.1) + state.MCR(randi(<span class="keyword">end</span>, numIndividuals, 1));
-0155         CR = sort(CR);
-0156         CR = repmat(max(0, min(1, CR)), 1, nhps);
-0157         F = min(1, trnd(1, numIndividuals, 1) .* sqrt(0.1) + state.MF(randi(<span class="keyword">end</span>, numIndividuals, 1)));
-0158         <span class="keyword">while</span> any(F &lt;= 0)
-0159             F(F &lt;= 0) = min(1, trnd(1, sum(F &lt;= 0), 1) .* sqrt(0.1) + state.MF(randi(<span class="keyword">end</span>, sum(F &lt;= 0), 1)));
-0160         <span class="keyword">end</span>
-0161         F  = repmat(F, 1, nhps);
-0162 
-0163         mopSum = cumsum(state.MOP);
-0164         OP1 = []; coder.varsize(<span class="string">'OP1'</span>);
-0165         OP2 = []; coder.varsize(<span class="string">'OP2'</span>);
-0166         OP3 = []; coder.varsize(<span class="string">'OP3'</span>);
-0167         OP = {OP1, OP2, OP3};
-0168         <span class="keyword">for</span> i = 1:numIndividuals
-0169             index = find(rand &lt;= mopSum, 1);
-0170             OP{index} = [OP{index}, i];
-0171         <span class="keyword">end</span>
-0172 
-0173         newPositions = <a href="#_sub4" class="code" title="subfunction newPositions = updatePositions( ">updatePositions</a>(state, lbRow, <span class="keyword">...</span>
-0174                 ubRow, pIdx, numIndividuals, nhps, hyperparameters, hpIndexes, F, OP, CR);
-0175         
-0176         popSize = size(newPositions, 1);
-0177         fvals = zeros(popSize, 1);
-0178         <span class="keyword">if</span> optOptions.UseParallel
-0179             setenv(<span class="string">'OMP_NUM_THREADS'</span>, <span class="string">'12'</span>);
-0180             parfor (i = 1:popSize, 12)
-0181                 fvals(i) = objFun(newPositions(i, :));
-0182             <span class="keyword">end</span>
-0183         <span class="keyword">else</span>
-0184             <span class="keyword">for</span> i = 1:popSize
-0185                 fvals(i) = objFun(newPositions(i, :));
-0186             <span class="keyword">end</span>
-0187         <span class="keyword">end</span> 
-0188         <span class="comment">% Update the population and archive</span>
-0189         delta = state.Fvals - fvals;
-0190         replace = delta &gt; 0;
-0191         state.Archive = [state.Archive; state.Positions(replace, :)];
-0192         state.Archive = state.Archive(randperm(<span class="keyword">end</span>, min(<span class="keyword">end</span>, ceil(aRate * numIndividuals))), :);
-0193         state.Positions(replace, :) = newPositions(replace, :);
-0194         state.Fvals(replace) = fvals(replace);
-0195 
-0196         <span class="comment">% Update CR, F, and probabilities of operators</span>
-0197         <span class="keyword">if</span> any(replace)
-0198             w = delta(replace) ./ sum(delta(replace));
-0199             state.MCR(state.k) = (w' * CR(replace, 1) .^ 2) ./ (w' * CR(replace, 1));
-0200             state.MF(state.k)  = (w' * F(replace, 1) .^ 2) ./ (w' * F(replace, 1));
-0201             state.k = mod(state.k, length(state.MCR)) + 1;
-0202         <span class="keyword">else</span>
-0203             state.MCR(state.k) = 0.5;
-0204             state.MF(state.k) = 0.5;
-0205         <span class="keyword">end</span>
-0206         delta = max(0, delta ./ abs(state.Fvals));
-0207         <span class="keyword">if</span> any(arrayfun(@(i) isempty(OP{i}), 1:length(OP)))
-0208             state.MOP = ones(1, 3) / 3;
-0209         <span class="keyword">else</span>
-0210             mop = zeros(1, length(OP));
-0211             <span class="keyword">for</span> i = 1:length(OP);  mop(i) = mean(delta(OP{i}')); <span class="keyword">end</span>
-0212             state.MOP = max(0.1, min(0.9, mop ./ sum(mop)));
-0213         <span class="keyword">end</span>
+0139         state.Iteration = state.Iteration + 1;
+0140 
+0141         <span class="comment">% Reduce the population size</span>
+0142         numIndividuals = ceil((minN - optOptions.PopulationSize) <span class="keyword">...</span>
+0143             * state.FunEval / optOptions.MaxFunEval) + optOptions.PopulationSize;
+0144         pIdx = 1:numIndividuals;
+0145 
+0146         [~, rank] = sort(state.Fvals);
+0147         indexes = (1:numIndividuals)';
+0148         state.Positions = state.Positions(rank(indexes), :);
+0149         state.Fvals = state.Fvals(rank(indexes), :);
+0150         state.Archive = state.Archive(randperm(<span class="keyword">end</span>, min(<span class="keyword">end</span>, ceil(aRate * numIndividuals))), :);
+0151         CR = randn(numIndividuals, 1) .* sqrt(0.1) + state.MCR(randi(<span class="keyword">end</span>, numIndividuals, 1));
+0152         CR = sort(CR);
+0153         CR = repmat(max(0, min(1, CR)), 1, nhps);
+0154         F = min(1, trnd(1, numIndividuals, 1) .* sqrt(0.1) + state.MF(randi(<span class="keyword">end</span>, numIndividuals, 1)));
+0155         <span class="keyword">while</span> any(F &lt;= 0)
+0156             F(F &lt;= 0) = min(1, trnd(1, sum(F &lt;= 0), 1) .* sqrt(0.1) + state.MF(randi(<span class="keyword">end</span>, sum(F &lt;= 0), 1)));
+0157         <span class="keyword">end</span>
+0158         F  = repmat(F, 1, nhps);
+0159 
+0160         mopSum = cumsum(state.MOP);
+0161         OP1 = []; coder.varsize(<span class="string">'OP1'</span>);
+0162         OP2 = []; coder.varsize(<span class="string">'OP2'</span>);
+0163         OP3 = []; coder.varsize(<span class="string">'OP3'</span>);
+0164         OP = {OP1, OP2, OP3};
+0165         <span class="keyword">for</span> i = 1:numIndividuals
+0166             index = find(rand &lt;= mopSum, 1);
+0167             OP{index} = [OP{index}, i];
+0168         <span class="keyword">end</span>
+0169 
+0170         newPositions = <a href="#_sub3" class="code" title="subfunction newPositions = updatePositions( ">updatePositions</a>(state, lbRow, <span class="keyword">...</span>
+0171                 ubRow, pIdx, numIndividuals, nhps, hyperparameters, hpIndexes, F, OP, CR);
+0172         
+0173         popSize = size(newPositions, 1);
+0174         fvals = zeros(popSize, 1);
+0175         <span class="keyword">if</span> optOptions.UseParallel
+0176             setenv(<span class="string">'OMP_NUM_THREADS'</span>, <span class="string">'12'</span>);
+0177             parfor (i = 1:popSize, 12)
+0178                 fvals(i) = objFun(newPositions(i, :));
+0179             <span class="keyword">end</span>
+0180         <span class="keyword">else</span>
+0181             <span class="keyword">for</span> i = 1:popSize
+0182                 fvals(i) = objFun(newPositions(i, :));
+0183             <span class="keyword">end</span>
+0184         <span class="keyword">end</span> 
+0185         <span class="comment">% Update the population and archive</span>
+0186         delta = state.Fvals - fvals;
+0187         replace = delta &gt; 0;
+0188         state.Archive = [state.Archive; state.Positions(replace, :)];
+0189         state.Archive = state.Archive(randperm(<span class="keyword">end</span>, min(<span class="keyword">end</span>, ceil(aRate * numIndividuals))), :);
+0190         state.Positions(replace, :) = newPositions(replace, :);
+0191         state.Fvals(replace) = fvals(replace);
+0192 
+0193         <span class="comment">% Update CR, F, and probabilities of operators</span>
+0194         <span class="keyword">if</span> any(replace)
+0195             w = delta(replace) ./ sum(delta(replace));
+0196             state.MCR(state.k) = (w' * CR(replace, 1) .^ 2) ./ (w' * CR(replace, 1));
+0197             state.MF(state.k)  = (w' * F(replace, 1) .^ 2) ./ (w' * F(replace, 1));
+0198             state.k = mod(state.k, length(state.MCR)) + 1;
+0199         <span class="keyword">else</span>
+0200             state.MCR(state.k) = 0.5;
+0201             state.MF(state.k) = 0.5;
+0202         <span class="keyword">end</span>
+0203         delta = max(0, delta ./ abs(state.Fvals));
+0204         <span class="keyword">if</span> any(arrayfun(@(i) isempty(OP{i}), 1:length(OP)))
+0205             state.MOP = ones(1, 3) / 3;
+0206         <span class="keyword">else</span>
+0207             mop = zeros(1, length(OP));
+0208             <span class="keyword">for</span> i = 1:length(OP);  mop(i) = mean(delta(OP{i}')); <span class="keyword">end</span>
+0209             state.MOP = max(0.1, min(0.9, mop ./ sum(mop)));
+0210         <span class="keyword">end</span>
+0211 
+0212         <span class="comment">% Update state with best fvals and best individual positions.</span>
+0213         state = <a href="../../igmn/updateState.html" class="code" title="function state = updateState(state, numIndividuals, pIdx) %#codegen">updateState</a>(state, numIndividuals, pIdx');
 0214 
-0215         <span class="comment">% Update state with best fvals and best individual positions.</span>
-0216         state = updateState(state, numIndividuals, pIdx');
-0217 
-0218         <span class="comment">% Call plot functions</span>
-0219         <span class="keyword">if</span> haveplotfcn
-0220             <span class="keyword">if</span> coder.target(<span class="string">'MATLAB'</span>) || coder.target(<span class="string">'MEX'</span>)
-0221                 state.StopFlag = callPlotFcns(<a href="#_sub3" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'iter'</span>);
-0222             <span class="keyword">end</span>
-0223         <span class="keyword">else</span>
-0224             state.StopFlag = false;
-0225         <span class="keyword">end</span>
-0226 
-0227         bestFvalsWindow(1 + mod(state.Iteration - 1, optOptions.StallIterLimit)) = min(state.IndividualBestFvals);
-0228         
-0229         newBest = min(state.IndividualBestFvals, [], &quot;all&quot;);
-0230         <span class="keyword">if</span> isfinite(newBest) &amp;&amp; newBest &lt; bestFvals
-0231             bestFvals = newBest;
-0232             state.LastImprovement = state.Iteration;
-0233             state.LastImprovementTime = toc(state.StartTime);
-0234         <span class="keyword">end</span>
-0235 
-0236         <span class="comment">% check to see if any stopping criteria have been met</span>
-0237         exitFlag  = stopOptimization(optOptions, state, bestFvalsWindow);
-0238     <span class="keyword">end</span>
-0239 
-0240     <span class="comment">% Find and return the best solution</span>
-0241     [fval, indexBestFval] = min(state.IndividualBestFvals);
-0242     x = state.IndividualBestPositions(indexBestFval, :);
-0243     
-0244 
-0245     <span class="comment">% Allow output and plot functions to perform any clean up tasks.</span>
-0246     <span class="keyword">if</span> haveplotfcn
-0247         <span class="keyword">if</span> coder.target(<span class="string">'MATLAB'</span>) || coder.target(<span class="string">'MEX'</span>)
-0248             callPlotFcns(<a href="#_sub3" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'done'</span>);
-0249         <span class="keyword">end</span>
-0250     <span class="keyword">end</span>
-0251 
-0252     <span class="comment">% Nested function</span>
-0253     <a name="_sub2" href="#_subfunctions" class="code">function optimValues = i_updateOptimValues</a>
-0254         optimValues.bestfval = min(state.IndividualBestFvals);
-0255         optimValues.iteration = state.Iteration;
-0256         optimValues.meanfval = <a href="meanf.html" class="code" title="function m = meanf(x)">meanf</a>(state.Fvals);
-0257         optimValues.population = state.Positions;
-0258         optimValues.populationRange = state.PopulationRange;
-0259         optimValues.populationfvals = state.Fvals;
-0260         optimValues.plotFcns = state.PlotFcns;
-0261         optimValues.hpNames = hpNames;
-0262         optimValues.algorithm = <span class="string">'IMODE'</span>;
-0263     <span class="keyword">end</span>
-0264 <span class="keyword">end</span>
-0265 
-0266 <a name="_sub3" href="#_subfunctions" class="code">function newPositions = updatePositions( </a><span class="keyword">...</span>
-0267     state, lbRow, ubRow, pIdx, numIndividuals, nhps, hyperparameters, hpIndexes, F, OP, CR) <span class="comment">%#codegen</span>
-0268      <span class="comment">% Generate parents, CR, F, and operator for each offspring</span>
-0269     Xp1 = state.Positions(ceil(rand(1, numIndividuals) .* max(1, 0.25 * numIndividuals)), :);
-0270     Xp2 = state.Positions(ceil(rand(1, numIndividuals) .* max(2, 0.5 * numIndividuals)), :);
-0271     Xr1 = state.Positions(randi(<span class="keyword">end</span>, 1, numIndividuals), :);
-0272     Xr3 = state.Positions(randi(<span class="keyword">end</span>, 1, numIndividuals), :);
-0273     P = [state.Positions; state.Archive];
-0274     Xr2 = P(randi(<span class="keyword">end</span>, 1, numIndividuals), :);
-0275 
-0276     <span class="comment">% Generate offspring</span>
-0277     newPositions = state.Positions(:, :);
-0278     newPositions(OP{1}, :) = state.Positions(OP{1}, :) + F(OP{1}, :) .* <span class="keyword">...</span>
-0279         (Xp1(OP{1}, :) - state.Positions(OP{1}, :) + Xr1(OP{1}, :) - Xr2(OP{1}, :));
-0280     newPositions(OP{2}, :) = state.Positions(OP{2}, :) + F(OP{2}, :) .* <span class="keyword">...</span>
-0281         (Xp1(OP{2}, :) - state.Positions(OP{2}, :) + Xr1(OP{2}, :) - Xr3(OP{2}, :));
-0282     newPositions(OP{3}, :) = F(OP{3}, :) .* (Xr1(OP{3}, :) + Xp2(OP{3}, :) - Xr3(OP{3}, :));
-0283     <span class="keyword">if</span> rand &lt; 0.4
-0284         Site = rand(size(CR)) &gt; CR;
-0285         newPositions(Site) = state.Positions(Site);
-0286     <span class="keyword">else</span>
-0287         p1 = randi(nhps, numIndividuals, 1);
-0288         p2 = zeros(1, numIndividuals);
-0289         <span class="keyword">for</span> i = 1:numIndividuals
-0290             p2(i) = find([rand(1, nhps), 2] &gt; CR(i, 1), 1);
-0291         <span class="keyword">end</span>
-0292         <span class="keyword">for</span> i = 1 :numIndividuals
-0293             Site = [1:p1(i) - 1, p1(i) + p2(i):nhps];
-0294             newPositions(i, Site) = state.Positions(i, Site);
-0295         <span class="keyword">end</span>
-0296     <span class="keyword">end</span>
-0297 
-0298     newPositions = <a href="roundDiscreteHyperparameters.html" class="code" title="function population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes) %#codegen">roundDiscreteHyperparameters</a>(newPositions, hyperparameters, hpIndexes);
-0299     
-0300     <span class="comment">% Remove positions if infinite.</span>
-0301     tfInvalid = any(~isfinite(newPositions), 2);
-0302     tfInvalidFull = false(numIndividuals, 1);
-0303     tfInvalidFull(pIdx) = tfInvalid;
-0304     newPositions(tfInvalid, :) = state.Positions(tfInvalidFull, :);
-0305 
-0306     lbMatrix = repmat(lbRow, numIndividuals, 1);
-0307     ubMatrix = repmat(ubRow, numIndividuals, 1);
-0308     
-0309     <span class="comment">% Enforce bounds on positions and return logical array to update velocities where position exceeds bounds.</span>
-0310     tfInvalidLB = newPositions &lt; lbMatrix(pIdx, :);
-0311     <span class="keyword">if</span> any(tfInvalidLB(:))
-0312         tfInvalidLBFull = false(numIndividuals, nhps);
-0313         tfInvalidLBFull(pIdx, :) = tfInvalidLB;
-0314         newPositions(tfInvalidLB) = lbMatrix(tfInvalidLBFull);
-0315     <span class="keyword">end</span>
-0316     
-0317     tfInvalidUB = newPositions &gt; ubMatrix(pIdx,:);
-0318     <span class="keyword">if</span> any(tfInvalidUB(:))
-0319         tfInvalidUBFull = false(numIndividuals,nhps);
-0320         tfInvalidUBFull(pIdx,:) = tfInvalidUB;
-0321         newPositions(tfInvalidUB) = ubMatrix(tfInvalidUBFull);
-0322     <span class="keyword">end</span> 
-0323 <span class="keyword">end</span>
-0324</pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+0215         <span class="comment">% Call plot functions</span>
+0216         <span class="keyword">if</span> haveplotfcn
+0217             <span class="keyword">if</span> coder.target(<span class="string">'MATLAB'</span>) || coder.target(<span class="string">'MEX'</span>)
+0218                 state.StopFlag = <a href="../../igmn/callPlotFcns.html" class="code" title="function stop = callPlotFcns(optimValues, flag)">callPlotFcns</a>(<a href="#_sub2" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'iter'</span>);
+0219             <span class="keyword">end</span>
+0220         <span class="keyword">else</span>
+0221             state.StopFlag = false;
+0222         <span class="keyword">end</span>
+0223 
+0224         bestFvalsWindow(1 + mod(state.Iteration - 1, optOptions.StallIterLimit)) = min(state.IndividualBestFvals);
+0225         
+0226         newBest = min(state.IndividualBestFvals, [], &quot;all&quot;);
+0227         <span class="keyword">if</span> isfinite(newBest) &amp;&amp; newBest &lt; bestFvals
+0228             bestFvals = newBest;
+0229             state.LastImprovement = state.Iteration;
+0230             state.LastImprovementTime = toc(state.StartTime);
+0231         <span class="keyword">end</span>
+0232 
+0233         <span class="comment">% check to see if any stopping criteria have been met</span>
+0234         exitFlag  = <a href="../../igmn/stopOptimization.html" class="code" title="function exitFlag = stopOptimization(optOptions, state, bestFvalsWindow) %#codegen">stopOptimization</a>(optOptions, state, bestFvalsWindow);
+0235     <span class="keyword">end</span>
+0236 
+0237     <span class="comment">% Find and return the best solution</span>
+0238     [fval, indexBestFval] = min(state.IndividualBestFvals);
+0239     x = state.IndividualBestPositions(indexBestFval, :);
+0240     
+0241 
+0242     <span class="comment">% Allow output and plot functions to perform any clean up tasks.</span>
+0243     <span class="keyword">if</span> haveplotfcn
+0244         <span class="keyword">if</span> coder.target(<span class="string">'MATLAB'</span>) || coder.target(<span class="string">'MEX'</span>)
+0245             <a href="../../igmn/callPlotFcns.html" class="code" title="function stop = callPlotFcns(optimValues, flag)">callPlotFcns</a>(<a href="#_sub2" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'done'</span>);
+0246         <span class="keyword">end</span>
+0247     <span class="keyword">end</span>
+0248 
+0249     <span class="comment">% Nested function</span>
+0250     <a name="_sub2" href="#_subfunctions" class="code">function optimValues = i_updateOptimValues</a>
+0251         optimValues.bestfval = min(state.IndividualBestFvals);
+0252         optimValues.iteration = state.Iteration;
+0253         optimValues.meanfval = <a href="meanf.html" class="code" title="function m = meanf(x)">meanf</a>(state.Fvals);
+0254         optimValues.population = state.Positions;
+0255         optimValues.populationRange = state.PopulationRange;
+0256         optimValues.populationfvals = state.Fvals;
+0257         optimValues.plotFcns = state.PlotFcns;
+0258         optimValues.hpNames = hpNames;
+0259         optimValues.algorithm = <span class="string">'IMODE'</span>;
+0260     <span class="keyword">end</span>
+0261 <span class="keyword">end</span>
+0262 
+0263 <a name="_sub3" href="#_subfunctions" class="code">function newPositions = updatePositions( </a><span class="keyword">...</span>
+0264     state, lbRow, ubRow, pIdx, numIndividuals, nhps, hyperparameters, hpIndexes, F, OP, CR) <span class="comment">%#codegen</span>
+0265      <span class="comment">% Generate parents, CR, F, and operator for each offspring</span>
+0266     Xp1 = state.Positions(ceil(rand(1, numIndividuals) .* max(1, 0.25 * numIndividuals)), :);
+0267     Xp2 = state.Positions(ceil(rand(1, numIndividuals) .* max(2, 0.5 * numIndividuals)), :);
+0268     Xr1 = state.Positions(randi(<span class="keyword">end</span>, 1, numIndividuals), :);
+0269     Xr3 = state.Positions(randi(<span class="keyword">end</span>, 1, numIndividuals), :);
+0270     P = [state.Positions; state.Archive];
+0271     Xr2 = P(randi(<span class="keyword">end</span>, 1, numIndividuals), :);
+0272 
+0273     <span class="comment">% Generate offspring</span>
+0274     newPositions = state.Positions(:, :);
+0275     newPositions(OP{1}, :) = state.Positions(OP{1}, :) + F(OP{1}, :) .* <span class="keyword">...</span>
+0276         (Xp1(OP{1}, :) - state.Positions(OP{1}, :) + Xr1(OP{1}, :) - Xr2(OP{1}, :));
+0277     newPositions(OP{2}, :) = state.Positions(OP{2}, :) + F(OP{2}, :) .* <span class="keyword">...</span>
+0278         (Xp1(OP{2}, :) - state.Positions(OP{2}, :) + Xr1(OP{2}, :) - Xr3(OP{2}, :));
+0279     newPositions(OP{3}, :) = F(OP{3}, :) .* (Xr1(OP{3}, :) + Xp2(OP{3}, :) - Xr3(OP{3}, :));
+0280     <span class="keyword">if</span> rand &lt; 0.4
+0281         Site = rand(size(CR)) &gt; CR;
+0282         newPositions(Site) = state.Positions(Site);
+0283     <span class="keyword">else</span>
+0284         p1 = randi(nhps, numIndividuals, 1);
+0285         p2 = zeros(1, numIndividuals);
+0286         <span class="keyword">for</span> i = 1:numIndividuals
+0287             p2(i) = find([rand(1, nhps), 2] &gt; CR(i, 1), 1);
+0288         <span class="keyword">end</span>
+0289         <span class="keyword">for</span> i = 1 :numIndividuals
+0290             Site = [1:p1(i) - 1, p1(i) + p2(i):nhps];
+0291             newPositions(i, Site) = state.Positions(i, Site);
+0292         <span class="keyword">end</span>
+0293     <span class="keyword">end</span>
+0294 
+0295     newPositions = <a href="roundDiscreteHyperparameters.html" class="code" title="function population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes) %#codegen">roundDiscreteHyperparameters</a>(newPositions, hyperparameters, hpIndexes);
+0296     
+0297     <span class="comment">% Remove positions if infinite.</span>
+0298     tfInvalid = any(~isfinite(newPositions), 2);
+0299     tfInvalidFull = false(numIndividuals, 1);
+0300     tfInvalidFull(pIdx) = tfInvalid;
+0301     newPositions(tfInvalid, :) = state.Positions(tfInvalidFull, :);
+0302 
+0303     lbMatrix = repmat(lbRow, numIndividuals, 1);
+0304     ubMatrix = repmat(ubRow, numIndividuals, 1);
+0305     
+0306     <span class="comment">% Enforce bounds on positions and return logical array to update velocities where position exceeds bounds.</span>
+0307     tfInvalidLB = newPositions &lt; lbMatrix(pIdx, :);
+0308     <span class="keyword">if</span> any(tfInvalidLB(:))
+0309         tfInvalidLBFull = false(numIndividuals, nhps);
+0310         tfInvalidLBFull(pIdx, :) = tfInvalidLB;
+0311         newPositions(tfInvalidLB) = lbMatrix(tfInvalidLBFull);
+0312     <span class="keyword">end</span>
+0313     
+0314     tfInvalidUB = newPositions &gt; ubMatrix(pIdx,:);
+0315     <span class="keyword">if</span> any(tfInvalidUB(:))
+0316         tfInvalidUBFull = false(numIndividuals,nhps);
+0317         tfInvalidUBFull(pIdx,:) = tfInvalidUB;
+0318         newPositions(tfInvalidUB) = ubMatrix(tfInvalidUBFull);
+0319     <span class="keyword">end</span> 
+0320 <span class="keyword">end</span>
+0321</pre></div>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <head>
   <title>Description of pso</title>
   <meta name="keywords" content="pso">
-  <meta name="description" content="PSO - Particle Swarm Optimization Algorithm">
+  <meta name="description" content="pso - Particle Swarm Optimization Algorithm">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="box"><strong>PSO - Particle Swarm Optimization Algorithm</strong></div>
+<div class="box"><strong>pso - Particle Swarm Optimization Algorithm</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
 <div class="box"><strong>function [x, fval, exitFlag] = pso(problem) %#codegen </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> PSO - Particle Swarm Optimization Algorithm
+<div class="fragment"><pre class="comment"> pso - Particle Swarm Optimization Algorithm
 
  This script implements a Particle Swarm Optimization (PSO) algorithm for
  hyperparameter optimization. The main function `pso` initializes the
@@ -107,18 +107,19 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../../matlabicon.gif)">
-<li><a href="extractBounds.html" class="code" title="function [lbRow, ubRow, nhps] = extractBounds(hyperparameters, hpIndexes) %#codegen">extractBounds</a>	extractBounds - Extracts the lower and upper bounds of hyperparameters.</li><li><a href="extractHyperarameterNames.html" class="code" title="function [hpNames, hpIndexes] = extractHyperarameterNames(optOptions)">extractHyperarameterNames</a>	extractHyperarameterNames - Extracts the names and indexes of hyperparameters</li><li><a href="initialPopulationCheck.html" class="code" title="function options = initialPopulationCheck(options) %#codegen">initialPopulationCheck</a>	initialPopulationCheck - Validates and adjusts the initial population for optimization.</li><li><a href="meanf.html" class="code" title="function m = meanf(x)">meanf</a>	MEANF Compute the mean of an array, ignoring NaN values.</li><li><a href="roundDiscreteHyperparameters.html" class="code" title="function population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes) %#codegen">roundDiscreteHyperparameters</a>	roundDiscreteHyperparameters - Rounds discrete hyperparameters in a population matrix.</li><li><a href="validateOptimizationOptions.html" class="code" title="">validateOptimizationOptions</a>	{</li></ul>
+<li><a href="../../igmn/callPlotFcns.html" class="code" title="function stop = callPlotFcns(optimValues, flag)">callPlotFcns</a>	callPlotFcns - A function to manage and execute plotting functions during</li><li><a href="../../igmn/evaluate.html" class="code" title="function fit = evaluate(params, problem, hpNames, maxPenalty) %#codegen">evaluate</a>	evaluate - Evaluates the performance of an IGMN (Incremental Gaussian Mixture Network) model.</li><li><a href="../../igmn/makeOptimizationState.html" class="code" title="function state = makeOptimizationState(nhps, lbMatrix, ubMatrix, optOptions, objFun, hpIndexes) %#codegen">makeOptimizationState</a>	makeOptimizationState - Initializes the optimization state structure for an optimization algorithm.</li><li><a href="extractBounds.html" class="code" title="function [lbRow, ubRow, nhps] = extractBounds(hyperparameters, hpIndexes) %#codegen">extractBounds</a>	extractBounds - Extracts the lower and upper bounds of hyperparameters.</li><li><a href="extractHyperarameterNames.html" class="code" title="function [hpNames, hpIndexes] = extractHyperarameterNames(optOptions)">extractHyperarameterNames</a>	extractHyperarameterNames - Extracts the names and indexes of hyperparameters</li><li><a href="initialPopulationCheck.html" class="code" title="function options = initialPopulationCheck(options) %#codegen">initialPopulationCheck</a>	initialPopulationCheck - Validates and adjusts the initial population for optimization.</li><li><a href="meanf.html" class="code" title="function m = meanf(x)">meanf</a>	meanf Compute the mean of an array, ignoring NaN values.</li><li><a href="roundDiscreteHyperparameters.html" class="code" title="function population = roundDiscreteHyperparameters(population, hyperparameters, hpIndexes) %#codegen">roundDiscreteHyperparameters</a>	roundDiscreteHyperparameters - Rounds discrete hyperparameters in a population matrix.</li><li><a href="validateOptimizationOptions.html" class="code" title="function options = validateOptimizationOptions(options, nhps, varIndexes) %#codegen">validateOptimizationOptions</a>	validateOptimizationOptions - Validates and adjusts optimization options for a given problem.</li><li><a href="../../igmn/stopOptimization.html" class="code" title="function exitFlag = stopOptimization(optOptions, state, bestFvalsWindow) %#codegen">stopOptimization</a>	stopOptimization - Determines whether to stop the optimization process based on various criteria.</li><li><a href="../../igmn/updateState.html" class="code" title="function state = updateState(state, numIndividuals, pIdx) %#codegen">updateState</a>	updateState - Updates the state of the optimization process.</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../../matlabicon.gif)">
-</ul>
+<li><a href="../../igmn/optimize.html" class="code" title="function options = optimize(problem) %#codegen">optimize</a>	optimize - Optimizes the parameters of a given problem using a specified algorithm.</li></ul>
 <!-- crossreference -->
 
 <h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
 <ul style="list-style-image:url(../../matlabicon.gif)">
 <li><a href="#_sub1" class="code">function [x,fval,exitFlag] = psocore(nhps, lbRow, ubRow, problem, hpNames, hpIndexes)</a></li><li><a href="#_sub2" class="code">function optimValues = i_updateOptimValues</a></li><li><a href="#_sub3" class="code">function bestNeighborIndex = generateBestNeighborIndex(state ,adaptiveNeighborhoodSize, numParticles)</a></li><li><a href="#_sub4" class="code">function newVelocities = updateVelocities(state,adaptiveInertia,bestNeighborIndex,cSelf,cSocial,pIdx,nhps)</a></li><li><a href="#_sub5" class="code">function [newPositions, tfInvalid] = updatePositions(</a></li><li><a href="#_sub6" class="code">function [state,adaptiveInertiaCounter,bestFvals,adaptiveNeighborhoodSize,adaptiveInertia] =</a></li><li><a href="#_sub7" class="code">function state = updateParticles(state, adaptiveInertia, bestNeighborIndex, cSelf,</a></li></ul>
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<p><a href="pso.m">pso.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% PSO - Particle Swarm Optimization Algorithm</span>
+<div class="fragment"><pre>0001 <span class="comment">% pso - Particle Swarm Optimization Algorithm</span>
 0002 <span class="comment">%</span>
 0003 <span class="comment">% This script implements a Particle Swarm Optimization (PSO) algorithm for</span>
 0004 <span class="comment">% hyperparameter optimization. The main function `pso` initializes the</span>
@@ -200,7 +201,7 @@ This function is called by:
 0080 
 0081     [lbRow , ubRow, nhps] =  <a href="extractBounds.html" class="code" title="function [lbRow, ubRow, nhps] = extractBounds(hyperparameters, hpIndexes) %#codegen">extractBounds</a>(optOptions.hyperparameters, hpIndexes); 
 0082     
-0083     optOptions = <a href="validateOptimizationOptions.html" class="code" title="">validateOptimizationOptions</a>(optOptions, nhps, hpIndexes);
+0083     optOptions = <a href="validateOptimizationOptions.html" class="code" title="function options = validateOptimizationOptions(options, nhps, varIndexes) %#codegen">validateOptimizationOptions</a>(optOptions, nhps, hpIndexes);
 0084     
 0085     <span class="comment">% Perform check on initial population, fvals, and range</span>
 0086     problem.OptimizeOptions = <a href="initialPopulationCheck.html" class="code" title="function options = initialPopulationCheck(options) %#codegen">initialPopulationCheck</a>(optOptions);
@@ -236,9 +237,9 @@ This function is called by:
 0116     maxPenalty = 0.1 * mean( <span class="keyword">...</span>
 0117         range(2, outVarIndexes) - range(1, outVarIndexes), <span class="string">'all'</span>);
 0118 
-0119     objFun = @(params) evaluate(params, problem, hpNames, maxPenalty);
+0119     objFun = @(params) <a href="../../igmn/evaluate.html" class="code" title="function fit = evaluate(params, problem, hpNames, maxPenalty) %#codegen">evaluate</a>(params, problem, hpNames, maxPenalty);
 0120 
-0121     state = makeOptimizationState(nhps, lbMatrix, ubMatrix, optOptions, objFun, hpIndexes);
+0121     state = <a href="../../igmn/makeOptimizationState.html" class="code" title="function state = makeOptimizationState(nhps, lbMatrix, ubMatrix, optOptions, objFun, hpIndexes) %#codegen">makeOptimizationState</a>(nhps, lbMatrix, ubMatrix, optOptions, objFun, hpIndexes);
 0122     bestFvals = min(state.Fvals, [], &quot;all&quot;);
 0123     <span class="comment">% Create a vector to store the last StallIterLimit bestFvals.</span>
 0124     <span class="comment">% bestFvalsWindow is a circular buffer, so that the value from the i'th</span>
@@ -267,9 +268,9 @@ This function is called by:
 0147         <span class="keyword">if</span> coder.target(<span class="string">'MATLAB'</span>) || coder.target(<span class="string">'MEX'</span>)
 0148             haveplotfcn = true;
 0149             state.StopFlag = false;
-0150             state.StopFlag = callPlotFcns(<a href="#_sub2" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'init'</span>);
+0150             state.StopFlag = <a href="../../igmn/callPlotFcns.html" class="code" title="function stop = callPlotFcns(optimValues, flag)">callPlotFcns</a>(<a href="#_sub2" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'init'</span>);
 0151             <span class="comment">% check to see if any stopping criteria have been met</span>
-0152             exitFlag = stopOptimization(optOptions, state, bestFvalsWindow);
+0152             exitFlag = <a href="../../igmn/stopOptimization.html" class="code" title="function exitFlag = stopOptimization(optOptions, state, bestFvalsWindow) %#codegen">stopOptimization</a>(optOptions, state, bestFvalsWindow);
 0153         <span class="keyword">else</span>
 0154             haveplotfcn = false;
 0155         <span class="keyword">end</span>
@@ -313,7 +314,7 @@ This function is called by:
 0193         state.Fvals = fvals(:);
 0194     
 0195         <span class="comment">% Update state with best fvals and best individual positions.</span>
-0196         state = updateState(state, numParticles, pIdx');
+0196         state = <a href="../../igmn/updateState.html" class="code" title="function state = updateState(state, numIndividuals, pIdx) %#codegen">updateState</a>(state, numParticles, pIdx');
 0197     
 0198         bestFvalsWindow(1 + mod(state.Iteration - 1, optOptions.StallIterLimit)) = min(state.IndividualBestFvals);
 0199     
@@ -324,14 +325,14 @@ This function is called by:
 0204         <span class="comment">% Call plot functions</span>
 0205         <span class="keyword">if</span> haveplotfcn
 0206             <span class="keyword">if</span> coder.target(<span class="string">'MATLAB'</span>) || coder.target(<span class="string">'MEX'</span>)
-0207                 state.StopFlag = callPlotFcns(<a href="#_sub2" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'iter'</span>);
+0207                 state.StopFlag = <a href="../../igmn/callPlotFcns.html" class="code" title="function stop = callPlotFcns(optimValues, flag)">callPlotFcns</a>(<a href="#_sub2" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'iter'</span>);
 0208             <span class="keyword">end</span>
 0209         <span class="keyword">else</span>
 0210             state.StopFlag = false;
 0211         <span class="keyword">end</span>
 0212     
 0213         <span class="comment">% check to see if any stopping criteria have been met</span>
-0214         exitFlag = stopOptimization(optOptions, state, bestFvalsWindow);
+0214         exitFlag = <a href="../../igmn/stopOptimization.html" class="code" title="function exitFlag = stopOptimization(optOptions, state, bestFvalsWindow) %#codegen">stopOptimization</a>(optOptions, state, bestFvalsWindow);
 0215     <span class="keyword">end</span> <span class="comment">% End while loop</span>
 0216     
 0217     
@@ -342,7 +343,7 @@ This function is called by:
 0222     <span class="comment">% Allow output and plot functions to perform any clean up tasks.</span>
 0223     <span class="keyword">if</span> haveplotfcn
 0224         <span class="keyword">if</span> coder.target(<span class="string">'MATLAB'</span>) || coder.target(<span class="string">'MEX'</span>)
-0225             callPlotFcns(<a href="#_sub2" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'done'</span>);
+0225             <a href="../../igmn/callPlotFcns.html" class="code" title="function stop = callPlotFcns(optimValues, flag)">callPlotFcns</a>(<a href="#_sub2" class="code" title="subfunction optimValues = i_updateOptimValues">i_updateOptimValues</a>, <span class="string">'done'</span>);
 0226         <span class="keyword">end</span>
 0227     <span class="keyword">end</span>
 0228 
@@ -486,6 +487,6 @@ This function is called by:
 0366         state.Velocities(tfInvalid) = 0;
 0367     <span class="keyword">end</span>
 0368 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

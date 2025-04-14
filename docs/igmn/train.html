@@ -4,7 +4,7 @@
 <head>
   <title>Description of train</title>
   <meta name="keywords" content="train">
-  <meta name="description" content="TRAIN Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.">
+  <meta name="description" content="train - Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>TRAIN Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.</strong></div>
+<div class="box"><strong>train - Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function  net = train(net, X) %#codegen </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> TRAIN Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.
+<div class="fragment"><pre class="comment"> train - Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.
 
  This function updates the IGMN model by iteratively learning from each 
  example in the provided dataset X. The training process stops early if 
@@ -45,16 +45,17 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="learn.html" class="code" title="function net = learn(net, x) %#codegen">learn</a>	LEARN Learns a single training sample and updates the network.</li></ul>
+<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="learn.html" class="code" title="function net = learn(net, x) %#codegen">learn</a>	learn - Learns a single training sample and updates the network.</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	COMPILE - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li><li><a href="evaluate.html" class="code" title="">evaluate</a>	{</li><li><a href="transpile.html" class="code" title="function transpile(options)">transpile</a>	TRANSPILE Transpile MATLAB code to MEX functions using MATLAB Coder.</li></ul>
+<li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	compile - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li><li><a href="evaluate.html" class="code" title="function fit = evaluate(params, problem, hpNames, maxPenalty) %#codegen">evaluate</a>	evaluate - Evaluates the performance of an IGMN (Incremental Gaussian Mixture Network) model.</li><li><a href="transpile.html" class="code" title="function transpile(options)">transpile</a>	transpile - Transpile MATLAB code to MEX functions using MATLAB Coder.</li></ul>
 <!-- crossreference -->
 
 
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="train.m">train.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% TRAIN Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.</span>
+<div class="fragment"><pre>0001 <span class="comment">% train - Train the IGMN (Incremental Gaussian Mixture Network) with the dataset X.</span>
 0002 <span class="comment">%</span>
 0003 <span class="comment">% This function updates the IGMN model by iteratively learning from each</span>
 0004 <span class="comment">% example in the provided dataset X. The training process stops early if</span>
@@ -82,6 +83,6 @@ This function is called by:
 0026         <span class="keyword">if</span> ~net.converged; <span class="keyword">return</span>; <span class="keyword">end</span>
 0027     <span class="keyword">end</span>
 0028 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

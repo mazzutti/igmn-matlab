@@ -1,52 +1,50 @@
-%{
-PLOTRESULTS - Visualizes regression results and probabilities for rock physics data.
-
-This function generates a tiled plot layout to display the regression 
-results, including facies classification, probability distributions, 
-and comparisons between reference and predicted outputs.
-
-SYNTAX:
-    plotResults(targets, outputs, xlabels, depth, facies, legends, ...
-                outputVars, variableRanges, variableNames, outputsDomain, ...
-                probabilities, initDeth, endDepth, plotTitle, exportFileName)
-
-INPUTS:
-    targets         - Matrix of reference target values (depth x variables).
-    outputs         - Matrix of predicted output values (depth x variables).
-    xlabels         - Cell array of strings for x-axis labels of each variable.
-    depth           - Vector of depth values (depth x 1).
-    facies          - Vector of facies classification values (depth x 1).
-    legends         - Cell array of legend labels for the plots.
-    outputVars      - Vector of indices specifying which variables to plot.
-    variableRanges  - Matrix specifying the range of each variable (2 x variables).
-    variableNames   - Cell array of variable names for labeling.
-    outputsDomain   - Cell array of domain values for each output variable.
-    probabilities   - Cell array of probability matrices (depth x domain).
-    initDeth        - Integer specifying the starting depth index for plotting.
-    endDepth        - Integer specifying the ending depth index for plotting.
-    plotTitle       - String specifying the title of the plot (optional).
-    exportFileName  - String specifying the file name for exporting the plot 
-                      as a PDF (optional).
-
-OUTPUTS:
-    A figure displaying:
-        - Facies classification as an image.
-        - Probability distributions for each output variable.
-        - Reference and predicted values overlaid on the probability plots.
-
-NOTES:
-    - The function uses a colormap loaded from "prob_color_map.mat" for 
-      probability visualization.
-    - If 'exportFileName' is provided, the plot is saved as a PDF with 
-      high resolution.
-
-EXAMPLE USAGE:
-    plotResults(targets, outputs, {'Porosity', 'Permeability'}, depth, facies, ...
-                {'Shale', 'Water Sand', 'Oil Sand'}, [1, 2], ...
-                [0, 1; 0, 1000], {'Depth', 'Facies'}, outputsDomain, ...
-                probabilities, 1, 100, 'Rock Physics Results', 'results_plot');
-
-%}
+% plotResults - Visualizes regression results and probabilities for rock physics data.
+% 
+% This function generates a tiled plot layout to display the regression 
+% results, including facies classification, probability distributions, 
+% and comparisons between reference and predicted outputs.
+% 
+% SYNTAX:
+%     plotResults(targets, outputs, xlabels, depth, facies, legends, ...
+%                 outputVars, variableRanges, variableNames, outputsDomain, ...
+%                 probabilities, initDeth, endDepth, plotTitle, exportFileName)
+% 
+% INPUTS:
+%     targets         - Matrix of reference target values (depth x variables).
+%     outputs         - Matrix of predicted output values (depth x variables).
+%     xlabels         - Cell array of strings for x-axis labels of each variable.
+%     depth           - Vector of depth values (depth x 1).
+%     facies          - Vector of facies classification values (depth x 1).
+%     legends         - Cell array of legend labels for the plots.
+%     outputVars      - Vector of indices specifying which variables to plot.
+%     variableRanges  - Matrix specifying the range of each variable (2 x variables).
+%     variableNames   - Cell array of variable names for labeling.
+%     outputsDomain   - Cell array of domain values for each output variable.
+%     probabilities   - Cell array of probability matrices (depth x domain).
+%     initDeth        - Integer specifying the starting depth index for plotting.
+%     endDepth        - Integer specifying the ending depth index for plotting.
+%     plotTitle       - String specifying the title of the plot (optional).
+%     exportFileName  - String specifying the file name for exporting the plot 
+%                       as a PDF (optional).
+% 
+% OUTPUTS:
+%     A figure displaying:
+%         - Facies classification as an image.
+%         - Probability distributions for each output variable.
+%         - Reference and predicted values overlaid on the probability plots.
+% 
+% NOTES:
+%     - The function uses a colormap loaded from "prob_color_map.mat" for 
+%       probability visualization.
+%     - If 'exportFileName' is provided, the plot is saved as a PDF with 
+%       high resolution.
+% 
+% EXAMPLE USAGE:
+%     plotResults(targets, outputs, {'Porosity', 'Permeability'}, depth, facies, ...
+%                 {'Shale', 'Water Sand', 'Oil Sand'}, [1, 2], ...
+%                 [0, 1; 0, 1000], {'Depth', 'Facies'}, outputsDomain, ...
+%                 probabilities, 1, 100, 'Rock Physics Results', 'results_plot');
+% 
 function plotResults(targets, outputs, xlabels, depth, facies, legends, ...
     outputVars, variableRanges, variableNames, outputsDomain, probabilities, initDeth, endDepth, plotTitle, exportFileName)
 

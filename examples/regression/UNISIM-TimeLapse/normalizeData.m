@@ -1,4 +1,3 @@
-%{
 % normalizeData - Normalizes the input data to a specified range [0, 1].
 %
 % Syntax:
@@ -36,7 +35,6 @@
 %
 % See also:
 %   mapminmax
-%}
 function [normalizedData, minMaxProportion] = normalizeData(data, minMaxProportion)
     [R, C, S] = size(data);
     normalizedData = zeros(R, C, S);

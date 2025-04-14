@@ -1,3 +1,59 @@
+% plotResults - Function to visualize and analyze regression results, including
+% facies, input variables, target variables, predictions, probabilities, and
+% histograms.
+% 
+% Syntax:
+%     plotResults(net, targets, inputs, outputs, useFacies, depth, facies, legends, ...
+%                 variableRanges, variableNames, outputsDomain, probabilities, ...
+%                 plotTitle, exportFileName)
+% 
+% Inputs:
+%     net             - Struct containing the trained network parameters, including
+%                       means, inverse covariances, and priors.
+%     targets         - Matrix of target values for regression (size: [N x T]).
+%     inputs          - Matrix of input variables (size: [N x I]).
+%     outputs         - Matrix of predicted outputs (size: [N x O]).
+%     useFacies       - Boolean flag indicating whether facies information is used.
+%     depth           - Vector of depth values corresponding to the data (size: [N x 1]).
+%     facies          - Vector or matrix representing facies information (size: [N x 1] or [N x F]).
+%     legends         - Cell array of legends for the plots (size: {1 x O}).
+%     variableRanges  - Matrix specifying the range of each variable (size: [2 x V]).
+%     variableNames   - Cell array of variable names for labeling (size: {1 x V}).
+%     outputsDomain   - Cell array of output domains for probability plots (size: {1 x O}).
+%     probabilities   - Cell array of probability matrices for outputs (size: {1 x O}).
+%     plotTitle       - String specifying the title for the probability plots.
+%     exportFileName  - (Optional) String specifying the file name for exporting plots.
+% 
+% Outputs:
+%     None. The function generates and displays various plots, including:
+%         - Facies visualization.
+%         - Input variable plots.
+%         - Target and predicted output plots.
+%         - Probability plots for outputs.
+%         - Histograms of generated samples.
+%         - Regression analysis plots.
+% 
+% Description:
+%     This function creates a comprehensive set of plots to analyze regression
+%     results. It includes facies visualization, input variable trends, target
+%     and predicted output comparisons, probability distributions, and histograms
+%     of generated samples. Additionally, regression analysis plots are generated
+%     to evaluate the performance of the model.
+% 
+%     The function supports exporting plots to PDF files if 'exportFileName' is
+%     provided. It also uses a custom colormap for probability plots and adjusts
+%     plot aesthetics for publication-quality figures.
+% 
+% Dependencies:
+%     - Requires the 'tight_subplot' function for subplot layout.
+%     - Requires the 'generate_histograms' function for histogram generation.
+%     - Requires the 'plotregression' function for regression analysis.
+%     - Requires the 'prob_color_map.mat' file for custom colormap.
+% 
+% Example:
+%     plotResults(net, targets, inputs, outputs, true, depth, facies, legends, ...
+%                 variableRanges, variableNames, outputsDomain, probabilities, ...
+%                 'Probability Plots', 'results');
 function plotResults(net, targets, inputs, outputs, useFacies, depth, facies, legends, ...
          variableRanges, variableNames, outputsDomain, probabilities, plotTitle, exportFileName)
 

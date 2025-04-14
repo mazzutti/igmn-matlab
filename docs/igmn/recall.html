@@ -4,7 +4,7 @@
 <head>
   <title>Description of recall</title>
   <meta name="keywords" content="recall">
-  <meta name="description" content="RECALL Performs the Gaussian Mixture Regression for a given input.">
+  <meta name="description" content="recall - Performs the Gaussian Mixture Regression for a given input.">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>RECALL Performs the Gaussian Mixture Regression for a given input.</strong></div>
+<div class="box"><strong>recall - Performs the Gaussian Mixture Regression for a given input.</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function [Y, probabilities] = recall(net, X, features, featureGrid) %#codegen </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> RECALL Performs the Gaussian Mixture Regression for a given input.
+<div class="fragment"><pre class="comment"> recall - Performs the Gaussian Mixture Regression for a given input.
    This function estimates the missing values in the input data `X` 
    using the Incremental Gaussian Mixture Network (IGMN). The known 
    attributes are specified by the `features` parameter, and the 
@@ -76,16 +76,17 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li></ul>
+<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="../igmn/private/computeLoglike.html" class="code" title="function [logLike, distance] = computeLoglike(X, cov, data, options) %#codegen">computeLoglike</a>	computeLoglike - Computes the log-likelihood and distance for given data.</li><li><a href="../igmn/private/mustBeNDimensional.html" class="code" title="function mustBeNDimensional(net, x, y)">mustBeNDimensional</a>	mustBeNDimensional - Validate that input dimensions match the network's dimension</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>	PREDICT Classifies a given input and computes posterior probabilities.</li></ul>
+<li><a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>	predict - Classifies a given input and computes posterior probabilities.</li></ul>
 <!-- crossreference -->
 
 
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="recall.m">recall.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% RECALL Performs the Gaussian Mixture Regression for a given input.</span>
+<div class="fragment"><pre>0001 <span class="comment">% recall - Performs the Gaussian Mixture Regression for a given input.</span>
 0002 <span class="comment">%   This function estimates the missing values in the input data `X`</span>
 0003 <span class="comment">%   using the Incremental Gaussian Mixture Network (IGMN). The known</span>
 0004 <span class="comment">%   attributes are specified by the `features` parameter, and the</span>
@@ -140,7 +141,7 @@ This function is called by:
 0053             mustBeNumeric, <span class="keyword">...</span>
 0054             mustBeNonempty, <span class="keyword">...</span>
 0055             mustBeInteger, <span class="keyword">...</span>
-0056             mustBeNDimensional(net, X, features) <span class="keyword">...</span>
+0056             <a href="../igmn/private/mustBeNDimensional.html" class="code" title="function mustBeNDimensional(net, x, y)">mustBeNDimensional</a>(net, X, features) <span class="keyword">...</span>
 0057         } = [(size(X, 2) + 1):net.dimension], <span class="keyword">...</span>
 0058         featureGrid (:, :) { mustBeNumeric } = [];
 0059     <span class="keyword">end</span>
@@ -177,16 +178,16 @@ This function is called by:
 0090             invBetaAlpha = betaBetaCov \ betaAlphaCov;
 0091             invA = alphaAlphaCov - (betaAlphaCov' * invBetaAlpha);
 0092             determinant = det(betaBetaCov);
-0093             pajs(:, :, i) = computeLoglike(X, invA, alphaMeans(i, :), <span class="keyword">...</span>
+0093             pajs(:, :, i) = <a href="../igmn/private/computeLoglike.html" class="code" title="function [logLike, distance] = computeLoglike(X, cov, data, options) %#codegen">computeLoglike</a>(X, invA, alphaMeans(i, :), <span class="keyword">...</span>
 0094                 useRankOne=true, determinant=determinant) + igmn.minimum;
 0095             xm(:, :, i) = (betaMeans(i, :) - (invBetaAlpha * diff')');  
 0096         <span class="keyword">else</span>
 0097             xm(:, :, i) = betaMeans(i, :) + (betaAlphaCov / alphaAlphaCov * diff')';
-0098             loglike = computeLoglike(X, alphaAlphaCov, diff);
+0098             loglike = <a href="../igmn/private/computeLoglike.html" class="code" title="function [logLike, distance] = computeLoglike(X, cov, data, options) %#codegen">computeLoglike</a>(X, alphaAlphaCov, diff);
 0099             pajs(:, :, i) = exp(loglike) * priors(i);
 0100         <span class="keyword">end</span>
 0101         <span class="keyword">if</span> computeGrid
-0102             loglikeGrid = computeLoglike(featureGrid, betaBetaCov, xm(:, :, i), <span class="keyword">...</span>
+0102             loglikeGrid = <a href="../igmn/private/computeLoglike.html" class="code" title="function [logLike, distance] = computeLoglike(X, cov, data, options) %#codegen">computeLoglike</a>(featureGrid, betaBetaCov, xm(:, :, i), <span class="keyword">...</span>
 0103                 isProbability=true, useRankOne=useRankOne, determinant=determinant);
 0104             <span class="keyword">if</span> ~useRankOne; loglikeGrid = exp(loglikeGrid); <span class="keyword">end</span>
 0105             probabilities = probabilities + pajs(:, :, i) .* loglikeGrid;
@@ -200,6 +201,6 @@ This function is called by:
 0113         probabilities(isnan(probabilities)) = 0;
 0114     <span class="keyword">end</span>
 0115 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

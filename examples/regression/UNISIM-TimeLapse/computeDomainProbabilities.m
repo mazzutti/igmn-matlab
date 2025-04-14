@@ -1,4 +1,3 @@
-%{
 % computeDomainProbabilities - Computes domain probabilities for a given set of grid predictions.
 %
 % Syntax:
@@ -32,7 +31,6 @@
 %
 % See also:
 %   reshape, sum, squeeze
-%}
 function domainProbabilities = computeDomainProbabilities(gridPredictions, features, discretizationSize)
     N = size(gridPredictions, 1);
     F = length(features);

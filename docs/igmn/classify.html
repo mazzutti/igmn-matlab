@@ -4,7 +4,7 @@
 <head>
   <title>Description of classify</title>
   <meta name="keywords" content="classify">
-  <meta name="description" content="CLASSIFY Classifies a given input using the IGMN model.">
+  <meta name="description" content="classify - Classifies a given input using the IGMN model.">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html &copy; 2003-2019 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>CLASSIFY Classifies a given input using the IGMN model.</strong></div>
+<div class="box"><strong>classify - Classifies a given input using the IGMN model.</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function Y = classify(net, X, features) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> CLASSIFY Classifies a given input using the IGMN model.
+<div class="fragment"><pre class="comment"> classify - Classifies a given input using the IGMN model.
  
    This function takes an input array and classifies it using the 
    Incremental Gaussian Mixture Network (IGMN). It returns a label-binarized 
@@ -54,16 +54,17 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>	PREDICT Classifies a given input and computes posterior probabilities.</li></ul>
+<li><a href="igmn.html" class="code" title="">igmn</a>	IGMN Class</li><li><a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>	predict - Classifies a given input and computes posterior probabilities.</li><li><a href="../igmn/private/mustBeNDimensional.html" class="code" title="function mustBeNDimensional(net, x, y)">mustBeNDimensional</a>	mustBeNDimensional - Validate that input dimensions match the network's dimension</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	COMPILE - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li><li><a href="evaluate.html" class="code" title="">evaluate</a>	{</li><li><a href="transpile.html" class="code" title="function transpile(options)">transpile</a>	TRANSPILE Transpile MATLAB code to MEX functions using MATLAB Coder.</li></ul>
+<li><a href="compile.html" class="code" title="function compile(problem)">compile</a>	compile - Compiles MATLAB functions into MEX or library files based on the specified problem configuration.</li><li><a href="evaluate.html" class="code" title="function fit = evaluate(params, problem, hpNames, maxPenalty) %#codegen">evaluate</a>	evaluate - Evaluates the performance of an IGMN (Incremental Gaussian Mixture Network) model.</li><li><a href="transpile.html" class="code" title="function transpile(options)">transpile</a>	transpile - Transpile MATLAB code to MEX functions using MATLAB Coder.</li></ul>
 <!-- crossreference -->
 
 
-
+<h2><a name="_download"></a>DOWNLOAD <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<p><a href="classify.m">classify.m</a></p>
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% CLASSIFY Classifies a given input using the IGMN model.</span>
+<div class="fragment"><pre>0001 <span class="comment">% classify - Classifies a given input using the IGMN model.</span>
 0002 <span class="comment">%</span>
 0003 <span class="comment">%   This function takes an input array and classifies it using the</span>
 0004 <span class="comment">%   Incremental Gaussian Mixture Network (IGMN). It returns a label-binarized</span>
@@ -96,12 +97,12 @@ This function is called by:
 0031             mustBeNumeric, <span class="keyword">...</span>
 0032             mustBeNonempty, <span class="keyword">...</span>
 0033             mustBeInteger, <span class="keyword">...</span>
-0034             mustBeNDimensional(net, X, features) <span class="keyword">...</span>
+0034             <a href="../igmn/private/mustBeNDimensional.html" class="code" title="function mustBeNDimensional(net, x, y)">mustBeNDimensional</a>(net, X, features) <span class="keyword">...</span>
 0035         } = [(size(X, 2) + 1):net.dimension];
 0036     <span class="keyword">end</span>
 0037     Y = <a href="predict.html" class="code" title="function [Y, probabilities] = predict(net, X,features, discretizationSize, featureRanges) %#codegen">predict</a>(net, X, features, 0);
 0038     Y = Y == max(Y, [], 2);
 0039 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Sun 13-Apr-2025 23:43:31 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
+<hr><address>Generated on Mon 14-Apr-2025 13:07:48 by <strong><a href="https://github.com/gllmflndn/m2html">m2html</a></strong> &copy; 2003-2022</address>
 </body>
 </html>

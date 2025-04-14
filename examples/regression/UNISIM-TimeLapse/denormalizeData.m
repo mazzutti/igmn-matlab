@@ -1,4 +1,3 @@
-%{
 % denormalizeData - Denormalizes data using specified min-max proportions.
 %
 % Syntax:
@@ -30,7 +29,6 @@
 %
 % See also:
 %   mapminmax
-%}
 function data = denormalizeData(data, minMaxProportion, vars)
     [R, ~, S] = size(data);
     for i = 1:S

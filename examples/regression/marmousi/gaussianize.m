@@ -1,4 +1,4 @@
-% GAUSSIANIZE Transforms data to follow a standard normal distribution.
+% gaussianize - Transforms data to follow a standard normal distribution.
 %
 %   Xn = gaussianize(X) takes an input matrix X of size (n, p), where n is
 %   the number of observations and p is the number of variables, and
