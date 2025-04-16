@@ -45,7 +45,9 @@
 function [modelData, wellData] = genPseudoWell(nSim, showPlots, useFacies, exportPlots)
 
     % Synthetic data configs
-    load 'data/data4.mat'; %#ok<LOAD>
+    dataPath =  'data/NorthSe-1D-Application/data4.mat';
+    assertFileAvailable(dataPath)
+    load(dataPath); %#ok<LOAD>
 
     Vp = Vp .* 1000; %#ok<*NODEF>
     Vs = Vs .* 1000;
