@@ -44,7 +44,7 @@ function [outputs, probabilities, outputsDomain] = kdeInversion(modelData, wellD
     ndiscr = 25;
     phidomain = linspace(0, 0.4, ndiscr)';   
     cdomain = linspace(0, 0.8, ndiscr)';   
-    swdomain = linspace(0, 1, ndiscr)';   
+    swdomain = linspace(0, 0.8, ndiscr)';   
     mdomain = [phidomain cdomain swdomain];
 
 
@@ -59,7 +59,7 @@ function [outputs, probabilities, outputsDomain] = kdeInversion(modelData, wellD
     ddomain = [vpdomain vsdomain rhodomain];
     
     % kernel bandwidths 
-    h = 5;
+    h = 8;
     hm(1) = (max(phidomain)-min(phidomain))/h;
     hm(2) = (max(cdomain)-min(cdomain))/h;
     hm(3) = (max(swdomain)-min(swdomain))/h;

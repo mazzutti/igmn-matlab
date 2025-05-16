@@ -15,9 +15,8 @@
 **/examples.env
 **/examples/**/data/
 !examples/regression/NorthSe-1D-Application/prob_color_map.mat
-!examples/regression/NorthSe-1D-Application/igmnOptions.mat
-!examples/regression/rock_physics/igmnOptions.mat
 !examples/regression/rock_physics/prob_color_map.mat
 !examples/regression/UNISIM-TimeLapse/dms_rmse.mat
-!examples/regression/UNISIM-TimeLapse/igmnOptions.mat
+!**/igmnOptions.mat
+!**/google_drive_file_map.mat
 
